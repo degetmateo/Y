@@ -88,41 +88,9 @@ async function loadPosts () {
     }
 
     for (const post of response.posts.reverse()) {
-        const now = new Date();
-        const created_at = new Date(post.date);
-        const dif = now.getTime() - created_at.getTime();
-
-        const seconds = Math.floor(dif / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-
-        let made_at = '';
-
-        if (days > 0) {
-            days === 1 ? 
-                made_at = `hace ${days} día` :
-                made_at = `hace ${days} días`;
-        } else if (hours > 0) {
-            hours === 1 ?
-                made_at = `hace ${hours} hora` :
-                made_at = `hace ${hours} horas`;
-        } else if (minutes > 0) {
-            minutes === 1 ?
-                made_at = `hace ${minutes} minuto` :
-                made_at = `hace ${minutes} minutos`; 
-        } else if (seconds > 0) {
-            seconds === 1 ?
-                made_at = `hace ${seconds} segundo` :
-                made_at = `hace ${seconds} segundos`;
-        } else {
-            made_at = 'ahora'
-        }
-
-        console.log(post)
         timelineContainer.innerHTML += `
             <div style="display: block; padding-bottom: 15px; border-bottom: 1px solid gray;" class="post-container">
-                <p><strong>${post.creator.name}</strong> ▪ ${made_at}</p>
+                <p><strong>${post.creator.name}</strong> ▪ ${getDateMessage(getTimeDifference(new Date(post.date)))}</p>
                 <p style="overflow-wrap: break-word">${post.content}</p>
                 <div style="display:flex;" class="post-interactions-container">
                     <span style="margin: 0 5px 0 0">${post.comments.length} 💬</span>
@@ -131,4 +99,79 @@ async function loadPosts () {
             </div>
         `;
     }
+}
+
+function getTimeDifference (date) {
+    const now = new Date();
+
+    let years = now.getFullYear() - date.getFullYear();
+    let months = now.getMonth() - date.getMonth();
+    let days = now.getDate() - date.getDate();
+
+    if (days < 0) {
+        months--;
+        const lastDayMonthBefore = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        days += lastDayMonthBefore;
+    }
+    
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+    
+    const hours = now.getHours() - date.getHours();
+    const minutes = now.getMinutes() - date.getMinutes();
+    const seconds = now.getSeconds() - date.getSeconds();
+
+    return {
+        years,
+        months,
+        days,
+        hours,
+        minutes,
+        seconds
+    }
+}
+
+function getDateMessage (_parsedTimeUnits) {
+    let made_at = '';
+
+    const years = _parsedTimeUnits.years;
+    const months = _parsedTimeUnits.months;
+    const days = _parsedTimeUnits.days;
+    const hours = _parsedTimeUnits.hours;
+    const minutes = _parsedTimeUnits.minutes;
+    const seconds = _parsedTimeUnits.seconds;
+
+    if (years > 0) {
+        years === 1 ? 
+            made_at = `hace ${years} año` :
+            made_at = `hace ${years} años`;
+    }
+    else if (months > 0) {
+        months === 1 ? 
+            made_at = `hace ${months} mes` :
+            made_at = `hace ${months} meses`;
+    }
+    else if (days > 0) {
+        days === 1 ? 
+            made_at = `hace ${days} día` :
+            made_at = `hace ${days} días`;
+    } else if (hours > 0) {
+        hours === 1 ?
+            made_at = `hace ${hours} hora` :
+            made_at = `hace ${hours} horas`;
+    } else if (minutes > 0) {
+        minutes === 1 ?
+            made_at = `hace ${minutes} minuto` :
+            made_at = `hace ${minutes} minutos`; 
+    } else if (seconds > 0) {
+        seconds === 1 ?
+            made_at = `hace ${seconds} segundo` :
+            made_at = `hace ${seconds} segundos`;
+    } else {
+        made_at = 'ahora'
+    }
+
+    return made_at;
 }
