@@ -15,7 +15,7 @@ function HOME_CONTENT () {
         <h2>Bienvenide, ${user.name}</h2> 
         <span>(no andan los favs es solo decoracion)</span><br>
         <span>(el que lee se la come)</span>
-
+        
         <h3>Cerrar Sesion</h3>
         <form action="/user" method="delete" id="form-logout">
             <button type="submit">Cerrar Sesion</button>
@@ -125,8 +125,8 @@ async function loadPosts () {
                 <p><strong>${post.creator.name}</strong> ▪ ${made_at}</p>
                 <p style="overflow-wrap: break-word">${post.content}</p>
                 <div style="display:flex;" class="post-interactions-container">
-                    <span style="margin: 0 5px">${post.comments.length} 💬</span>
-                    <span style="margin: 0 5px">${post.likes.length} ❤️</span>
+                    <span style="margin: 0 5px 0 0">${post.comments.length} 💬</span>
+                    <span style="margin: 0 5px 0 0">${post.likes.length} ❤️</span>
                 </div>
             </div>
         `;
