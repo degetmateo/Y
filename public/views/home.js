@@ -5,6 +5,7 @@ export const viewHome = async () => {
     document.title = 'Y - Inicio'
     setEventFormLogout();
     setEventFormPostCreate();
+    setEventButtonRefresh();
     loadPosts();
 }
 
@@ -16,18 +17,30 @@ function HOME_CONTENT () {
         <span>(no andan los favs es solo decoracion)</span><br>
         <span>(el que lee se la come)</span>
         
-        <h3>Cerrar Sesion</h3>
-        <form action="/user" method="delete" id="form-logout">
-            <button type="submit">Cerrar Sesion</button>
-        </form>
+        <div style="height: 50px; display: flex; align-items: center;">
+            <form action="/user" method="delete" id="form-logout">
+                <button type="submit">Cerrar Sesion</button>
+            </form>
+        </div>
 
         <h3>Publicar</h3>
         <form action="/post/create" method="post" id="form-post-create">
-            <input type="text" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required>
-            <button type="submit">Publicar</button>
+            <div style="
+                display: flex;
+            ">
+                <textarea style="width: 100%; max-width: 500px; height: 60px;" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required></textarea>
+                <button type="submit">Publicar</button>
+            </div>
         </form>
 
-        <h3>Publicaciones</h3>
+        <div style="
+            width: 100%;
+            height: 70px;
+        ">
+            <h3>Publicaciones</h3>
+            <button type="button" id="refresh-button">Refrescar</button>
+        </div>
+        <div style="padding-bottom: 15px; border-bottom: 1px solid gray;"></div>
         <div id="timeline-container" class="timeline-container"></div>
     `;
 }
@@ -66,6 +79,14 @@ async function setEventFormPostCreate () {
         }
         inputContent.value = ''
         await loadPosts();
+    })
+}
+
+function setEventButtonRefresh () {
+    const button = document.getElementById('refresh-button');
+    button.addEventListener('click', event => {
+        event.preventDefault();
+        loadPosts();
     })
 }
 
