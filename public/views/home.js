@@ -2,7 +2,7 @@ import { APP_CONTAINER, updateContent } from "../consts.js";
 
 export const viewHome = async () => {
     APP_CONTAINER.innerHTML = HOME_CONTENT();
-    document.title = 'Y - Inicio'
+    document.title = 'miau - Inicio'
     setEventFormLogout();
     setEventFormPostCreate();
     setEventButtonRefresh();

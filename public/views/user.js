@@ -2,7 +2,7 @@ import { APP_CONTAINER, updateContent } from "../consts.js";
 
 export const viewUser = () => {
     APP_CONTAINER.innerHTML = VIEW_CONTENT;
-    document.title = 'Y - Acceder'
+    document.title = 'miau - Acceder'
     setEventFormRegister();
     setEventFormLogin();
 }
