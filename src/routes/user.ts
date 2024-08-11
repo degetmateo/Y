@@ -117,16 +117,65 @@ module.exports = (server: Server) => {
         const username = req.body.user.username;
         const password = req.body.user.password;
 
+        if (!name || name.length <= 1) {
+            res.json({
+                ok: false,
+                error: {
+                    code: 'user-register',
+                    message: 'Name: Mayor a o igual a 1 caracter'
+                }
+            })
+
+            return;
+        }
+        
+        if (!password || password.length <= 1) {
+            res.json({
+                ok: false,
+                error: {
+                    code: 'user-register',
+                    message: 'Password: Mayor o igual a 1 caracter'
+                }
+            })
+
+            return;
+        }
+        
+        if (!username || username.length <= 3) {
+            res.json({
+                ok: false,
+                error: {
+                    code: 'user-register',
+                    message: 'Username: Mayor o igual a 3 caracteres'
+                }
+            })
+
+            return;
+        }
+
         if (name.length > 16 || username.length > 16) {
             res.json({
                 ok: false,
                 error: {
                     code: 'user-register',
-                    message: 'NOMBRE O USUARIO DEMASIADO LARGO FLACO'
+                    message: 'Username & name: Menor o igual a 16 caracteres'
                 }
             })
 
             return;
+        }
+
+        const regexUsername = /^[a-zA-Z0-9_]+$/;
+        const isValid = regexUsername.test(username);
+
+        if (!isValid) {
+            res.json({
+                ok: false,
+                error: {
+                    code: 'user-register',
+                    message: 'Username: Solo numeros, letras y guiones bajos'
+                }
+            })
         }
 
         const queryUser = await Postgres.query() `
