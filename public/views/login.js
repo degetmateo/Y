@@ -13,12 +13,20 @@ function setEventFormRegister () {
     const inputName = document.getElementById('form-register-input-name')
     const inputUsername = document.getElementById('form-register-input-username');
     const inputPassword = document.getElementById('form-register-input-password');
+    const inputPasswordConfirm = document.getElementById('form-register-input-password-confirmation');
 
     form.addEventListener('submit', async event => {
         event.preventDefault();
         const name = inputName.value;
         const username = inputUsername.value;
         const password = inputPassword.value;
+        const passwordConfirmation = inputPasswordConfirm.value;
+
+        if (password != passwordConfirmation) {
+            alert('Contraseñas no coinciden.')
+            return;
+        }
+
         const req = await fetch('/user/register', {
             method: 'POST',
             headers: { "content-type": "application/json" },
@@ -76,6 +84,7 @@ const VIEW_CONTENT = `
                     <input placeholder="Nombre de Perfil" type="text" name="input-name" id="form-register-input-name" required>
                     <input placeholder="username" type="text" name="input-name" id="form-register-input-username" required>
                     <input placeholder="Contraseña" type="password" name="input-password" id="form-register-input-password" required>
+                    <input placeholder="Confirme Pass" type="password" name="input-password-confirmation" id="form-register-input-password-confirmation" required>
                     <button type="submit">Enviar</button>
                 </form>        
         </div>
