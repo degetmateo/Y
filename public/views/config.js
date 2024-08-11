@@ -17,7 +17,7 @@ const VIEW_PROFILE_CONTENT = () => {
         <div class="container-config-pfp">
             <h3>Cambiar Imagen de Perfil</h3>
             <p>1. Ingresa un enlace a una imagen.</p>
-            <p>2. Si el enlace es valido, la imagen se mostrara debajo.</p>
+            <p>2. Presiona fuera del area del input para desfocusearlo. Si el enlace es valido, la imagen se mostrara debajo.</p>
             <p>3. Si la imagen es valida para recortar, en unos instantes aparecera la herramienta de recorte. Si la herramienta no aparece, posiblemente esa imagen no pueda recortarse.
             <p>3. Elige qué parte de la imagen deseas guardar.</p>
             <p>4. Presiona el botón.</p>
