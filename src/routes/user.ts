@@ -112,7 +112,7 @@ module.exports = (server: Server) => {
                 ok: false,
                 error: {
                     code: 'user-register',
-                    message: 'Ya existe un usuario con ese nombre.'
+                    message: 'Ya existe un usuario con ese nombre de usuario.'
                 }
             })
             return;

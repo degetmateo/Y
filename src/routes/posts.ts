@@ -33,7 +33,7 @@ module.exports = (server: Server) => {
     })
 
     function getTimeDifference (date: Date) {
-        const now = new Date(new Date().setHours(new Date().getHours()+3));
+        const now = new Date();
         let dif = now.getTime() - date.getTime();
     
         const seconds = Math.floor(dif / 1000);
