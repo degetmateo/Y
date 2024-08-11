@@ -100,6 +100,18 @@ module.exports = (server: Server) => {
         const username = req.body.user.username;
         const password = req.body.user.password;
 
+        if (name.length > 16 || username.length > 16) {
+            res.json({
+                ok: false,
+                error: {
+                    code: 'user-register',
+                    message: 'NOMBRE O USUARIO DEMASIADO LARGO FLACO'
+                }
+            })
+
+            return;
+        }
+
         const queryUser = await Postgres.query() `
             SELECT * FROM
                 base_user bu
