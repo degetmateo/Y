@@ -19,6 +19,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "miau.com": "file:",
+    "postgres": "^3.4.4",
     "socialy": "file:",
     "Y": "file:"
   },

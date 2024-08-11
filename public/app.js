@@ -1,12 +1,16 @@
-import { updateContent } from "./consts.js";
+import { navigateTo } from "./consts.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    authUser();
+    authenticate();
 })
 
-async function authUser () {
+async function authenticate () {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user || !user.id || !user.name || !user.token) return updateContent('user');
+    
+    if (!user || !user.id || !user.username || !user.token) {
+        navigateTo('/login', null)
+        return;
+    }
 
     const req = await fetch('/user/auth', {
         method: 'POST',
@@ -22,9 +26,9 @@ async function authUser () {
 
     if (!res.ok) {
         localStorage.removeItem('user');
-        updateContent('user');
+        navigateTo('/login', null)
         return;
     }
 
-    updateContent('home');
+    navigateTo('/home', null)
 }

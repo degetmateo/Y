@@ -1,27 +1,39 @@
-import { APP_CONTAINER, updateContent } from "../consts.js";
+import { APP_CONTAINER, navigateTo } from "../consts.js";
+import {CONTENT_NAV, EventsNavButtons} from "../views.js";
 
-export const viewHome = async () => {
+export const renderHome = async (data) => {
     APP_CONTAINER.innerHTML = HOME_CONTENT();
     document.title = 'miau - Inicio'
-    setEventFormLogout();
+
+    getUserData().then(res => {
+        document.getElementById('title').textContent = 'Bienvenide, '+res.user.name
+    })
+
+    EventsNavButtons();
     setEventFormPostCreate();
     setEventButtonRefresh();
     loadPosts();
 }
 
-function HOME_CONTENT () {
-    const user = JSON.parse(localStorage.getItem('user'));
+async function getUserData () {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const req = await fetch('/user', { 
+        method: 'GET',
+        headers: { "authorization": 'Bearer ' + user.token }
+    
+    })
 
+    const res = await req.json();
+    return res;
+}
+
+function HOME_CONTENT () {
     return `
-        <h2>Bienvenide, ${user.name}</h2> 
+        <h2 id="title"></h2> 
         <span>(no andan los favs es solo decoracion)</span><br>
         <span>(el que lee se la come)</span>
-        
-        <div style="height: 50px; display: flex; align-items: center;">
-            <form action="/user" method="delete" id="form-logout">
-                <button type="submit">Cerrar Sesion</button>
-            </form>
-        </div>
+
+        ${CONTENT_NAV}
 
         <h3>Publicar</h3>
         <form action="/post/create" method="post" id="form-post-create">
@@ -43,15 +55,6 @@ function HOME_CONTENT () {
         <div style="padding-bottom: 15px; border-bottom: 1px solid gray;"></div>
         <div id="timeline-container" class="timeline-container"></div>
     `;
-}
-
-function setEventFormLogout () {
-    const formLogout = document.getElementById('form-logout');
-    formLogout.addEventListener('submit', async event => {
-        event.preventDefault();
-        localStorage.removeItem('user');
-        updateContent('user')
-    })
 }
 
 async function setEventFormPostCreate () {
@@ -105,52 +108,22 @@ async function loadPosts () {
     console.log(response)
     if (!response.ok) {
         if (response.error) alert(response.error.message);
+        localStorage.removeItem('user')
+        navigateTo('/login', null)
         return;
     }
 
     for (const post of response.posts.reverse()) {
         timelineContainer.innerHTML += `
             <div style="display: block; padding-bottom: 15px; border-bottom: 1px solid gray;" class="post-container">
-                <p><strong>${post.creator.name}</strong> ▪ ${getDateMessage(getTimeDifference(new Date(post.date)))}</p>
+                <p><strong>${post.creator.name}</strong> ▪ ${getDateMessage(post.date)}</p>
                 <p style="overflow-wrap: break-word">${post.content}</p>
                 <div style="display:flex;" class="post-interactions-container">
-                    <span style="margin: 0 5px 0 0">${post.comments.length} 💬</span>
-                    <span style="margin: 0 5px 0 0">${post.likes.length} ❤️</span>
+                    <span style="margin: 0 5px 0 0">${0} 💬</span>
+                    <span style="margin: 0 5px 0 0">${0} ❤️</span>
                 </div>
             </div>
         `;
-    }
-}
-
-function getTimeDifference (date) {
-    const now = new Date();
-
-    let years = now.getFullYear() - date.getFullYear();
-    let months = now.getMonth() - date.getMonth();
-    let days = now.getDate() - date.getDate();
-
-    if (days < 0) {
-        months--;
-        const lastDayMonthBefore = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-        days += lastDayMonthBefore;
-    }
-    
-    if (months < 0) {
-        years--;
-        months += 12;
-    }
-    
-    const hours = now.getHours() - date.getHours();
-    const minutes = now.getMinutes() - date.getMinutes();
-    const seconds = now.getSeconds() - date.getSeconds();
-
-    return {
-        years,
-        months,
-        days,
-        hours,
-        minutes,
-        seconds
     }
 }
 
