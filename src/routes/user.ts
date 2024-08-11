@@ -5,8 +5,25 @@ import Server from "../Server";
 import Postgres from '../database/Postgres';
 
 module.exports = (server: Server) => {
-    server.app.get('/user', server.authenticate, (req:any, res) => {
+    server.app.get('/user', server.authenticate, async (req:any, res) => {
         console.log(req.user)
+
+        const queryUser = await Postgres.query()`
+            SELECT * FROM
+                base_user
+            WHERE
+                username = ${req.user.username.username};
+        `
+        
+        res.json({
+            ok: true,
+            user: {
+                id: queryUser[0].id,
+                name: queryUser[0].name,
+                username: queryUser[0].username,
+                created_at: new Date(queryUser[0].created_at)
+            }
+        })
     })
 
 
@@ -131,26 +148,15 @@ module.exports = (server: Server) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const queryUserCount = await Postgres.query() `
-            SELECT id FROM base_user;
-        `;
-
-        const newID = queryUserCount.length + 1;
-
         const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '2h' });
 
-        const date = new Date();
         await Postgres.query() `
-            INSERT INTO
-                base_user
-            VALUES (
-                ${newID},
+            SELECT insert_base_user (
                 ${username},
                 ${name},
                 ${hashedPassword},
                 ${new Date().toISOString()},
-                ${token}
+                ${token} 
             );
         `;
 

@@ -1,18 +1,19 @@
 import { APP_CONTAINER, navigateTo } from "../consts.js";
 import {CONTENT_NAV, EventsNavButtons} from "../views.js";
 
-export const renderHome = async (data) => {
+export const renderHome = (data) => {
     APP_CONTAINER.innerHTML = HOME_CONTENT();
     document.title = 'miau - Inicio'
-
-    getUserData().then(res => {
-        document.getElementById('title').textContent = 'Bienvenide, '+res.user.name
-    })
 
     EventsNavButtons();
     setEventFormPostCreate();
     setEventButtonRefresh();
     loadPosts();
+
+    getUserData().then(res => {
+        console.log(res)
+        document.getElementById('title').textContent = 'Bienvenide, '+res.user.name
+    }).catch(err => console.error(err))
 }
 
 async function getUserData () {
@@ -20,7 +21,6 @@ async function getUserData () {
     const req = await fetch('/user', { 
         method: 'GET',
         headers: { "authorization": 'Bearer ' + user.token }
-    
     })
 
     const res = await req.json();
@@ -113,10 +113,30 @@ async function loadPosts () {
         return;
     }
 
+    const noImageURL = 'https://static.vecteezy.com/system/resources/thumbnails/007/126/739/small/question-mark-icon-free-vector.jpg';
     for (const post of response.posts.reverse()) {
         timelineContainer.innerHTML += `
-            <div style="display: block; padding-bottom: 15px; border-bottom: 1px solid gray;" class="post-container">
-                <p><strong>${post.creator.name}</strong> ▪ ${getDateMessage(post.date)}</p>
+            <div style="display: block; padding: 0px 0 15px 0; border-bottom: 1px solid gray;" class="post-container">
+                <div class="container-sign" style="display: flex; align-items: center;">
+                    <div class="container-pfp" 
+                        style="
+                            display: inline-block; 
+                            width: 50px; 
+                            height: 50px; 
+                            margin: 0 10px 0 0; 
+                            border: 1px solid gray;
+                            
+                            overflow: hidden;
+                        ">
+                        <img src="${post.creator.profilePicture.url || noImageURL}"
+                            style="
+                                width: 100%;
+                                height: 100%; 
+                            "
+                        />
+                    </div>
+                    <p><strong>${post.creator.name}</strong> ▪ ${getDateMessage(post.date)}</p>                
+                </div>
                 <p style="overflow-wrap: break-word">${post.content}</p>
                 <div style="display:flex;" class="post-interactions-container">
                     <span style="margin: 0 5px 0 0">${0} 💬</span>
@@ -126,6 +146,7 @@ async function loadPosts () {
         `;
     }
 }
+
 
 function getDateMessage (_parsedTimeUnits) {
     let made_at = '';

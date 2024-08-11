@@ -74,7 +74,7 @@ const VIEW_CONTENT = `
 
                 <form class="form" action="/" method="post" id="form-register">
                     <input placeholder="Nombre de Perfil" type="text" name="input-name" id="form-register-input-name" required>
-                    <input placeholder="@username" type="text" name="input-name" id="form-register-input-username" required>
+                    <input placeholder="username" type="text" name="input-name" id="form-register-input-username" required>
                     <input placeholder="Contraseña" type="password" name="input-password" id="form-register-input-password" required>
                     <button type="submit">Enviar</button>
                 </form>        
@@ -84,7 +84,7 @@ const VIEW_CONTENT = `
             <h3>Iniciar Sesion</h3>
 
                 <form class="form" action="/" method="post" id="form-login">
-                    <input placeholder="@username" type="text" name="form-login-input-name" id="form-login-input-username" required>
+                    <input placeholder="username" type="text" name="form-login-input-name" id="form-login-input-username" required>
                     <input placeholder="Contraseña" type="password" name="form-login-input-password" id="form-login-input-password" required>
                     <button type="submit">Enviar</button>
                 </form> 

@@ -6,11 +6,27 @@ module.exports = (server: Server) => {
     server.app.get('/posts', server.authenticate, async (req: express.Request, res: express.Response) => {
         
         const queryPosts = await Postgres.query() `
-            SELECT bp.id, bp.id_base_user, bp.username_base_user, bp.content, bp.date, bp.id_post_original, bu.name FROM 
-                base_post bp, base_user bu
+            SELECT 
+                bp.id,
+                bp.id_base_user,
+                bp.username_base_user,
+                bp.content,
+                bp.date,
+                bp.id_post_original,
+                bu.name,
+                pp.url,
+                pp.x,
+                pp.y,
+                pp.w
+            FROM 
+                base_post bp, base_user bu, user_profile_picture pp
             WHERE
                 bp.id_base_user = bu.id and
-                bp.username_base_user = bu.username;
+                bp.username_base_user = bu.username and
+                bu.id = pp.id_base_user and
+                bu.username = pp.username_base_user
+            ORDER BY
+                bp.date;
         `;
 
         const posts = queryPosts.map(p => {
@@ -21,7 +37,14 @@ module.exports = (server: Server) => {
                 creator: {
                     id: p.id_base_user,
                     name: p.name,
-                    username: p.username_base_user
+                    username: p.username_base_user,
+                    profilePicture: {
+                        url: p.url,
+                        x: p.x,
+                        y: p.y,
+                        w: p.w,
+                        h: p.w
+                    }
                 }
             }
         });
@@ -56,51 +79,4 @@ module.exports = (server: Server) => {
             seconds
         }
     }
-
-    server.app.post('/post/create', server.authenticate, async (req: express.Request, res: express.Response) => {
-        console.log('POST CREATE', req.body)
-
-        const content = req.body.post.content;
-
-        if (content.length > 400) {
-            return res.json({
-                ok: false,
-                error: {
-                    code: 'post',
-                    message: 'Has superado el limite de caracteres (400).'
-                }
-            })
-        }
-        const user = req.body.user;
-        
-        const queryUserCreator = await Postgres.query() `
-            SELECT * FROM
-                base_user bu
-            WHERE
-                bu.username = ${user.username};
-        `;
-        
-        if (!queryUserCreator[0]) return res.json({ ok:false, error: { code: 'auth', message: 'Error de autentificacion.' } });
-        
-        const queryPostCount = await Postgres.query() `
-            SELECT * FROM base_post;
-        `;
-
-        await Postgres.query() `
-            INSERT INTO
-                base_post
-            VALUES (
-                ${queryPostCount.length+1},
-                ${queryUserCreator[0].id},
-                ${queryUserCreator[0].username},
-                ${content},
-                ${new Date()},
-                null
-            );
-        `;
-
-        res.json({
-            ok: true
-        })
-    })
 }
