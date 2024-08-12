@@ -1,5 +1,10 @@
 import { navigateTo } from "./consts.js";
 
+window.addEventListener('popstate', (event) => {
+    const path = window.location.pathname;
+    navigateTo(path);
+})
+
 document.addEventListener('DOMContentLoaded', () => {
     authenticate();
 })

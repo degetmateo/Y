@@ -116,25 +116,20 @@ async function loadPosts () {
     const noImageURL = 'https://static.vecteezy.com/system/resources/thumbnails/007/126/739/small/question-mark-icon-free-vector.jpg';
     for (const post of response.posts.reverse()) {
         timelineContainer.innerHTML += `
-            <div style="display: block; padding: 0px 0 15px 0; border-bottom: 1px solid gray;" class="post-container">
+            <div style="display: block; padding: 10px 0 15px 0; border-bottom: 1px solid gray;" class="post-container">
                 <div class="container-sign" style="display: flex; align-items: center;">
+
                     <div class="container-pfp" 
                         style="
-                            display: inline-block; 
-                            width: 50px; 
-                            height: 50px; 
+                            width: 50px;
+                            height: 50px;
                             margin: 0 10px 0 0; 
                             border: 1px solid gray;
-                            
-                            overflow: hidden;
                         ">
-                        <img src="${post.creator.profilePicture.url || noImageURL}"
-                            style="
-                                width: 100%;
-                                height: 100%; 
-                            "
-                        />
+
+                        ${setProfilePic(post)}
                     </div>
+
                     <p><strong>${post.creator.name}</strong> ▪ ${getDateMessage(post.date)}</p>                
                 </div>
                 <p style="overflow-wrap: break-word">${post.content}</p>
@@ -145,8 +140,35 @@ async function loadPosts () {
             </div>
         `;
     }
-}
 
+    function setProfilePic (post) {
+        const creator = post.creator;
+        const image = creator.profilePicture;
+        const imageUrl = image.url || noImageURL;
+    
+        if (!image.url) {
+            return `
+                <img 
+                    src="${imageUrl}"
+                    style="
+                        width: 100%;
+                        height: 100%;
+                    "    
+                ></img>
+            `
+        } else {
+            return `
+            <img 
+                src="${imageUrl}"
+                style="
+                    width: 100%;
+                    height: 100%;
+                "    
+            ></img>
+        `
+        }
+    }
+}
 
 function getDateMessage (_parsedTimeUnits) {
     let made_at = '';

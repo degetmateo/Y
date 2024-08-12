@@ -6,7 +6,6 @@ export const renderConfig = (data) => {
     APP_CONTAINER.innerHTML = VIEW_PROFILE_CONTENT();
     EventsNavButtons();
     setEventInputImageURL()
-    // setEventTestButton()
 }   
 
 const VIEW_PROFILE_CONTENT = () => {
@@ -22,11 +21,14 @@ const VIEW_PROFILE_CONTENT = () => {
             <p>3. Elige qué parte de la imagen deseas guardar.</p>
             <p>4. Presiona el botón.</p>
             <p>5. Listo.</p>
+
+            <p>AVISO: Se recomienda que la imagen sea cuadrada.</p>
+            <p>AVISO: Por el momento, la imagen no se mostrara recortada.</p>
+
             <input type="text" id="input-image-url">
             <button id="crop-button">Guardar</button>
             <div id="container-image"></div>
         </div>
-
     `;
 }
 
