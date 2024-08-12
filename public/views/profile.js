@@ -86,6 +86,7 @@ const VIEW_CONTENT = (data) => {
                 </div>
                 <div class="container-bio">
                     <p>test: Biografia</p>
+                    <p>NO TERMINÉ TENGO SUEÑO</p>
                 </div>
             </div>
             <div class="container-posts" id="container-posts">
