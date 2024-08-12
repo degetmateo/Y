@@ -1,6 +1,7 @@
 import { navigateTo } from "./consts.js";
 
 window.addEventListener('popstate', (event) => {
+    event.preventDefault();
     const path = window.location.pathname;
     navigateTo(path);
 })

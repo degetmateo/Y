@@ -10,10 +10,11 @@ module.exports = (server: Server) => {
 
         const queryUser = await Postgres.query()`
             SELECT * FROM
-                base_user
+                base_user bu, user_profile_picture pp
             WHERE
-                username = ${req.user.username.username};
-        `
+                bu.username = ${req.user.username.username} and
+                bu.username = pp.username_base_user;
+        `;
         
         res.json({
             ok: true,
@@ -21,7 +22,10 @@ module.exports = (server: Server) => {
                 id: queryUser[0].id,
                 name: queryUser[0].name,
                 username: queryUser[0].username,
-                created_at: new Date(queryUser[0].created_at)
+                created_at: new Date(queryUser[0].created_at),
+                profilePic: {
+                    url: queryUser[0].url
+                }
             }
         })
     })

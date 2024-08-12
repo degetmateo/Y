@@ -1,4 +1,4 @@
-import { APP_CONTAINER, navigateTo } from "../consts.js";
+import { APP_CONTAINER, getDateMessage, navigateTo } from "../consts.js";
 import {CONTENT_NAV, EventsNavButtons} from "../views.js";
 
 export const renderHome = (data) => {
@@ -31,7 +31,9 @@ function HOME_CONTENT () {
     return `
         <h2 id="title"></h2> 
         <span>(no andan los favs es solo decoracion)</span><br>
-        <span>(el que lee se la come)</span>
+        <span>(el que lee se la come)</span><br>
+        <span>Ultima Update: PERFIL</span>
+        <br><br>
 
         ${CONTENT_NAV}
 
@@ -64,6 +66,16 @@ async function setEventFormPostCreate () {
     form.addEventListener('submit', async event => {
         event.preventDefault()
         const content = inputContent.value;
+
+        if (!content || content.length <= 0) {
+            return;
+        }
+
+        if (hasDisallowedTags(content, ['img', 'span'])) {
+            alert('Contenido no permitido por el momento.');
+            return;
+        }
+
         const user = JSON.parse(localStorage.getItem('user'));
         const request = await fetch ('/post/create', {
             method: 'POST',
@@ -83,6 +95,22 @@ async function setEventFormPostCreate () {
         inputContent.value = ''
         await loadPosts();
     })
+}
+
+function hasDisallowedTags(content, allowedTags) {
+    const contenedor = document.createElement('div');
+    contenedor.innerHTML = content;
+
+    const todasEtiquetas = contenedor.getElementsByTagName('*');
+
+    for (let i = 0; i < todasEtiquetas.length; i++) {
+        const etiqueta = todasEtiquetas[i].tagName.toLowerCase();
+        if (!allowedTags.includes(etiqueta)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function setEventButtonRefresh () {
@@ -168,47 +196,4 @@ async function loadPosts () {
         `
         }
     }
-}
-
-function getDateMessage (_parsedTimeUnits) {
-    let made_at = '';
-
-    const years = _parsedTimeUnits.years;
-    const months = _parsedTimeUnits.months;
-    const days = _parsedTimeUnits.days;
-    const hours = _parsedTimeUnits.hours;
-    const minutes = _parsedTimeUnits.minutes;
-    const seconds = _parsedTimeUnits.seconds;
-
-    if (years > 0) {
-        years === 1 ? 
-            made_at = `hace ${years} año` :
-            made_at = `hace ${years} años`;
-    }
-    else if (months > 0) {
-        months === 1 ? 
-            made_at = `hace ${months} mes` :
-            made_at = `hace ${months} meses`;
-    }
-    else if (days > 0) {
-        days === 1 ? 
-            made_at = `hace ${days} día` :
-            made_at = `hace ${days} días`;
-    } else if (hours > 0) {
-        hours === 1 ?
-            made_at = `hace ${hours} hora` :
-            made_at = `hace ${hours} horas`;
-    } else if (minutes > 0) {
-        minutes === 1 ?
-            made_at = `hace ${minutes} minuto` :
-            made_at = `hace ${minutes} minutos`; 
-    } else if (seconds > 0) {
-        seconds === 1 ?
-            made_at = `hace ${seconds} segundo` :
-            made_at = `hace ${seconds} segundos`;
-    } else {
-        made_at = 'ahora'
-    }
-
-    return made_at;
 }

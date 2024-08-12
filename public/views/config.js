@@ -22,6 +22,7 @@ const VIEW_PROFILE_CONTENT = () => {
             <p>4. Presiona el botón.</p>
             <p>5. Listo.</p>
 
+            <p>AVISO: La URL debe ser directa a la imagen.</p>
             <p>AVISO: Se recomienda que la imagen sea cuadrada.</p>
             <p>AVISO: Por el momento, la imagen no se mostrara recortada.</p>
 
