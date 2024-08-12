@@ -32,7 +32,8 @@ function HOME_CONTENT () {
         <h2 id="title"></h2> 
         <span>(no andan los favs es solo decoracion)</span><br>
         <span>(el que lee se la come)</span><br>
-        <span>Ultima Update: PERFIL</span>
+        <span>Ultima Update: PERFIL</span><br>
+        <span>Limité los posts que se cargan de entrada a 50 porque se lageaba todo pipipi</span>
         <br><br>
 
         ${CONTENT_NAV}
@@ -142,7 +143,7 @@ async function loadPosts () {
     }
 
     const noImageURL = 'https://static.vecteezy.com/system/resources/thumbnails/007/126/739/small/question-mark-icon-free-vector.jpg';
-    for (const post of response.posts.reverse()) {
+    for (const post of response.posts) {
         timelineContainer.innerHTML += `
             <div style="display: block; padding: 10px 0 15px 0; border-bottom: 1px solid gray;" class="post-container">
                 <div class="container-sign" style="display: flex; align-items: center;">

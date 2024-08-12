@@ -26,7 +26,9 @@ module.exports = (server: Server) => {
                 bu.id = pp.id_base_user and
                 bu.username = pp.username_base_user
             ORDER BY
-                bp.date;
+                bp.date DESC
+            LIMIT
+                50;
         `;
 
         const posts = queryPosts.map(p => {
