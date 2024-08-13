@@ -13,6 +13,7 @@ export function navigateTo (view, data) {
  
 export function render (view, data) {
     switch (view) {
+        case '/': renderHome(data); break;
         case '/login': renderLogin(data); break;
         case '/home': renderHome(data); break;
         case '/profile': renderProfile(data); break;
