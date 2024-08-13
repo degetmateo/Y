@@ -1,25 +1,19 @@
-import { APP_CONTAINER, getDateMessage } from "../consts.js";
+import { APP_CONTAINER, getDateMessage, navigateTo } from "../consts.js";
+import {app} from "../model.js";
 import {CONTENT_NAV, EventsNavButtons} from "../views.js";
 
-let userProfile;
-
-export const renderProfile = async (data) => {
-    if (!data || !data.token) {
-        return alert('Error de autentificacion.');
-    }
-
-    const res = await fetchUser(data);
-
-    if (!res.ok) {
-        alert(res.error.message);
+export const renderProfile = async () => {
+    if (!app.user.token) {
+        alert('Error de autentificacion.');
+        navigateTo('/login');
         return;
     }
-    userProfile = res.user;
-    APP_CONTAINER.innerHTML = VIEW_CONTENT(res);
+
+    APP_CONTAINER.innerHTML = VIEW_CONTENT(app.user);
     EventsNavButtons();
     document.title = 'Perfil';
 
-    const resPosts = await fetchPosts(data);
+    const resPosts = await fetchPosts(app.user);
 
     if (!resPosts.ok) {
         alert(resPosts.error.message);
@@ -27,17 +21,6 @@ export const renderProfile = async (data) => {
     }
 
     drawPosts(resPosts.posts);
-}
-
-const fetchUser = async (user) => {
-    const req = await fetch('/user', {
-        method: 'GET',
-        headers: {
-            "authorization": "Bearer "+user.token
-        }
-    })
-    const res = await req.json();
-    return res;
 }
 
 const fetchPosts = async (user) => {
@@ -60,9 +43,9 @@ const drawPosts = (posts) => {
             <div style="display: block; padding: 10px 0 15px 0; border-bottom: 1px solid gray;" class="post-container">
                 <div class="container-sign" style="display: flex; align-items: center;">
                     <div class="container-pfp"
-                        <img src="${userProfile.profilePic.url}" />
+                        <img src="${app.user.profilePic.url}" />
                     </div>
-                    <p><strong>${userProfile.name}</strong> ▪ ${getDateMessage(post.date)}</p>                
+                    <p><strong>${app.user.name}</strong> ▪ ${getDateMessage(post.date)}</p>                
                 </div>
                 <p style="overflow-wrap: break-word">${post.content}</p>
             </div>
@@ -78,11 +61,11 @@ const VIEW_CONTENT = (data) => {
             </div>
             <div class="container-profile">
                 <div class="container-pfp">
-                    <img src="${data.user.profilePic.url}" />
+                    <img src="${app.user.profilePic.url}" />
                 </div>
                 <div class="container-name">
-                    <strong>${data.user.name}</strong>
-                    <span>@${data.user.username}</span>
+                    <strong>${app.user.name}</strong>
+                    <span>@${app.user.username}</span>
                 </div>
                 <div class="container-bio">
                     <p>test: Biografia</p>

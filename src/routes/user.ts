@@ -12,7 +12,7 @@ module.exports = (server: Server) => {
             SELECT * FROM
                 base_user bu, user_profile_picture pp
             WHERE
-                bu.username = ${req.user.username.username} and
+                bu.username = ${req.user.username} and
                 bu.username = pp.username_base_user;
         `;
         
@@ -37,9 +37,11 @@ module.exports = (server: Server) => {
 
         const queryUser = await Postgres.query() `
             SELECT * FROM
-                base_user bu
+                base_user bu, user_profile_picture pic
             WHERE 
-                bu.username = ${username};
+                bu.username = ${username} and
+                bu.id = pic.id_base_user and
+                bu.username = pic.username_base_user;
         `;
 
         if (!queryUser[0]) {
@@ -53,7 +55,22 @@ module.exports = (server: Server) => {
         }
 
         res.json({
-            ok: true
+            ok: true,
+            user: {
+                id: queryUser[0].id,
+                username: queryUser[0].username,
+                name: queryUser[0].name,
+                token: queryUser[0].token,
+                profilePic: {
+                    url: queryUser[0].url,
+                    crop: {
+                        x: queryUser[0].x,
+                        y: queryUser[0].y,
+                        w: queryUser[0].w,
+                        h: queryUser[0].h
+                    }
+                }
+            }
         })
     })
 

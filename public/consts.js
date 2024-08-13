@@ -1,4 +1,9 @@
-import { VIEWS } from './views.js';
+import {renderConfig} from './views/config.js';
+import {renderError} from './views/error.js';
+import {renderHome} from './views/home.js';
+import {renderLogin} from './views/login.js';
+import {renderProfile} from './views/profile.js';
+
 export const APP_CONTAINER = document.getElementById('app');
 
 export function navigateTo (view, data) {
@@ -7,7 +12,13 @@ export function navigateTo (view, data) {
 }
  
 export function render (view, data) {
-    VIEWS[view](data);
+    switch (view) {
+        case '/login': renderLogin(data); break;
+        case '/home': renderHome(data); break;
+        case '/profile': renderProfile(data); break;
+        case '/config': renderConfig(data); break;
+        default: renderError(data); break;
+    }
 }
 
 export function getDateMessage (_parsedTimeUnits) {

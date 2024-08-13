@@ -1,4 +1,6 @@
 import { APP_CONTAINER, navigateTo } from "../consts.js";
+import {authenticate} from "../main.js";
+import {app} from "../model.js";
 
 export const renderLogin = (data) => {
     APP_CONTAINER.innerHTML = VIEW_CONTENT;
@@ -37,6 +39,13 @@ function setEventFormRegister () {
 
         if (res.ok) {
             localStorage.setItem('user', JSON.stringify({ id: res.user.id, username: res.user.username, token: res.user.token }));
+            app.user.id = res.user.id;
+            app.user.username = res.user.username;
+            app.user.token = res.user.token;
+            const isUserAuthenticated = await authenticate();
+            if(!isUserAuthenticated) {
+                return;
+            }
             navigateTo('/home', null)
         } else {
             console.error(res.error.message);
@@ -71,6 +80,13 @@ function setEventFormLogin () {
 
         console.log('USER:', response.user);
         localStorage.setItem('user', JSON.stringify({ id: response.user.id, username: response.user.username, token: response.user.token }));
+        app.user.id = response.user.id;
+        app.user.username = response.user.username;
+        app.user.token = response.user.token;
+        const isUserAuthenticated = await authenticate();
+        if(!isUserAuthenticated) {
+            return;
+        }
         navigateTo('/home', null)
     })
 }

@@ -34,9 +34,8 @@ export default class Server {
                 console.log('✅ | Loaded:', file);
             }
             
-            this.app.use((_, res, next) => {
-                // res.sendFile(path.join(__dirname + '/../public/app.html'));
-                res.redirect('/');
+            this.app.use((_, res: express.Response, next) => {
+                res.sendFile(path.join(__dirname + '/../public/app.html'));
             });
         } catch (error) {
             console.error('🟥 |', error);
@@ -44,7 +43,6 @@ export default class Server {
     }
 
     public authenticate (req, res: express.Response, next: express.NextFunction) {
-        console.log('USER AUTH MIDDLEWARE')
         const header = req.headers['authorization'];
         const token = header && header.split(' ')[1];
         
@@ -59,9 +57,10 @@ export default class Server {
             return;
         }
 
-        jwt.verify(token, process.env.SECRET_KEY, (err, username) => {
+        jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
             if (err) return res.json({ ok: false, error: { code: 'auth', message: 'Error en la autentificacion.' } });
-            req.user = { username: username };
+            // const newToken = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '2h' });
+            req.user = { username: user.username }
             next();
         })
     }

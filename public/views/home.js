@@ -1,4 +1,5 @@
 import { APP_CONTAINER, getDateMessage, navigateTo } from "../consts.js";
+import {app} from "../model.js";
 import {CONTENT_NAV, EventsNavButtons} from "../views.js";
 
 export const renderHome = (data) => {
@@ -10,21 +11,7 @@ export const renderHome = (data) => {
     setEventButtonRefresh();
     loadPosts();
 
-    getUserData().then(res => {
-        console.log(res)
-        document.getElementById('title').textContent = 'Bienvenide, '+res.user.name
-    }).catch(err => console.error(err))
-}
-
-async function getUserData () {
-    const user = JSON.parse(localStorage.getItem('user'))
-    const req = await fetch('/user', { 
-        method: 'GET',
-        headers: { "authorization": 'Bearer ' + user.token }
-    })
-
-    const res = await req.json();
-    return res;
+    document.getElementById('title').textContent = 'Bienvenide, '+app.user.name
 }
 
 function HOME_CONTENT () {
@@ -145,7 +132,7 @@ async function loadPosts () {
     const noImageURL = 'https://static.vecteezy.com/system/resources/thumbnails/007/126/739/small/question-mark-icon-free-vector.jpg';
     for (const post of response.posts) {
         timelineContainer.innerHTML += `
-            <div style="display: block; padding: 10px 0 15px 0; border-bottom: 1px solid gray;" class="post-container">
+            <div style="padding: 10px 10px 10px 10px; border-bottom: 1px solid gray;" class="post-container">
                 <div class="container-sign" style="display: flex; align-items: center;">
 
                     <div class="container-pfp" 

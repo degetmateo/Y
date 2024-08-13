@@ -1,16 +1,4 @@
-import { renderLogin } from "./views/login.js";
-import { renderHome } from "./views/home.js"
-import { renderConfig } from "./views/config.js";
-import { renderProfile } from './views/profile.js';
-
 import {navigateTo} from "./consts.js";
-
-export const VIEWS = {
-    '/login': renderLogin,
-    '/home': renderHome,
-    '/config': renderConfig,
-    '/profile': renderProfile
-}
 
 export const CONTENT_NAV = `
     <nav>
@@ -34,7 +22,7 @@ export const EventsNavButtons = () => {
 
     document.getElementById('nav-button-profile').addEventListener('click', (event) => {
         event.preventDefault();
-        navigateTo('/profile', JSON.parse(localStorage.getItem('user')));
+        navigateTo('/profile', null);
     })
 
     document.getElementById('nav-button-logout').addEventListener('click', (event) => {

@@ -7,7 +7,7 @@ module.exports = (server: Server) => {
             SELECT * FROM
                 base_post
             WHERE
-                username_base_user = ${req.user.username.username} 
+                username_base_user = ${req.user.username} 
         `;
         
         res.json({
