@@ -7,15 +7,15 @@ import {renderProfile} from './views/profile.js';
 export const APP_CONTAINER = document.getElementById('app');
 
 export function navigateTo (view, data) {
-    history.pushState({ view }, view, `${view}`);
+    window.history.pushState({ view }, view, `${view}`);
     render(view, data);
 }
  
 export function render (view, data) {
     switch (view) {
         case '/': renderHome(data); break;
-        case '/login': renderLogin(data); break;
         case '/home': renderHome(data); break;
+        case '/login': renderLogin(data); break;
         case '/profile': renderProfile(data); break;
         case '/config': renderConfig(data); break;
         default: renderError(data); break;

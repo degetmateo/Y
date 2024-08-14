@@ -1,6 +1,7 @@
 import express from 'express';
 import Server from "../Server";
 import Postgres from '../database/Postgres';
+import getTimeDifference from '../helpers/get_time_difference';
 
 module.exports = (server: Server) => {
     server.app.get('/posts', server.authenticate, async (req: express.Request, res: express.Response) => {
@@ -56,29 +57,4 @@ module.exports = (server: Server) => {
             posts
         })
     })
-
-    function getTimeDifference (date: Date) {
-        const now = new Date();
-        let dif = now.getTime() - date.getTime();
-    
-        const seconds = Math.floor(dif / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-    
-        const daysInYear = 365.25;
-        const daysInMonth = 30.44; 
-    
-        const years = Math.floor(days / daysInYear);
-        const months = Math.floor(days / daysInMonth);
-    
-        return {
-            years,
-            months,
-            days,
-            hours,
-            minutes,
-            seconds
-        }
-    }
 }

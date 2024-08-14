@@ -1,34 +1,38 @@
+import {app} from "../app.js";
 import { APP_CONTAINER, navigateTo } from "../consts.js"
-import {CONTENT_NAV, EventsNavButtons} from "../views.js";
+import {CreateNavigation} from "./templates/nav.js";
 
 export const renderConfig = (data) => {
     console.log(window.location.pathname)
     APP_CONTAINER.innerHTML = VIEW_PROFILE_CONTENT();
-    EventsNavButtons();
+    CreateNavigation();
     setEventInputImageURL()
 }   
 
 const VIEW_PROFILE_CONTENT = () => {
     return `
-        <h1>Configuracion</h1>
-        ${CONTENT_NAV}
+        <div class="container-config-view">
+            <div class="container-nav" id="container-nav"></div>
+            <div class="container-main">
+                <h1>Configuracion</h1>
+                <div class="container-config-pfp">
+                    <h3>Cambiar Imagen de Perfil</h3>
+                    <p>1. Ingresa un enlace a una imagen.</p>
+                    <p>2. Presiona fuera del area del input para desfocusearlo. Si el enlace es valido, la imagen se mostrara debajo.</p>
+                    <p>3. Si la imagen es valida para recortar, en unos instantes aparecera la herramienta de recorte. Si la herramienta no aparece, posiblemente esa imagen no pueda recortarse.
+                    <p>3. Elige qué parte de la imagen deseas guardar.</p>
+                    <p>4. Presiona el botón.</p>
+                    <p>5. Listo.</p>
 
-        <div class="container-config-pfp">
-            <h3>Cambiar Imagen de Perfil</h3>
-            <p>1. Ingresa un enlace a una imagen.</p>
-            <p>2. Presiona fuera del area del input para desfocusearlo. Si el enlace es valido, la imagen se mostrara debajo.</p>
-            <p>3. Si la imagen es valida para recortar, en unos instantes aparecera la herramienta de recorte. Si la herramienta no aparece, posiblemente esa imagen no pueda recortarse.
-            <p>3. Elige qué parte de la imagen deseas guardar.</p>
-            <p>4. Presiona el botón.</p>
-            <p>5. Listo.</p>
+                    <p>AVISO: La URL debe ser directa a la imagen.</p>
+                    <p>AVISO: Se recomienda que la imagen sea cuadrada.</p>
+                    <p>AVISO: Por el momento, la imagen no se mostrara recortada.</p>
 
-            <p>AVISO: La URL debe ser directa a la imagen.</p>
-            <p>AVISO: Se recomienda que la imagen sea cuadrada.</p>
-            <p>AVISO: Por el momento, la imagen no se mostrara recortada.</p>
-
-            <input type="text" id="input-image-url">
-            <button id="crop-button">Guardar</button>
-            <div id="container-image"></div>
+                    <input type="text" id="input-image-url">
+                    <button id="crop-button">Guardar</button>
+                    <div id="container-image"></div>
+                </div>
+            </div>
         </div>
     `;
 }
@@ -38,9 +42,7 @@ function setEventInputImageURL () {
     const imageContainer = document.getElementById('container-image');
     inputImageURL.addEventListener('change', () => {
         imageContainer.innerHTML = `<img id="image" src="${inputImageURL.value}" style="display: block; max-width: 100%;" />`;
-        setTimeout(() => {
-            createCropper()
-        }, 1000)
+        createCropper();
     })
 }
 
@@ -103,7 +105,15 @@ function setEventButtonCrop (getData) {
             alert(res.error.message);
             return;
         }
-
+        app.user.profilePic = {
+            url: inputImageURL.value,
+            crop: {
+                x: data.x,
+                y: data.y,
+                w: data.w,
+                h: data.h
+            }
+        }
         alert('Imagen Guardada')
         navigateTo('/home');
     })

@@ -1,4 +1,5 @@
 import Postgres from "../database/Postgres";
+import getTimeDifference from "../helpers/get_time_difference";
 import Server from "../Server";
 
 module.exports = (server: Server) => {
@@ -7,12 +8,20 @@ module.exports = (server: Server) => {
             SELECT * FROM
                 base_post
             WHERE
-                username_base_user = ${req.user.username} 
+                username_base_user = ${req.user.username};
         `;
+
+        const posts = queryPosts.map(p => {
+            return {
+                id: p.id,
+                content: p.content,
+                date: getTimeDifference(new Date(p.date)),
+            }
+        });
         
         res.json({
             ok: true,
-            posts: queryPosts
+            posts
         })
     })
 }

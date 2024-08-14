@@ -1,73 +1,123 @@
 .container-profile-view {
-    margin: auto;
     width: 100%;
     height: 100%;
 
     display: grid;
-    grid-template-columns: 0.2fr 1fr;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: 0.2fr 1fr 0.2fr;
+    grid-template-rows: 1fr 1fr 1fr;
     grid-template-areas: 
-        "nav profile"
-        "nav posts"
-        "nav posts";
-    gap:10px
+        "nav main aside"
+        "nav main aside"
+        "nav main aside";
 }
 
-.container-profile-view .container-nav {
-    grid-area: nav;
-    border: 1px solid yellow;
+.container-profile-view .container-main {
+    grid-area: main;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
 }
 
-.container-profile-view .container-nav nav {
+.container-profile-view .container-main .container-profile {
+    padding: 10px;
+    border-bottom: 1px solid gray;
+    
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: min-content max-content;
+    grid-template-areas: 
+        "pfp username"
+        "pfp bio";
+    gap: 10px;
+}
+
+.container-profile-view .container-main .container-profile .container-pfp {
+    grid-area: pfp;
+    border: 1px solid black;
+    overflow: hidden;
+    width: 200px;
+    height: 200px;
+}
+
+.container-profile-view .container-main .container-profile .container-pfp .img-profile {
     width: 100%;
     height: 100%;
+}
 
+.container-profile-view .container-main .container-profile .container-name {
+    grid-area: username;
     display: flex;
     flex-direction: column;
-    align-items: center;
-
-    text-align: left;
+    justify-content: center;
 }
 
-.container-profile-view .container-nav nav a {
-    margin-bottom: 10px;
+.container-profile-view .container-main .container-profile .container-bio {
+    grid-area: bio;
 }
 
-.container-profile-view .container-profile {
-    grid-area: profile;
-    border: 1px solid red;
+.container-profile-view .container-main .container-posts {
+    width: 100%;
+    height: 100%;
 }
 
-.container-profile-view .container-posts {
-    grid-area: posts;
-    border: 1px solid green;
+.container-profile-view .container-main .container-posts .container-post {
+    padding: 10px;
+    border-bottom: 1px solid gray;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content min-content;
+    gap: 10px;
+}
+
+.container-profile-view .container-main .container-posts .container-post .container-sign {
+    display: flex;
+}
+
+.container-profile-view .container-main .container-posts .container-post .container-sign .sign {
+    margin-left: 10px;
+}
+
+.container-profile-view .container-main .container-posts .container-post .container-sign .container-pfp {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+}
+
+.container-profile-view .container-main .container-posts .container-post .container-sign .container-pfp .img-profile-post {
+    width: 100%;
+    height: 100%;
+}
+
+.container-profile-view .container-main .container-posts .container-post .post-content {
+    overflow-wrap: break-word;
+    margin: 0;
 }
 
 @media (max-width: 768px) {
     .container-profile-view {
         grid-template-areas: 
-            "profile profile"
-            "posts posts"
-            "nav nav";
+            "main main main"
+            "main main main"
+            "main main main";
     }
 
-    .container-profile-view .container-nav {
-        position: fixed;
-        width: 100%;
-        height: 25px;
-        bottom: 0;
-
-        background-color: yellow;
+    .container-home-view .container-main {
+        border:none;
     }
 
-    .container-profile-view .container-nav nav {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
+    .container-profile-view .container-main .container-profile {    
+        grid-template-columns: min-content auto;
+        grid-template-rows: min-content auto;
+        grid-template-areas: 
+            "pfp username"
+            "bio bio";
     }
 
-    .container-profile-view .container-nav a {
-        margin-bottom: 0;
+    .container-profile-view .container-main .container-profile .container-pfp {
+        width: 100px;
+        height: 100px;
     }
 }

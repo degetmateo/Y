@@ -1,5 +1,5 @@
 import { navigateTo } from "./consts.js";
-import { app } from "./model.js";
+import { app } from "./app.js";
 
 window.addEventListener('popstate', (event) => {
     event.preventDefault();

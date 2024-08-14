@@ -1,12 +1,13 @@
 import { APP_CONTAINER, getDateMessage, navigateTo } from "../consts.js";
-import {app} from "../model.js";
-import {CONTENT_NAV, EventsNavButtons} from "../views.js";
+import {app} from "../app.js";
+import {CreateNavigation} from "./templates/nav.js";
 
 export const renderHome = (data) => {
     APP_CONTAINER.innerHTML = HOME_CONTENT();
     document.title = 'miau - Inicio'
 
-    EventsNavButtons();
+    CreateNavigation();
+
     setEventFormPostCreate();
     setEventButtonRefresh();
     loadPosts();
@@ -16,34 +17,37 @@ export const renderHome = (data) => {
 
 function HOME_CONTENT () {
     return `
-        <h2 id="title"></h2> 
-        <span>(no andan los favs es solo decoracion)</span><br>
-        <span>(el que lee se la come)</span><br>
-        <span>Ultima Update: PERFIL</span><br>
-        <span>Limité los posts que se cargan de entrada a 50 porque se lageaba todo pipipi</span>
-        <br><br>
+        <div class="container-home-view">
+            <div class="container-nav" id="container-nav"></div>
+            <div class="container-main">
+                <h2 id="title"></h2> 
+                <span>(no andan los favs es solo decoracion)</span><br>
+                <span>(el que lee se la come)</span><br>
+                <span>Ultima Update: PERFIL</span><br>
+                <span>Limité los posts que se cargan de entrada a 50 porque se lageaba todo pipipi</span>
+                <br><br>
 
-        ${CONTENT_NAV}
+                <h3>Publicar</h3>
+                <form action="/post/create" method="post" id="form-post-create">
+                    <div style="
+                        display: flex;
+                    ">
+                        <textarea style="width: 100%; max-width: 500px; height: 60px;" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required></textarea>
+                        <button type="submit">Publicar</button>
+                    </div>
+                </form>
 
-        <h3>Publicar</h3>
-        <form action="/post/create" method="post" id="form-post-create">
-            <div style="
-                display: flex;
-            ">
-                <textarea style="width: 100%; max-width: 500px; height: 60px;" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required></textarea>
-                <button type="submit">Publicar</button>
+                <div style="
+                    width: 100%;
+                    height: 70px;
+                ">
+                    <h3>Publicaciones</h3>
+                    <button type="button" id="refresh-button">Refrescar</button>
+                </div>
+                <div style="padding-bottom: 15px; border-bottom: 1px solid gray;"></div>
+                <div id="timeline-container" class="timeline-container"></div>
             </div>
-        </form>
-
-        <div style="
-            width: 100%;
-            height: 70px;
-        ">
-            <h3>Publicaciones</h3>
-            <button type="button" id="refresh-button">Refrescar</button>
         </div>
-        <div style="padding-bottom: 15px; border-bottom: 1px solid gray;"></div>
-        <div id="timeline-container" class="timeline-container"></div>
     `;
 }
 

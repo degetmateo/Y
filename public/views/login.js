@@ -1,6 +1,6 @@
 import { APP_CONTAINER, navigateTo } from "../consts.js";
 import {authenticate} from "../main.js";
-import {app} from "../model.js";
+import {app} from "../app.js";
 
 export const renderLogin = (data) => {
     APP_CONTAINER.innerHTML = VIEW_CONTENT;
