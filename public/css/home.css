@@ -21,6 +21,10 @@
     overflow-x: hidden;
 }
 
+.container-home-view .container-main .post-container img {
+    max-width: 100%;
+}
+
 @media (max-width: 768px) {
     .container-home-view {
         grid-template-areas: 

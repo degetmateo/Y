@@ -96,6 +96,10 @@
     margin: 0;
 }
 
+.container-profile-view .container-main .container-posts .container-post .post-content img {
+    max-width: 100%;
+}
+
 @media (max-width: 768px) {
     .container-profile-view {
         grid-template-areas: 
