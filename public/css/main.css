@@ -1,10 +1,18 @@
+a {
+    text-decoration: none;
+    padding: none;
+    margin: none;
+    background: none;
+    color: black;
+    border: none;
+    outline: none;
+}
+
 .app {
     height: 100vh;
     max-width: 100vw;
     max-height: 100vh;
 }
-
-
 
 .container-view-login {
     width: 100%;
@@ -17,4 +25,37 @@
 .container-view-login .form {
     display: flex;
     flex-direction: column;
+}
+
+.container-mobile-form-post-create {
+    display: none;
+    width: 20em;
+    height: 15em;
+    border: 3px solid red;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.container-mobile-form-post-create .container-form {
+    width: 100%;
+    height: 100%;
+
+    background-color: gray;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.container-mobile-form-post-create .container-form .textarea {
+    resize: none;
+    border: gray;
+    outline: none;
+    padding: 10px;
+    height: 75%;
+}
+
+.container-mobile-form-post-create .container-form button {
+    height: 25%;
 }

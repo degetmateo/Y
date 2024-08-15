@@ -21,6 +21,47 @@
     overflow-x: hidden;
 }
 
+.container-home-view .container-main .container-form-post-create {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid gray;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-home-view .container-main .container-form-post-create .container-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-home-view .container-main .container-form-post-create .textarea {
+    border: 1px solid gray;
+    border-radius: none;
+    outline: none;
+    padding: 10px;
+    
+    width: 400px;
+    min-height: 100px;
+    overflow-y: none;
+    resize: none;
+}
+
+.container-button-refresh {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid gray;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-button-refresh i {
+    display: none;
+}
+
 .container-home-view .container-main .post-container img {
     max-width: 100%;
 }
@@ -34,6 +75,76 @@
     }
 
     .container-home-view .container-main {
+        padding-top: 50px;
+        padding-bottom: 50px;
+
         border:none;
+    }
+
+    .container-home-view .container-main .container-form-post-create {
+        background-color: blue;
+        padding: 10px;
+
+        border-radius: 10px;
+
+        width: 250px;
+        height: 200px;
+        
+        display: none;
+
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .container-home-view .container-main .container-form-post-create .textarea {
+        min-width: initial;
+        max-width: initial;
+
+        width: max-content;
+        height: max-content;
+    }
+
+    .container-button-refresh {
+        padding: 0px;
+
+        height: 50px;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-color: #FFF;
+    }
+
+    .container-button-refresh button {
+        padding: 5px;
+        background: none;
+        border: none;
+        font-size: 18px;
+    }
+
+    .container-button-refresh i {
+        display: block;
+    }
+
+    .container-button-refresh span {
+        display: none;
+    }
+
+    .container-mobile-button-post-create {
+        display: initial;
+        position: fixed;
+        bottom: 55px;
+        right: 5px;
+
+        width: 50px;
+        height: 50px;
+        background-color: blue;
     }
 }

@@ -9,10 +9,6 @@ export const renderProfile = async () => {
         return;
     }
 
-    const dimensions = await getImageDimensions(app.user.profilePic.url);
-    app.user.profilePic.crop.ow = dimensions.width;
-    app.user.profilePic.crop.oh = dimensions.height;
-
     APP_CONTAINER.innerHTML = VIEW_CONTENT();
 
     CreateNavigation();
@@ -59,33 +55,9 @@ const drawPosts = (posts) => {
 }
 
 const VIEW_CONTENT = (data) => {
-    const dc = 200;
-
-    const ix = app.user.profilePic.crop.x;
-    const iy = app.user.profilePic.crop.y;
-
-    const iw = app.user.profilePic.crop.w;
-    const ih = app.user.profilePic.crop.h;
-
-    const ow = app.user.profilePic.crop.ow;
-    const oh = app.user.profilePic.crop.oh;
-
-    let difW = 0;
-    let difH = 0;
-    console.log(ow)
-    console.log(oh)
-    if (ow < dc) {
-        difW = dc - ow;
-    }
-
-    if (oh < dc) {
-        difH = dc - oh;
-    }
-
-    const dif = difW + difH;
-
     return `
         <div class="container-profile-view">
+            <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
             <div class="container-nav" id="container-nav"></div>
             
             <div class="container-main">
@@ -106,23 +78,4 @@ const VIEW_CONTENT = (data) => {
             </div>
         </div>
     `;
-}
-
-async function getImageDimensions(url) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-
-        img.onload = function() {
-            resolve({
-                width: img.width,
-                height: img.height
-            });
-        };
-
-        img.onerror = function() {
-            reject(new Error('No se pudo cargar la imagen.'));
-        };
-
-        img.src = url;
-    });
 }

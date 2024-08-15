@@ -5,6 +5,11 @@ import {CreateNavigation} from "./templates/nav.js";
 export const renderConfig = (data) => {
     console.log(window.location.pathname)
     APP_CONTAINER.innerHTML = VIEW_PROFILE_CONTENT();
+    document.getElementById('button-logout').addEventListener('click', (event) => {
+        event.preventDefault();
+        localStorage.removeItem('user');
+        navigateTo('/login', null)
+    })
     CreateNavigation();
     setEventInputImageURL()
 }   
@@ -12,9 +17,11 @@ export const renderConfig = (data) => {
 const VIEW_PROFILE_CONTENT = () => {
     return `
         <div class="container-config-view">
+            <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
             <div class="container-nav" id="container-nav"></div>
             <div class="container-main">
                 <h1>Configuracion</h1>
+                <a id="button-logout" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesion</span></a>
                 <div class="container-config-pfp">
                     <h3>Cambiar Imagen de Perfil</h3>
                     <p>1. Ingresa un enlace a una imagen.</p>

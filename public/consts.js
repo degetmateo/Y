@@ -64,3 +64,35 @@ export function getDateMessage (_parsedTimeUnits) {
 
     return made_at;
 }
+
+export async function loadImage (url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+
+        img.onload = function() {
+            resolve(img);
+        };
+
+        img.onerror = function() {
+            reject(new Error('No se pudo cargar la imagen.'));
+        };
+
+        img.src = url;
+    });
+}
+
+export function hasDisallowedTags (content, allowedTags) {
+    const contenedor = document.createElement('div');
+    contenedor.innerHTML = content;
+
+    const todasEtiquetas = contenedor.getElementsByTagName('*');
+
+    for (let i = 0; i < todasEtiquetas.length; i++) {
+        const etiqueta = todasEtiquetas[i].tagName.toLowerCase();
+        if (!allowedTags.includes(etiqueta)) {
+            return true;
+        }
+    }
+
+    return false;
+}

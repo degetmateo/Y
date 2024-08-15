@@ -1,4 +1,4 @@
-import { APP_CONTAINER, getDateMessage, navigateTo } from "../consts.js";
+import { APP_CONTAINER, getDateMessage, navigateTo, hasDisallowedTags } from "../consts.js";
 import {app} from "../app.js";
 import {CreateNavigation} from "./templates/nav.js";
 
@@ -11,41 +11,29 @@ export const renderHome = (data) => {
     setEventFormPostCreate();
     setEventButtonRefresh();
     loadPosts();
-
-    document.getElementById('title').textContent = 'Bienvenide, '+app.user.name
 }
 
 function HOME_CONTENT () {
     return `
         <div class="container-home-view">
+            <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
             <div class="container-nav" id="container-nav"></div>
+
             <div class="container-main">
-                <h2 id="title"></h2> 
-                <span>(no andan los favs es solo decoracion)</span><br>
-                <span>(el que lee se la come)</span><br>
-                <span>Ultima Update: PERFIL</span><br>
-                <span>Limité los posts que se cargan de entrada a 50 porque se lageaba todo pipipi</span>
-                <br><br>
-
-                <h3>Publicar</h3>
-                <form action="/post/create" method="post" id="form-post-create">
-                    <div style="
-                        display: flex;
-                    ">
-                        <textarea style="width: 100%; max-width: 500px; height: 60px;" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required></textarea>
-                        <button type="submit">Publicar</button>
-                    </div>
-                </form>
-
-                <div style="
-                    width: 100%;
-                    height: 70px;
-                ">
-                    <h3>Publicaciones</h3>
-                    <button type="button" id="refresh-button">Refrescar</button>
+                <div class="container-form-post-create">
+                    <form action="/post/create" method="post" id="form-post-create">
+                        <div class="container-inputs">
+                            <textarea class="textarea" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required></textarea>
+                            <button class="button-submit" type="submit">Publicar</button>
+                        </div>
+                    </form>
                 </div>
-                <div style="padding-bottom: 15px; border-bottom: 1px solid gray;"></div>
-                <div id="timeline-container" class="timeline-container"></div>
+
+                <div class="container-button-refresh">
+                    <button type="button" id="button-refresh"><i class="fa-solid fa-arrows-rotate"></i> <span>Actualizar Timeline</span></button>
+                </div>
+
+                <div id="container-timeline" class="container-timeline"></div>
             </div>
         </div>
     `;
@@ -89,32 +77,17 @@ async function setEventFormPostCreate () {
     })
 }
 
-function hasDisallowedTags(content, allowedTags) {
-    const contenedor = document.createElement('div');
-    contenedor.innerHTML = content;
-
-    const todasEtiquetas = contenedor.getElementsByTagName('*');
-
-    for (let i = 0; i < todasEtiquetas.length; i++) {
-        const etiqueta = todasEtiquetas[i].tagName.toLowerCase();
-        if (!allowedTags.includes(etiqueta)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 function setEventButtonRefresh () {
-    const button = document.getElementById('refresh-button');
+    const button = document.getElementById('button-refresh');
     button.addEventListener('click', event => {
         event.preventDefault();
         loadPosts();
     })
 }
 
-async function loadPosts () {
-    const timelineContainer = document.getElementById('timeline-container');
+export async function loadPosts () {
+    if (window.location.pathname != '/home') return;
+    const timelineContainer = document.getElementById('container-timeline');
     timelineContainer.innerHTML = '';
     const user = JSON.parse(localStorage.getItem('user'));
     const request = await fetch ('/posts', {

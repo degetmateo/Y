@@ -15,6 +15,8 @@ export const app = {
         }
     },
 
+    users: [],
+
     posts: {
         home: {
             follow: [],

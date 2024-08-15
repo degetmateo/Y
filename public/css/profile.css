@@ -108,8 +108,9 @@
             "main main main";
     }
 
-    .container-home-view .container-main {
+    .container-profile-view .container-main {
         border:none;
+        margin-bottom: 50px;
     }
 
     .container-profile-view .container-main .container-profile {    
