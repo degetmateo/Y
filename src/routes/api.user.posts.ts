@@ -1,4 +1,5 @@
 import Postgres from "../database/Postgres";
+import getTimeDifference from "../helpers/get_time_difference";
 import Server from "../Server";
 
 module.exports = (server: Server) => {
@@ -25,7 +26,7 @@ module.exports = (server: Server) => {
                 return {
                     id: post.id,
                     content: post.content,
-                    date: post.date
+                    date: getTimeDifference(new Date(post.date))
                 }
             })
         });

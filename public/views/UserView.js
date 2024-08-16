@@ -79,6 +79,7 @@ export default class extends AbstractView {
         postsContainer.innerHTML = '';
         if (!this.posts || this.posts.length <= 0) return;
         for (const post of this.posts.reverse()) {
+            console.log(post.date)
             postsContainer.innerHTML += `
                 <div class="container-post">
                     <div class="container-sign"">
