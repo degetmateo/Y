@@ -11,6 +11,7 @@ export default class extends AbstractView {
     }
 
     async init () {
+        if (window.location.pathname === '/') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
         CreateNavigation();
@@ -62,12 +63,13 @@ export default class extends AbstractView {
                                 height: 50px;
                                 margin: 0 10px 0 0; 
                                 border: 1px solid gray;
+                                cursor: pointer;
                             ">
     
                             ${setProfilePic(post)}
                         </div>
     
-                        <p><strong><a href="/user/${post.creator.username}" data-link>${post.creator.name}</a></strong> ▪ ${getDateMessage(post.date)}</p>                
+                        <p><strong style="cursor:pointer;"><a href="/user/${post.creator.username}" data-link>${post.creator.name}</a></strong> ▪ ${getDateMessage(post.date)}</p>                
                     </div>
                     <p style="overflow-wrap: break-word">${post.content}</p>
                     <div style="display:flex;" class="post-interactions-container">
