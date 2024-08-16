@@ -15,7 +15,7 @@ export default class Server {
         this.router = express.Router();
 
         this.app.set('port', this.port);
-        this.app.use(express.static(path.join(__dirname + '/../public/')));
+        this.app.use('/public', express.static(path.join(__dirname + '/../public/')));
         this.app.use(express.json());
 
         this.routes();
@@ -26,15 +26,15 @@ export default class Server {
         });
     }
 
-    private routes () {
+    private routes() {
         try {
             const files = fs.readdirSync(path.join(__dirname + '/routes/'));
             for (const file of files) {
                 require(path.join(__dirname + '/routes/' + file))(this);
                 console.log('✅ | Loaded:', file);
             }
-            
-            this.app.use((_, res: express.Response, next) => {
+
+            this.app.use('/*', (_, res) => {
                 res.sendFile(path.join(__dirname + '/../public/app.html'));
             });
         } catch (error) {

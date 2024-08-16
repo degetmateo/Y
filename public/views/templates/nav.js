@@ -1,5 +1,5 @@
-import { navigateTo, hasDisallowedTags } from "../../consts.js";
-import {loadPosts} from "../home.js";
+import {hasDisallowedTags} from "../../helpers.js";
+import {navigateTo} from "../../router.js";
 
 export const CreateNavigation = () => {
     const navContainer = document.getElementById('container-nav');
@@ -29,17 +29,17 @@ const CONTENT_MOBILE = `
 const CreateNavigationEvents = () => {
     document.getElementById('nav-button-home').addEventListener('click', (event) => {
         event.preventDefault();
-        navigateTo('/home', null);
+        navigateTo('/home');
     })
 
     document.getElementById('nav-button-config').addEventListener('click', (event) => {
         event.preventDefault();
-        navigateTo('/config', null);
+        navigateTo('/settings');
     })
 
     document.getElementById('nav-button-profile').addEventListener('click', (event) => {
         event.preventDefault();
-        navigateTo('/profile', null);
+        navigateTo('/user/'+window.app.user.username);
     })
 
     const buttonPost = document.getElementById('nav-button-post'); 
@@ -95,6 +95,6 @@ async function setEventFormPostCreate () {
         inputContent.value = ''
         buttonPost.style.background = 'none';
         mobile.style.display = 'none';
-        await loadPosts();
+        window.location.reload();
     })
 }

@@ -1,66 +1,76 @@
-import { APP_CONTAINER, navigateTo } from "../consts.js";
-import {authenticate} from "../main.js";
-import {app} from "../app.js";
+import auth from "../auth.js";
+import { navigateTo } from "../router.js";
+import AbstractView from "./AbstractView.js";
 
-export const renderLogin = (data) => {
-    APP_CONTAINER.innerHTML = VIEW_CONTENT;
-    document.title = 'miau - Acceder'
-    setEventFormRegister();
-    setEventFormLogin();
-}
+export default class extends AbstractView {
+    constructor (params) {
+        super(params);
+        this.setTitle('Iniciar Sesion');
+    }
 
-function setEventFormRegister () {
-    const form = document.getElementById('form-register');
+    async init () {
+        if (await auth()) {
+            navigateTo('/home');
+            return;
+        };
 
-    const inputName = document.getElementById('form-register-input-name')
-    const inputUsername = document.getElementById('form-register-input-username');
-    const inputPassword = document.getElementById('form-register-input-password');
-    const inputPasswordConfirm = document.getElementById('form-register-input-password-confirmation');
+        const appContainer = document.getElementById('app');
+        appContainer.innerHTML = VIEW_CONTENT;
+        await this.events();
+    }
 
-    form.addEventListener('submit', async event => {
+    async events () {
+        const formRegister = document.getElementById('form-register');
+        const formLogin = document.getElementById('form-login');
+        formRegister.addEventListener('submit', this.eventRegister);
+        formLogin.addEventListener('submit', this.eventLogin);
+    }
+
+    async eventRegister (event) {
         event.preventDefault();
+
+        const inputName = document.getElementById('form-register-input-name');
+        const inputUsername = document.getElementById('form-register-input-username');
+        const inputPassword = document.getElementById('form-register-input-password');
+        const inputPassConfirm = document.getElementById('form-register-input-password-confirmation');
+
         const name = inputName.value;
         const username = inputUsername.value;
         const password = inputPassword.value;
-        const passwordConfirmation = inputPasswordConfirm.value;
+        const passwordConfirmation = inputPassConfirm.value;
 
         if (password != passwordConfirmation) {
             alert('Contraseñas no coinciden.')
             return;
         }
 
-        const req = await fetch('/user/register', {
+        const request = await fetch('/user/register', {
             method: 'POST',
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ user: { name: name, username: username, password: password } })
         });
-        console.log(req)
-        const res = await req.json();
+        const res = await request.json();
 
         if (res.ok) {
             localStorage.setItem('user', JSON.stringify({ id: res.user.id, username: res.user.username, token: res.user.token }));
-            app.user.id = res.user.id;
-            app.user.username = res.user.username;
-            app.user.token = res.user.token;
-            const isUserAuthenticated = await authenticate();
-            if(!isUserAuthenticated) {
+            window.app.user.id = res.user.id;
+            window.app.user.username = res.user.username;
+            window.app.user.token = res.user.token;
+            if(!await auth()) {
                 return;
             }
-            navigateTo('/home', null)
+            navigateTo('/home');
         } else {
             console.error(res.error.message);
             alert(res.error.message)
         }
-    })
-}
+    }
 
-function setEventFormLogin () {
-    const form = document.getElementById('form-login')
-    const inputUsername = document.getElementById('form-login-input-username')
-    const inputPassword = document.getElementById('form-login-input-password')
-
-    form.addEventListener('submit', async event => {
+    async eventLogin (event) {
         event.preventDefault()
+
+        const inputUsername = document.getElementById('form-login-input-username');
+        const inputPassword = document.getElementById('form-login-input-password');
 
         const name = inputUsername.value;
         const password = inputPassword.value;
@@ -69,26 +79,22 @@ function setEventFormLogin () {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user: { username: name, password: password } })
-        })
-
+        });
         const response = await request.json();
 
         if (!response.ok) {
-            alert(response.error.message)
+            alert(response.error.message);
             return;
         }
-
-        console.log('USER:', response.user);
         localStorage.setItem('user', JSON.stringify({ id: response.user.id, username: response.user.username, token: response.user.token }));
-        app.user.id = response.user.id;
-        app.user.username = response.user.username;
-        app.user.token = response.user.token;
-        const isUserAuthenticated = await authenticate();
-        if(!isUserAuthenticated) {
+        window.app.user.id = response.user.id;
+        window.app.user.username = response.user.username;
+        window.app.user.token = response.user.token;
+        if(!await auth()) {
             return;
         }
-        navigateTo('/home', null)
-    })
+        navigateTo('/home');
+    }
 }
 
 const VIEW_CONTENT = `

@@ -194,7 +194,7 @@ module.exports = (server: Server) => {
                 ok: false,
                 error: {
                     code: 'user-register',
-                    message: 'Username: Solo numeros, letras y guiones bajos'
+                    message: 'Username: Solo numeros, letras y guiones bajos.'
                 }
             })
         }
