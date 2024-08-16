@@ -5,8 +5,6 @@ import Server from "../Server";
 
 module.exports = (server: Server) => {
     server.app.post('/post/create', server.authenticate, async (req, res) => {
-        console.log('POST CREATE', req.body)
-
         const content = req.body.post.content;
 
         if (content.length > 400) {
@@ -18,17 +16,6 @@ module.exports = (server: Server) => {
                 }
             })
         }
-
-        // const allowedTags = ['span', 'img'];
-        // if (containsDisallowedTags(content, allowedTags)) {
-        //     return res.json({
-        //         ok: false,
-        //         error: {
-        //             code: 'post',
-        //             message: 'Tu publicacion contiene elementos HTML no permitidos.'
-        //         }
-        //     })
-        // }
 
         const user = req.body.user;
         const queryUserCreator = await Postgres.query() `

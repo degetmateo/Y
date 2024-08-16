@@ -48,64 +48,74 @@ export default class extends AbstractView {
         if (!response.ok) {
             if (response.error) alert(response.error.message);
             localStorage.removeItem('user')
-            navigateTo('/login', null)
+            navigateTo('/login');
             return;
         }
     
         for (const post of response.posts) {
-            timelineContainer.innerHTML += `
-                <div style="padding: 10px 10px 10px 10px; border-bottom: 1px solid gray;" class="post-container">
-                    <div class="container-sign" style="display: flex; align-items: center;">
-    
-                        <div class="container-pfp" 
-                            style="
-                                width: 50px;
-                                height: 50px;
-                                margin: 0 10px 0 0; 
-                                border: 1px solid gray;
-                                cursor: pointer;
-                            ">
-    
-                            ${setProfilePic(post)}
-                        </div>
-    
-                        <p><strong style="cursor:pointer;"><a href="/user/${post.creator.username}" data-link>${post.creator.name}</a></strong> ▪ ${getDateMessage(post.date)}</p>                
-                    </div>
-                    <p style="overflow-wrap: break-word">${post.content}</p>
-                    <div style="display:flex;" class="post-interactions-container">
-                        <span style="margin: 0 5px 0 0">${0} 💬</span>
-                        <span style="margin: 0 5px 0 0">${0} ❤️</span>
-                    </div>
-                </div>
+            const containerPost = document.createElement('div');
+            containerPost.style = 'padding: 10px 10px 10px 10px; border-bottom: 1px solid gray;';
+            containerPost.setAttribute('class', 'post-container');
+
+            const containerSign = document.createElement('div');
+            containerSign.style = 'display: flex; align-items: center;';
+            containerSign.setAttribute('class', 'container-sign');
+            
+            const containerPfp = document.createElement('div');
+            containerPfp.style = 'display: flex; align-items: center; width: 50px; height: 50px; border: 1px solid black; cursor: pointer;';
+            containerPfp.setAttribute('class', 'container-pfp');
+            containerPfp.appendChild(createProfileImage(post));
+            
+            containerSign.appendChild(containerPfp);
+            containerPost.appendChild(containerSign);
+
+            const pSign = document.createElement('p');
+            const strongSign = document.createElement('strong');
+            const aSign = document.createElement('a');
+            const spanSign = document.createElement('span');
+            
+            aSign.setAttribute('href', '/user/'+post.creator.username);
+            aSign.setAttribute('data-link', '');
+            aSign.textContent = post.creator.name;
+            
+            strongSign.appendChild(aSign);
+            strongSign.style = 'cursor:pointer; margin-left: 10px;';
+            
+            pSign.appendChild(strongSign);
+
+            spanSign.textContent = ' ▪ '+getDateMessage(post.date);
+            pSign.appendChild(spanSign);
+
+            containerSign.appendChild(pSign);
+
+            const pContent = document.createElement('p');
+            pContent.style = 'overflow-wrap: break-word;';
+            pContent.innerText = post.content;
+
+            containerPost.appendChild(pContent);
+
+            const containerPostInteractions = document.createElement('div');
+            containerPostInteractions.style = 'display:flex;';
+            containerPostInteractions.innerHTML = `
+                <span style="margin: 0 5px 0 0">${0} 💬</span>
+                <span style="margin: 0 5px 0 0">${0} ❤️</span>
             `;
+
+            containerPost.appendChild(containerPostInteractions);
+            timelineContainer.appendChild(containerPost);
         }
     
-        function setProfilePic (post) {
+        function createProfileImage (post) {
             const creator = post.creator;
             const image = creator.profilePicture;
             const imageUrl = image.url || URL_NO_IMAGE;
-        
-            if (!image.url) {
-                return `
-                    <img 
-                        src="${imageUrl}"
-                        style="
-                            width: 100%;
-                            height: 100%;
-                        "    
-                    href="/user/${post.creator.username}" data-link />  
-                `
-            } else {
-                return `
-                    <img 
-                        src="${imageUrl}"
-                        style="
-                            width: 100%;
-                            height: 100%;
-                        "    
-                    href="/user/${post.creator.username}" data-link />
-                `
-            }
+
+            const img = new Image();
+            img.src = imageUrl;
+            img.style = 'width: 100%; height: 100%;';
+            img.setAttribute('href', '/user/'+post.creator.username);
+            img.setAttribute('data-link', '');
+            return img;
         }
     }
 
@@ -116,7 +126,7 @@ export default class extends AbstractView {
         form.addEventListener('submit', async event => {
             event.preventDefault()
             const content = inputContent.value;
-    
+
             if (!content || content.length <= 0) {
                 return;
             }
@@ -142,7 +152,7 @@ export default class extends AbstractView {
                 alert(res.error.message)
                 return;
             }
-            inputContent.value = ''
+            inputContent.value = '';
             await this.loadPosts();
         })
     }
