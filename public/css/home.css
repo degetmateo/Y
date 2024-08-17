@@ -62,9 +62,9 @@
     display: none;
 }
 
-.container-home-view .container-main .post-container img {
+/* .container-home-view .container-main .post-container img {
     max-width: 100%;
-}
+} */
 
 @media (max-width: 768px) {
     .container-home-view {

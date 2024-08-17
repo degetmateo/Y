@@ -60,12 +60,20 @@ export default class extends AbstractView {
             const containerSign = document.createElement('div');
             containerSign.style = 'display: flex; align-items: center;';
             containerSign.setAttribute('class', 'container-sign');
-            
+
             const containerPfp = document.createElement('div');
-            containerPfp.style = 'display: flex; align-items: center; width: 50px; height: 50px; border: 1px solid black; cursor: pointer;';
-            containerPfp.setAttribute('class', 'container-pfp');
-            containerPfp.appendChild(createProfileImage(post));
+            containerPfp.setAttribute('class', 'container-pfp'); 
+            containerPfp.style = `
+                width: 50px;
+                height: 50px;
+                border: 1px solid black; 
+                cursor: pointer;
+                position:relative;
+                overflow: hidden;
+            `;
             
+            containerPfp.appendChild(createProfileImage(post));
+
             containerSign.appendChild(containerPfp);
             containerPost.appendChild(containerSign);
 
@@ -112,9 +120,15 @@ export default class extends AbstractView {
 
             const img = new Image();
             img.src = imageUrl;
-            img.style = 'width: 100%; height: 100%;';
             img.setAttribute('href', '/user/'+post.creator.username);
             img.setAttribute('data-link', '');
+            img.addEventListener('load', () => {                
+                img.style = `
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                `;
+            });
             return img;
         }
     }

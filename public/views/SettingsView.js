@@ -33,7 +33,7 @@ export default class extends AbstractView {
         const imageContainer = document.getElementById('container-image');
         inputImageURL.addEventListener('change', () => {
             imageContainer.innerHTML = `<img id="image" src="${inputImageURL.value}" style="display: block; max-width: 100%;" />`;
-            cropper();
+            this.cropper();
         });
     }
 
@@ -45,7 +45,7 @@ export default class extends AbstractView {
         let w;
         let h;
     
-        const cropper = new Cropper(image, {
+        new Cropper(image, {
             aspectRatio: 1,
             viewMode: 1,
             crop(event) {
@@ -57,7 +57,7 @@ export default class extends AbstractView {
         });
     
         const getData = () => { return { x, y, w, h } };
-        eventButtonCrop(getData); 
+        this.eventButtonCrop(getData); 
     }
 
     async eventButtonCrop (getData) {
