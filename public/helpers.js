@@ -42,18 +42,13 @@ export function getDateMessage (_parsedTimeUnits) {
 }
 
 export async function loadImage (url) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
+    return new Promise(async (resolve, reject) => {
+        const image = new Image();
 
-        img.onload = function() {
-            resolve(img);
-        };
+        image.addEventListener('load', () => resolve(image));
+        image.addEventListener('error', () => reject(new Error('No se pudo cargar la imagen.')));
 
-        img.onerror = function() {
-            reject(new Error('No se pudo cargar la imagen.'));
-        };
-
-        img.src = url;
+        image.src = url;
     });
 }
 

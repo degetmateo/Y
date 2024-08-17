@@ -27,6 +27,7 @@ module.exports = (server: Server) => {
                 id: user.id,
                 name: user.name,
                 username: user.username,
+                bio: user.bio,
                 created_at: new Date(user.created_at),
                 profilePic: {
                     url: user.url,

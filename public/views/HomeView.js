@@ -68,7 +68,6 @@ export default class extends AbstractView {
                 height: 50px;
                 border: 1px solid black; 
                 cursor: pointer;
-                position:relative;
                 overflow: hidden;
             `;
             

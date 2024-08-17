@@ -1,0 +1,129 @@
+.container-settings-view {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 0.2fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas: 
+        "nav main aside"
+        "nav main aside"
+        "nav main aside";
+}
+
+.container-settings-view .container-main {
+    grid-area: main;
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.container-settings-view .container-main .container-button-logout {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid gray;
+}
+
+.container-settings-view .container-main .container-button-logout .button-logout {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.container-main .container-settings {
+    padding: 10px;
+    border-bottom: 1px solid gray;
+}
+
+.container-settings .container-settings-bio {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 5px;
+}
+
+.container-settings-title {
+    width: 100%;
+}
+
+.settings-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.container-settings-bio-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container-settings-bio .settings-bio-input {
+    resize: none;
+    outline: none;
+    border: 1px solid black;
+    padding: 10px;
+    height: 100px;
+}
+
+.container-settings-bio-button {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-bio-button {
+    padding: 10px;
+    background-color: #FFF;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.settings-bio-button:hover {
+    background-color: gray;
+}
+
+.container-settings-pfp-img-input {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    gap: 5px;
+}
+
+.settings-pfp-img-input {
+    padding: 10px;
+    border: 1px solid black;
+    outline: none;
+}
+
+.settings-pfp-img-button {
+    border: 1px solid black;
+    outline: none;
+    background-color: #FFF;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.settings-pfp-img-button:hover {
+    background-color: gray;
+}
+
+@media (max-width: 768px) {
+    .container-settings-view {
+        grid-template-areas: 
+            "main main main"
+            "main main main"
+            "main main main";
+    }
+    .container-settings-view .container-main {
+        border:none;
+        padding-bottom: 50px;
+    }
+}

@@ -72,25 +72,91 @@ export default class extends AbstractView {
         containerPfp.innerHTML = `
             <img class="img-profile" src="${this.user.profilePic.url || URL_NO_IMAGE}" />
         `;
+
+        document.getElementById('span-bio')
+            .innerText = this.user.bio;
     }
     
     drawPosts () {
         const postsContainer = document.getElementById('container-posts');
         postsContainer.innerHTML = '';
+
         if (!this.posts || this.posts.length <= 0) return;
+
         for (const post of this.posts.reverse()) {
-            console.log(post.date)
-            postsContainer.innerHTML += `
-                <div class="container-post">
-                    <div class="container-sign"">
-                        <div class="container-pfp">
-                            <img class="img-profile-post" src="${this.user.profilePic.url}" />
-                        </div>
-                        <p class="sign"><strong>${this.user.name}</strong> ▪ ${getDateMessage(post.date)}</p>                
-                    </div>
-                    <p class="post-content">${post.content}</p>
-                </div>
+            post.creator = this.user;
+            const containerPost = document.createElement('div');
+            containerPost.style = 'padding: 10px 10px 10px 10px; border-bottom: 1px solid gray;';
+            containerPost.setAttribute('class', 'post-container');
+
+            const containerSign = document.createElement('div');
+            containerSign.style = 'display: flex; align-items: center;';
+            containerSign.setAttribute('class', 'container-sign');
+
+            const containerPfp = document.createElement('div');
+            containerPfp.setAttribute('class', 'container-pfp'); 
+            containerPfp.style = `
+                width: 50px;
+                height: 50px;
+                border: 1px solid black; 
+                cursor: pointer;
+                overflow: hidden;
             `;
+            
+            containerPfp.appendChild(createProfileImage(this.user));
+
+            containerSign.appendChild(containerPfp);
+            containerPost.appendChild(containerSign);
+
+            const pSign = document.createElement('p');
+            const strongSign = document.createElement('strong');
+            const aSign = document.createElement('a');
+            const spanSign = document.createElement('span');
+            
+            aSign.setAttribute('href', '/user/'+post.creator.username);
+            aSign.setAttribute('data-link', '');
+            aSign.textContent = post.creator.name;
+            
+            strongSign.appendChild(aSign);
+            strongSign.style = 'cursor:pointer; margin-left: 10px;';
+            
+            pSign.appendChild(strongSign);
+
+            spanSign.textContent = ' ▪ '+getDateMessage(post.date);
+            pSign.appendChild(spanSign);
+
+            containerSign.appendChild(pSign);
+
+            const pContent = document.createElement('p');
+            pContent.style = 'overflow-wrap: break-word;';
+            pContent.innerText = post.content;
+
+            containerPost.appendChild(pContent);
+
+            const containerPostInteractions = document.createElement('div');
+            containerPostInteractions.style = 'display:flex;';
+            containerPostInteractions.innerHTML = `
+                <span style="margin: 0 5px 0 0">${0} 💬</span>
+                <span style="margin: 0 5px 0 0">${0} ❤️</span>
+            `;
+
+            containerPost.appendChild(containerPostInteractions);
+            postsContainer.appendChild(containerPost);
+        }
+
+        function createProfileImage (user) {
+            const img = new Image();
+            img.src = user.profilePic.url || URL_NO_IMAGE;
+            img.setAttribute('href', '/user/'+user.username);
+            img.setAttribute('data-link', '');
+            img.addEventListener('load', () => {                
+                img.style = `
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                `;
+            });
+            return img;
         }
     }
 }
@@ -109,7 +175,7 @@ const VIEW = `
 
                 </div>
                 <div class="container-bio">
-                    <p>Esto es una biografía. Voy a escribir mucho texto solo para probar. Hola, ¿cómo estás? Leé Umineko. Umineko cambió mi vida. Toda mi vida gira en torno a Umineko. Estoy seguro que Umineko también cambiará tu vida. Por favor, leé Umineko. Es la única forma en la que tu vida de mierda podrá ir a mejor. Haceme caso. <span style="color:red;">Esta es la verdad.</span></p>
+                    <span id="span-bio"></span>
                 </div>
             </div>
 
