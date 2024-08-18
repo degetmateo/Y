@@ -154,34 +154,21 @@
         height: max-content;
     }
 
-    .container-button-refresh {
-        padding: 0px;
-
-        height: 50px;
+    .container-button-change-timeline {
+        padding: 0;
+        width: 100%;
+        height: 30px;
 
         position: fixed;
         top: 0;
         left: 0;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
-
-    .container-button-refresh button {
-        padding: 5px;
-        background: none;
+    .container-button-change-timeline button {
         border: none;
-        font-size: 18px;
     }
 
-    .container-button-refresh i {
-        display: block;
-        color: #FFF;
-    }
-
-    .container-button-refresh span {
-        display: none;
+    .container-button-change-timeline button.active {
+        border-bottom: 1px solid #FFF;
     }
 
     .container-mobile-button-post-create {
