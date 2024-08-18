@@ -1,1 +1,1 @@
-export const URL_NO_IMAGE = 'https://static.vecteezy.com/system/resources/thumbnails/007/126/739/small/question-mark-icon-free-vector.jpg';
+export const URL_NO_IMAGE = '/public/assets/interrogation_mark.png';

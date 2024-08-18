@@ -32,12 +32,17 @@
 }
 
 .container-home-view .container-main .container-form-post-create .container-inputs {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
 }
 
 .container-home-view .container-main .container-form-post-create .textarea {
-    border: 1px solid gray;
+    border: 1px solid #FFF;
+    background-color: #000;
+    color: #FFF;
+
     border-radius: none;
     outline: none;
     padding: 10px;
@@ -46,6 +51,18 @@
     min-height: 100px;
     overflow-y: none;
     resize: none;
+}
+
+.container-home-view .container-main .container-form-post-create .button-submit {
+    background-color: #000;
+    border: 1px solid #FFF;
+    color: #FFF;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.container-home-view .container-main .container-form-post-create .button-submit:active {
+    background-color: gray;
 }
 
 .container-button-refresh {
@@ -58,6 +75,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.container-button-refresh button {
+    padding: 10px;
+    background-color: #000;
+    border: 1px solid #FFF;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.container-button-refresh button:active {
+    background-color: gray;
 }
 
 .container-button-refresh i {
