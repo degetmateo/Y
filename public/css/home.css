@@ -93,6 +93,28 @@
     display: none;
 }
 
+.container-button-change-timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    height: 30px;
+}
+
+.button-change-timeline {
+    background-color: #000;
+    border: 1px solid gray;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.button-change-timeline:active {
+    background-color: gray;
+} 
+
+.button-change-timeline.active {
+    border-bottom: 2px solid #FFF;
+}
+
 @media (max-width: 768px) {
     .container-home-view {
         grid-template-areas: 

@@ -15,27 +15,54 @@ export default class extends AbstractView {
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
         CreateNavigation();
-        await this.loadPosts();
-        await this.events();
+        this.setGlobalTimeline();
+        this.events();
     }
 
     async events () {
+        this.eventChangeTimeline();
         await this.eventButtonRefresh();
         await this.eventFormPostCreate();
+    }
+
+    eventChangeTimeline () {
+        const buttonGlobal = document.getElementById('button-change-timeline-global');
+        const buttonFollowing = document.getElementById('button-change-timeline-following');
+
+        buttonGlobal.addEventListener('click', () => {
+            buttonGlobal.classList.add('active');
+            buttonFollowing.classList.remove('active');
+            this.setGlobalTimeline();
+        });
+
+        buttonFollowing.addEventListener('click', () => {
+            buttonFollowing.classList.add('active');
+            buttonGlobal.classList.remove('active');
+            this.setFollowingTimeline();
+        });
+    }
+
+    async setFollowingTimeline () {
+        if (window.location.pathname != '/home') return;
+        const request = await fetch ("/api/posts/following", {
+            method: 'GET',
+            headers: { "Authorization": "Bearer "+window.app.user.token }
+        });
+        const response = await request.json();
+        if (!response.ok) return alert(response.error.message);
+        this.drawPosts(response.posts);
     }
 
     async eventButtonRefresh () {
         const button = document.getElementById('button-refresh');
         button.addEventListener('click', event => {
             event.preventDefault();
-            this.loadPosts();
+            this.setGlobalTimeline();
         });
     }
 
-    async loadPosts () {
+    async setGlobalTimeline () {
         if (window.location.pathname != '/home') return;
-        const timelineContainer = document.getElementById('container-timeline');
-        timelineContainer.innerHTML = '';
         const user = JSON.parse(localStorage.getItem('user'));
         const request = await fetch ('/posts', {
             method: 'GET',
@@ -51,8 +78,14 @@ export default class extends AbstractView {
             navigateTo('/login');
             return;
         }
-    
-        for (const post of response.posts) {
+        this.drawPosts(response.posts);
+    }
+
+    drawPosts (posts) {
+        const timelineContainer = document.getElementById('container-timeline');
+        timelineContainer.innerHTML = '';
+
+        for (const post of posts) {
             const containerPost = document.createElement('div');
             containerPost.style = 'padding: 10px 10px 10px 10px; border-bottom: 1px solid gray;';
             containerPost.setAttribute('class', 'post-container');
@@ -191,6 +224,11 @@ const VIEW_CONTENT = `
 
             <div class="container-button-refresh">
                 <button type="button" id="button-refresh"><i class="fa-solid fa-arrows-rotate"></i><span>Actualizar Timeline</span></button>
+            </div>
+
+            <div class="container-button-change-timeline">
+                <button class="button-change-timeline active" type="button" id="button-change-timeline-global"><span>Global</span></button>
+                <button class="button-change-timeline" type="button" id="button-change-timeline-following"><span>Siguiendo</span></button>
             </div>
 
             <div id="container-timeline" class="container-timeline"></div>
