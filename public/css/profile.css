@@ -26,36 +26,81 @@
     
     display: grid;
     grid-template-columns: min-content auto;
-    grid-template-rows: min-content max-content;
+    grid-template-rows: min-content max-content auto;
     grid-template-areas: 
         "pfp username"
-        "pfp bio";
+        "pfp bio"
+        "follows follows";
     gap: 10px;
 }
 
 .container-profile-view .container-main .container-profile .container-pfp {
     grid-area: pfp;
     border: 1px solid #FFF;
-    overflow: hidden;
     width: 200px;
     height: 200px;
+    overflow: hidden;
 }
 
 .container-profile-view .container-main .container-profile .container-pfp .img-profile {
     width: 100%;
     height: 100%;
+    object-fit: cover;
 }
 
-.container-profile-view .container-main .container-profile .container-name {
+.container-profile .container-name-follow {
     grid-area: username;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    gap: 10px;
+    align-content: center;
+    justify-content: start;
+}
+
+.container-name-follow .container-name {
+    width: 200px;
+
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    gap: 5px;
+}
+
+.container-name-follow .button-follow {
+    background-color: #000;
+    border: 1px solid #FFF;
+    color: #FFF;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.button-follow:active {
+    background-color: gray;
 }
 
 .container-profile-view .container-main .container-profile .container-bio {
     grid-area: bio;
 }
+
+.container-follows {
+    grid-area: follows;
+
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    gap: 5px;
+}
+
+.container-follow {
+    padding: 5px;
+    border: 0.5px solid #FFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .container-profile-view .container-main .container-posts {
     width: 100%;
@@ -83,7 +128,7 @@
 .container-profile-view .container-main .container-posts .container-post .container-sign .container-pfp {
     width: 50px;
     height: 50px;
-    border: 1px solid gray;
+    border: 1px solid #FFF;
 }
 
 .container-profile-view .container-main .container-posts .container-post .container-sign .container-pfp .img-profile-post {
@@ -115,14 +160,31 @@
 
     .container-profile-view .container-main .container-profile {    
         grid-template-columns: min-content auto;
-        grid-template-rows: min-content auto;
+        grid-template-rows: min-content auto auto;
         grid-template-areas: 
             "pfp username"
-            "bio bio";
+            "bio bio"
+            "follows follows";
     }
 
     .container-profile-view .container-main .container-profile .container-pfp {
         width: 100px;
         height: 100px;
+    }
+
+    .container-profile .container-name-follow {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 10px;
+    }
+
+    .container-name-follow .container-name {
+        width: 100%;
+    }
+
+    .container-name-follow .button-follow {
+        width: 100%;
+        padding: 10px;
     }
 }

@@ -68,13 +68,70 @@ export default class extends AbstractView {
             <span>@${this.user.username}</span>
         `;
 
+        if (this.user.username != window.app.user.username) {
+            const containerButtonFollow = document.getElementById('container-button-follow');
+            this.user.isFollowed ?
+                containerButtonFollow.appendChild(this.createButtonUnfollow()) :
+                containerButtonFollow.appendChild(this.createButtonFollow());
+        }
+
         const containerPfp = document.getElementById('container-pfp');
         containerPfp.innerHTML = `
             <img class="img-profile" src="${this.user.profilePic.url || URL_NO_IMAGE}" />
         `;
 
+        const spanFollowed = document.getElementById('span-followed');
+        spanFollowed.textContent = this.user.follows.followed + ' seguidos'
+
+        const spanFollowers = document.getElementById('span-followers');
+        spanFollowers.textContent = this.user.follows.followers == 1 ?
+            1 + ' seguidor' : 
+            this.user.follows.followers + ' seguidores'; 
+
         document.getElementById('span-bio')
             .innerText = this.user.bio;
+    }
+
+    createButtonFollow () {
+        const button = document.createElement('button');
+        button.setAttribute('class', 'button-follow');
+        button.setAttribute('id', 'button-follow');
+        button.textContent = 'Seguir';
+        button.addEventListener('click', () => this.followUser());
+        return button;
+    }
+
+    async followUser () {
+        document.getElementById('button-follow').remove();
+        document.getElementById('container-button-follow').appendChild(this.createButtonUnfollow());
+        const request = await fetch('/api/user/'+this.user.username+'/follow', {
+            method: 'PUT',
+            headers: { "Authorization": "Bearer "+window.app.user.token }
+        });
+
+        const response = await request.json();
+        if (!response.ok) return alert(response.error.message);
+    }
+
+    createButtonUnfollow () {
+        const button = document.createElement('button');
+        button.setAttribute('class', 'button-follow');
+        button.setAttribute('id', 'button-unfollow');
+        button.textContent = 'Dejar de Seguir';
+        button.addEventListener('click', () => this.unFollowUser());
+        return button;
+    }
+
+    async unFollowUser () {
+        document.getElementById('button-unfollow').remove();
+        document.getElementById('container-button-follow').appendChild(this.createButtonFollow());
+        const request = await fetch('/api/user/'+this.user.username+'/unfollow', {
+            method: 'DELETE',
+            headers: { "Authorization": "Bearer "+window.app.user.token }
+        });
+
+        const response = await request.json();
+        if (!response.ok) return alert(response.error.message);
     }
     
     drawPosts () {
@@ -171,11 +228,26 @@ const VIEW = `
                 <div class="container-pfp" id="container-pfp">
 
                 </div>
-                <div class="container-name" id="container-name">
+                <div class="container-name-follow">
+                    <div class="container-name" id="container-name">
 
+                    </div>
+                    <div class="container-button-follow" id="container-button-follow">
+
+                    </div>
                 </div>
                 <div class="container-bio">
                     <span id="span-bio"></span>
+                </div>
+
+                <div class="container-follows">
+                    <div class="container-follow">
+                        <span id="span-followed">0 seguidos</span>
+                    </div>
+
+                    <div class="container-follow">
+                        <span id="span-followers">0 seguidores</span>
+                    </div>
                 </div>
             </div>
 

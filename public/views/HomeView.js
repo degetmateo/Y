@@ -139,6 +139,7 @@ export default class extends AbstractView {
         form.addEventListener('submit', async event => {
             event.preventDefault()
             const content = inputContent.value;
+            inputContent.value = '';
 
             if (!content || content.length <= 0) {
                 return;
@@ -165,7 +166,6 @@ export default class extends AbstractView {
                 alert(res.error.message)
                 return;
             }
-            inputContent.value = '';
             await this.loadPosts();
         })
     }
