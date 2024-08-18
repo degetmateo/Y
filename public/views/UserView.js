@@ -104,6 +104,13 @@ export default class extends AbstractView {
     async followUser () {
         document.getElementById('button-follow').remove();
         document.getElementById('container-button-follow').appendChild(this.createButtonUnfollow());
+
+        this.user.follows.followers = parseInt(this.user.follows.followers) + 1;
+
+        document.getElementById('span-followers').textContent = this.user.follows.followers === 1 ?
+            1 + ' seguidor' : 
+            this.user.follows.followers + ' seguidores';
+
         const request = await fetch('/api/user/'+this.user.username+'/follow', {
             method: 'PUT',
             headers: { "Authorization": "Bearer "+window.app.user.token }
@@ -125,6 +132,13 @@ export default class extends AbstractView {
     async unFollowUser () {
         document.getElementById('button-unfollow').remove();
         document.getElementById('container-button-follow').appendChild(this.createButtonFollow());
+
+        this.user.follows.followers = parseInt(this.user.follows.followers) - 1;
+
+        document.getElementById('span-followers').textContent = this.user.follows.followers === 1 ?
+            1 + ' seguidor' : 
+            this.user.follows.followers + ' seguidores';
+
         const request = await fetch('/api/user/'+this.user.username+'/unfollow', {
             method: 'DELETE',
             headers: { "Authorization": "Bearer "+window.app.user.token }

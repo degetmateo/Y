@@ -97,7 +97,10 @@ export default class extends AbstractView {
 
             const pContent = document.createElement('p');
             pContent.style = 'overflow-wrap: break-word;';
-            pContent.innerText = post.content;
+
+            const urlPattern = /(https?:\/\/[^\s]+)/g;
+            const htmlWithLinks = post.content.replace(urlPattern, '<a class="link" href="$1" target="_blank">$1</a>');
+            pContent.innerHTML = htmlWithLinks.replace(/\n/g, '<br>');
 
             containerPost.appendChild(pContent);
 

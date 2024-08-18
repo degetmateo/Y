@@ -82,3 +82,11 @@ a {
 .container-mobile-form-post-create .container-form button:active {
     background-color: gray;
 }
+
+.link {
+    color: aqua;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

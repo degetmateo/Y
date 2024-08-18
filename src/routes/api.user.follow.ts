@@ -21,6 +21,8 @@ module.exports = (server: Server) => {
 
         try {
             await Postgres.query().begin(async sql => {
+                await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
+                
                 const queryToFollowUser = await sql`
                     SELECT * FROM 
                         base_user
@@ -36,8 +38,6 @@ module.exports = (server: Server) => {
                 `;
 
                 if (!queryToFollowUser[0] || !queryRequestUser[0]) throw new Error('Postgres Error: Usuarios no encontrados.');
-
-                await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
 
                 await sql`
                     INSERT INTO
