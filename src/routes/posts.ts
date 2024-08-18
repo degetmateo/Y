@@ -8,45 +8,38 @@ module.exports = (server: Server) => {
         
         const queryPosts = await Postgres.query() `
             SELECT 
-                bp.id,
-                bp.id_base_user,
-                bp.username_base_user,
-                bp.content,
-                bp.date,
-                bp.id_post_original,
-                bu.name,
-                pp.url,
-                pp.x,
-                pp.y,
-                pp.w
+                p.id_post,
+                p.id_member,
+                m.username_member,
+                p.content_post,
+                p.date_post,
+                m.name_member,
+                m.profile_pic_url_member
             FROM 
-                base_post bp, base_user bu, user_profile_picture pp
+                post p, member m
             WHERE
-                bp.id_base_user = bu.id and
-                bp.username_base_user = bu.username and
-                bu.id = pp.id_base_user and
-                bu.username = pp.username_base_user
+                p.id_member = m.id_member
             ORDER BY
-                bp.date DESC
+                p.date_post DESC
             LIMIT
                 50;
         `;
 
         const posts = queryPosts.map(p => {
             return {
-                id: p.id,
-                content: p.content,
-                date: getTimeDifference(new Date(p.date)),
+                id: p.id_post,
+                content: p.content_post,
+                date: getTimeDifference(new Date(p.date_post)),
                 creator: {
-                    id: p.id_base_user,
-                    name: p.name,
-                    username: p.username_base_user,
+                    id: p.id_member,
+                    name: p.name_member,
+                    username: p.username_member,
                     profilePicture: {
-                        url: p.url,
-                        x: p.x,
-                        y: p.y,
-                        w: p.w,
-                        h: p.w
+                        url: p.profile_pic_url_member,
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0
                     }
                 }
             }

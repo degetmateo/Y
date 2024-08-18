@@ -20,24 +20,22 @@ module.exports = (server: Server) => {
         const user = req.body.user;
         const queryUserCreator = await Postgres.query() `
             SELECT * FROM
-                base_user bu
+                member
             WHERE
-                bu.username = ${user.username};
+                username_member = ${user.username};
         `;
         
         if (!queryUserCreator[0]) return res.json({ ok:false, error: { code: 'auth', message: 'Error de autentificacion.' } });
 
         await Postgres.query()`
-            SELECT insert_base_post (
-                ${queryUserCreator[0].id},
-                ${queryUserCreator[0].username},
+            SELECT insert_post (
+                ${queryUserCreator[0].id_member},
                 ${content},
-                ${new Date().toISOString()},
-                null
+                ${new Date().toISOString()}
             );
         `;
 
-        res.json({
+        return res.json({
             ok: true
         })
     })

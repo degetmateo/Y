@@ -29,12 +29,10 @@ export default class extends AbstractView {
     async eventRegister (event) {
         event.preventDefault();
 
-        const inputName = document.getElementById('form-register-input-name');
         const inputUsername = document.getElementById('form-register-input-username');
         const inputPassword = document.getElementById('form-register-input-password');
         const inputPassConfirm = document.getElementById('form-register-input-password-confirmation');
 
-        const name = inputName.value;
         const username = inputUsername.value;
         const password = inputPassword.value;
         const passwordConfirmation = inputPassConfirm.value;
@@ -47,7 +45,7 @@ export default class extends AbstractView {
         const request = await fetch('/user/register', {
             method: 'POST',
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ user: { name: name, username: username, password: password } })
+            body: JSON.stringify({ user: { username: username, password: password } })
         });
         const res = await request.json();
 
@@ -104,7 +102,6 @@ const VIEW_CONTENT = `
                 <div class="container-form">
                     <p>Crear una Cuenta</p>
                     <form class="form" action="/" method="post" id="form-register">
-                        <input placeholder="Nombre" type="text" name="input-name" id="form-register-input-name" required>
                         <input placeholder="Nombre de Usuario" type="text" name="input-name" id="form-register-input-username" required>
                         <input placeholder="Contraseña" type="password" name="input-password" id="form-register-input-password" required>
                         <input placeholder="Confirmar Contraseña" type="password" name="input-password-confirmation" id="form-register-input-password-confirmation" required>

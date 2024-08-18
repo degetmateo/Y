@@ -22,45 +22,37 @@ module.exports = (server: Server) => {
             
                 const queryFollowedUsersPosts = await sql`
                     SELECT 
-                        p.id,
-                        p.id_base_user,
-                        p.username_base_user,
-                        p.content,
-                        p.date,
-                        p.id_post_original,
-                        u.name,
-                        pic.url,
-                        pic.x,
-                        pic.y,
-                        pic.w
+                        p.id_post,
+                        p.id_member,
+                        m2.username_member,
+                        p.content_post,
+                        p.date_post,
+                        m2.name_member,
+                        m2.profile_pic_url_member
                     FROM
-                        follow f, base_post p, base_user u, user_profile_picture pic
+                        follow f, post p, member m1, member m2
                     WHERE
-                        f.username_base_user_follower = ${username} and
-                        p.username_base_user = f.username_base_user_followed and
-                        u.username = f.username_base_user_followed and
-                        pic.username_base_user = u.username
+                        m1.username_member = ${username} and
+                        f.id_member_follower = m1.id_member and
+                        p.id_member = f.id_member_followed and
+                        m2.id_member = f.id_member_followed
                     ORDER BY
-                        p.date DESC
+                        p.date_post DESC
                     LIMIT
                         50;
                 `;
     
                 const posts = queryFollowedUsersPosts.map(p => {
                     return {
-                        id: p.id,
-                        content: p.content,
-                        date: getTimeDifference(new Date(p.date)),
+                        id: p.id_post,
+                        content: p.content_post,
+                        date: getTimeDifference(new Date(p.date_post)),
                         creator: {
-                            id: p.id_base_user,
-                            name: p.name,
-                            username: p.username_base_user,
+                            id: p.id_member,
+                            name: p.name_member,
+                            username: p.username_member,
                             profilePicture: {
-                                url: p.url,
-                                x: p.x,
-                                y: p.y,
-                                w: p.w,
-                                h: p.w
+                                url: p.profile_pic_url_member,
                             }
                         }
                     }

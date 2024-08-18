@@ -10,21 +10,20 @@ module.exports = (server: Server) => {
 
         const queryUser = await Postgres.query()`
             SELECT * FROM
-                base_user bu, user_profile_picture pp
+                member m
             WHERE
-                bu.username = ${req.user.username} and
-                bu.username = pp.username_base_user;
+                m.username_member = ${req.user.username};
         `;
         
         res.json({
             ok: true,
             user: {
-                id: queryUser[0].id,
-                name: queryUser[0].name,
-                username: queryUser[0].username,
-                created_at: new Date(queryUser[0].created_at),
+                id: queryUser[0].id_member,
+                name: queryUser[0].name_member,
+                username: queryUser[0].username_member,
+                created_at: new Date(queryUser[0].date_creation_member),
                 profilePic: {
-                    url: queryUser[0].url
+                    url: queryUser[0].profile_pic_url_member
                 }
             }
         })
@@ -37,11 +36,9 @@ module.exports = (server: Server) => {
 
         const queryUser = await Postgres.query() `
             SELECT * FROM
-                base_user bu, user_profile_picture pic
+                member
             WHERE 
-                bu.username = ${username} and
-                bu.id = pic.id_base_user and
-                bu.username = pic.username_base_user;
+                username_member = ${username};
         `;
 
         if (!queryUser[0]) {
@@ -54,20 +51,20 @@ module.exports = (server: Server) => {
             })
         }
 
-        res.json({
+        return res.json({
             ok: true,
             user: {
-                id: queryUser[0].id,
-                username: queryUser[0].username,
-                name: queryUser[0].name,
-                token: queryUser[0].token,
+                id: queryUser[0].id_member,
+                username: queryUser[0].username_member,
+                name: queryUser[0].name_member,
+                token: queryUser[0].token_member,
                 profilePic: {
-                    url: queryUser[0].url,
+                    url: queryUser[0].profile_pic_url_member,
                     crop: {
-                        x: queryUser[0].x,
-                        y: queryUser[0].y,
-                        w: queryUser[0].w,
-                        h: queryUser[0].h
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0
                     }
                 }
             }
@@ -81,8 +78,8 @@ module.exports = (server: Server) => {
         const password = req.body.user.password;
 
         const queryUser = await Postgres.query()`
-            SELECT * FROM base_user bu
-            WHERE bu.username = ${username};
+            SELECT * FROM member
+            WHERE username_member = ${username};
         `;
 
         if (!queryUser[0]) {
@@ -96,7 +93,7 @@ module.exports = (server: Server) => {
             return;
         }
 
-        if (!await bcrypt.compare(password, queryUser[0].password)) {
+        if (!await bcrypt.compare(password, queryUser[0].password_member)) {
             res.json({
                 ok: false,
                 error: {
@@ -108,23 +105,23 @@ module.exports = (server: Server) => {
             return;
         }
 
-        const token = jwt.sign({ username: queryUser[0].username }, process.env.SECRET_KEY, { expiresIn: '2h' });
+        const token = jwt.sign({ username: queryUser[0].username_member }, process.env.SECRET_KEY, { expiresIn: '2h' });
 
         await Postgres.query() `
             UPDATE 
-                base_user
+                member
             SET
-                token = ${token}
+                token_member = ${token}
             WHERE
-                id = ${queryUser[0].id} and
-                username = ${queryUser[0].username};
+                id_member = ${queryUser[0].id_member} and
+                username_member = ${queryUser[0].username_member};
         `;
 
         res.json({
             ok: true,
             user: {
-                id: queryUser[0].id,
-                username: queryUser[0].username,
+                id: queryUser[0].id_member,
+                username: queryUser[0].username_member,
                 token: token
             }
         })
@@ -199,9 +196,9 @@ module.exports = (server: Server) => {
 
         const queryUser = await Postgres.query() `
             SELECT * FROM
-                base_user bu
+                member
             WHERE
-                bu.username = ${username};
+                username_member = ${username};
         `;
 
         if (queryUser[0]) {
@@ -219,9 +216,8 @@ module.exports = (server: Server) => {
         const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '2h' });
 
         await Postgres.query() `
-            SELECT insert_base_user (
+            SELECT insert_member (
                 ${username},
-                ${name},
                 ${hashedPassword},
                 ${new Date().toISOString()},
                 ${token} 
@@ -230,17 +226,17 @@ module.exports = (server: Server) => {
 
         const queryUser2 = await Postgres.query() `
             SELECT * FROM
-                base_user bu
+                member
             WHERE
-                bu.username = ${username};
+                username_member = ${username};
         `;
 
         res.json({
             ok: true,
             user: {
-                id: queryUser2[0].id,
-                username: queryUser2[0].username,
-                token: queryUser2[0].token
+                id: queryUser2[0].id_member,
+                username: queryUser2[0].username_member,
+                token: queryUser2[0].token_member
             }
         })
     })

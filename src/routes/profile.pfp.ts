@@ -29,19 +29,15 @@ module.exports = (server: Server) => {
         try {
             await Postgres.query() `
                 UPDATE 
-                    user_profile_picture
+                    member
                 SET
-                    url = ${image.url},
-                    x = ${image.view.x}, 
-                    y = ${image.view.y},
-                    w = ${image.view.w},
-                    h = ${image.view.h}
+                    profile_pic_url_member = ${image.url}
                 WHERE
-                    id_base_user = ${user.id} and
-                    username_base_user = ${user.username};
+                    id_member = ${user.id} and
+                    username_member = ${user.username};
             `;
 
-            res.json({
+            return res.json({
                 ok: true
             })
         } catch (error) {

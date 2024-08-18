@@ -18,12 +18,12 @@ module.exports = (server: Server) => {
     
                 await sql `
                     UPDATE
-                        base_user
+                        member
                     SET
-                        bio = ${bio}
+                        bio_member = ${bio}
                     WHERE
-                        id = ${user.id} and
-                        username = ${user.username};
+                        id_member = ${user.id} and
+                        username_member = ${user.username};
                 `;
             });
 

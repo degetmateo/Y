@@ -13,12 +13,26 @@ module.exports = (server: Server) => {
             await Postgres.query().begin(async sql => {
                 await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
 
+                const queryUserRequest = await sql`
+                    SELECT * FROM
+                        member
+                    WHERE
+                        username_member = ${req.user.username};
+                `;
+
+                const queryUserParams = await sql`
+                    SELECT * FROM
+                        member
+                    WHERE
+                        username_member = ${req.params.username};
+                `;
+
                 await sql`
                     DELETE FROM
                         follow
                     WHERE
-                        username_base_user_follower = ${req.user.username} and
-                        username_base_user_followed = ${req.params.username};
+                        id_member_follower = ${queryUserRequest[0].id_member} and
+                        id_member_followed = ${queryUserParams[0].id_member};
                 `;
             });
 

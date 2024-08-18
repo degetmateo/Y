@@ -6,37 +6,15 @@ module.exports = (server: Server) => {
         const user = req.body.user;
         const image = req.body.image;
 
-        // console.log(req.body)
-        // const validateImage = (image.url) &&
-        // (image.view.w == image.view.h) && 
-        // (image.view.x != undefined && image.view.y != undefined) &&
-        // (image.view.x != null && image.view.y != null) &&
-        // (!isNaN(image.view.x) && !isNaN(image.view.y) && !isNaN(image.view.w) && !isNaN(image.view.h)) && 
-        // (image.view.x >= 0 && image.view.y >= 0);
-
-        // if (!validateImage) {
-        //     res.json({
-        //         ok: false,
-        //         error: {
-        //             message: 'Ocurrio un problema con la imagen.'
-        //         }
-        //     })
-        //     return;
-        // }
-
         try {
             await Postgres.query() `
                 UPDATE 
-                    user_profile_picture
+                    member
                 SET
-                    url = ${image.url},
-                    x = ${image.view.x}, 
-                    y = ${image.view.y},
-                    w = ${image.view.w},
-                    h = ${image.view.h}
+                    profile_pic_url_member = ${image.url}
                 WHERE
-                    id_base_user = ${user.id} and
-                    username_base_user = ${user.username};
+                    id_member = ${user.id} and
+                    username_member = ${user.username};
             `;
 
             res.json({

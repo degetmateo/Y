@@ -3,23 +3,29 @@ import Server from "../Server";
 
 module.exports = (server: Server) => {
     server.app.get('/api/user/:username', server.authenticate, async (req, res) => {
-        const queryUser = await Postgres.query()`
+        const queryUserParams = await Postgres.query()`
             SELECT * FROM
-                base_user bu, user_profile_picture pp
+                member m
             WHERE
-                bu.username = ${req.params.username} and
-                bu.username = pp.username_base_user;
+                m.username_member = ${req.params.username};
+        `;
+
+        const queryUserRequest = await Postgres.query()`
+            SELECT * FROM
+                member m
+            WHERE
+                m.username_member = ${req.user.username};
         `;
 
         const follow = await Postgres.query() `
             SELECT * FROM
                 follow
             WHERE
-                username_base_user_follower = ${req.user.username} and
-                username_base_user_followed = ${req.params.username};
+                id_member_follower = ${queryUserRequest[0].id_member} and
+                id_member_followed = ${queryUserParams[0].id_member};
         `;
         
-        if (!queryUser[0]) {
+        if (!queryUserParams[0]) {
             return res.json({
                 ok: false,
                 error: {
@@ -29,40 +35,40 @@ module.exports = (server: Server) => {
         }
 
         const queryFollowedCount = await Postgres.query()`
-            SELECT COUNT(id_base_user_followed) FROM
+            SELECT COUNT(id_member_followed) FROM
                 follow
             WHERE
-                username_base_user_follower = ${req.params.username};
+                id_member_follower = ${queryUserParams[0].id_member};
         `;
 
         const queryFollowersCount = await Postgres.query()`
-            SELECT COUNT(id_base_user_follower) FROM
+            SELECT COUNT(id_member_follower) FROM
                 follow
             WHERE
-                username_base_user_followed = ${req.params.username};
+                id_member_followed = ${queryUserParams[0].id_member};
         `;
 
-        const user = queryUser[0];
+        const user = queryUserParams[0];
         res.json({
             ok: true,
             user: {
-                id: user.id,
-                name: user.name,
-                username: user.username,
-                bio: user.bio,
-                created_at: new Date(user.created_at),
+                id: user.id_member,
+                name: user.name_member,
+                username: user.username_member,
+                bio: user.bio_member,
+                created_at: new Date(user.date_creation_member),
                 isFollowed: follow[0] ? true : false,
                 follows: {
                     followed: queryFollowedCount[0].count,
                     followers: queryFollowersCount[0].count
                 },
                 profilePic: {
-                    url: user.url,
+                    url: user.profile_pic_url_member,
                     crop: {
-                        x: user.x,
-                        y: user.y,
-                        w: user.w,
-                        h: user.h
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0
                     }
                 }
             }

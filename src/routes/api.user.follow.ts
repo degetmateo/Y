@@ -25,16 +25,16 @@ module.exports = (server: Server) => {
                 
                 const queryToFollowUser = await sql`
                     SELECT * FROM 
-                        base_user
+                        member
                     WHERE
-                        username = ${userToFollow};
+                        username_member = ${userToFollow};
                 `;
 
                 const queryRequestUser = await sql`
                     SELECT * FROM 
-                        base_user
+                        member
                     WHERE
-                        username = ${reqUser};
+                        username_member = ${reqUser};
                 `;
 
                 if (!queryToFollowUser[0] || !queryRequestUser[0]) throw new Error('Postgres Error: Usuarios no encontrados.');
@@ -43,10 +43,8 @@ module.exports = (server: Server) => {
                     INSERT INTO
                         follow
                     VALUES (
-                        ${queryRequestUser[0].id},
-                        ${queryRequestUser[0].username},
-                        ${queryToFollowUser[0].id},
-                        ${queryToFollowUser[0].username}
+                        ${queryRequestUser[0].id_member},
+                        ${queryToFollowUser[0].id_member}
                     );
                 `;
             });
