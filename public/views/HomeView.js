@@ -21,8 +21,7 @@ export default class extends AbstractView {
 
     async events () {
         this.eventChangeTimeline();
-        await this.eventButtonRefresh();
-        await this.eventFormPostCreate();
+        this.eventFormPostCreate();
     }
 
     eventChangeTimeline () {
@@ -51,14 +50,6 @@ export default class extends AbstractView {
         const response = await request.json();
         if (!response.ok) return alert(response.error.message);
         this.drawPosts(response.posts);
-    }
-
-    async eventButtonRefresh () {
-        const button = document.getElementById('button-refresh');
-        button.addEventListener('click', event => {
-            event.preventDefault();
-            this.setGlobalTimeline();
-        });
     }
 
     async setGlobalTimeline () {
@@ -220,10 +211,6 @@ const VIEW_CONTENT = `
                         <button class="button-submit" type="submit">Publicar</button>
                     </div>
                 </form>
-            </div>
-
-            <div class="container-button-refresh">
-                <button type="button" id="button-refresh"><i class="fa-solid fa-arrows-rotate"></i><span>Actualizar Timeline</span></button>
             </div>
 
             <div class="container-button-change-timeline">
