@@ -193,7 +193,7 @@ export default class extends AbstractView {
                 alert(res.error.message)
                 return;
             }
-            await this.loadPosts();
+            this.setGlobalTimeline();
         })
     }
 }

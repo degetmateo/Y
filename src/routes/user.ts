@@ -175,15 +175,13 @@ module.exports = (server: Server) => {
         }
 
         if (name.length > 16 || username.length > 16) {
-            res.json({
+            return res.json({
                 ok: false,
                 error: {
                     code: 'user-register',
                     message: 'Username & name: Menor o igual a 16 caracteres'
                 }
-            })
-
-            return;
+            });
         }
 
         const regexUsername = /^[a-zA-Z0-9_]+$/;
