@@ -49,6 +49,8 @@
 }
 
 .container-button-refresh {
+    background-color: #000;
+    color: #FFF;
     width: 100%;
     padding: 10px;
     border-bottom: 1px solid gray;
@@ -61,10 +63,6 @@
 .container-button-refresh i {
     display: none;
 }
-
-/* .container-home-view .container-main .post-container img {
-    max-width: 100%;
-} */
 
 @media (max-width: 768px) {
     .container-home-view {
@@ -82,7 +80,6 @@
     }
 
     .container-home-view .container-main .container-form-post-create {
-        background-color: blue;
         padding: 10px;
 
         border-radius: 10px;
@@ -118,8 +115,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-
-        background-color: #FFF;
     }
 
     .container-button-refresh button {
@@ -131,6 +126,7 @@
 
     .container-button-refresh i {
         display: block;
+        color: #FFF;
     }
 
     .container-button-refresh span {
@@ -145,6 +141,5 @@
 
         width: 50px;
         height: 50px;
-        background-color: blue;
     }
 }

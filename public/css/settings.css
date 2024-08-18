@@ -32,7 +32,7 @@
 .container-settings-view .container-main .container-button-logout .button-logout {
     padding: 10px 20px;
     border-radius: 10px;
-    border: 1px solid black;
+    border: 1px solid #FFF;
 }
 
 .container-main .container-settings {
@@ -68,9 +68,11 @@
 .container-settings-bio .settings-bio-input {
     resize: none;
     outline: none;
-    border: 1px solid black;
     padding: 10px;
     height: 100px;
+    background-color: #000;
+    color: #FFF;
+    border: 1px solid #FFF;
 }
 
 .container-settings-bio-button {
@@ -80,8 +82,9 @@
 
 .settings-bio-button {
     padding: 10px;
-    background-color: #FFF;
-    border: 1px solid black;
+    background-color: #000;
+    border: 1px solid #FFF;
+    color: #FFF;
     cursor: pointer;
 }
 
@@ -99,14 +102,17 @@
 
 .settings-pfp-img-input {
     padding: 10px;
-    border: 1px solid black;
+    border: 1px solid #FFF;
+    background-color: #000;
+    color: #FFF;
     outline: none;
 }
 
 .settings-pfp-img-button {
-    border: 1px solid black;
+    border: 1px solid #FFF;
     outline: none;
-    background-color: #FFF;
+    background-color: #000;
+    color: #FFF;
     padding: 10px;
     cursor: pointer;
 }

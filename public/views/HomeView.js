@@ -66,7 +66,7 @@ export default class extends AbstractView {
             containerPfp.style = `
                 width: 50px;
                 height: 50px;
-                border: 1px solid black; 
+                border: 1px solid #FFF; 
                 cursor: pointer;
                 overflow: hidden;
             `;
@@ -187,7 +187,7 @@ const VIEW_CONTENT = `
             </div>
 
             <div class="container-button-refresh">
-                <button type="button" id="button-refresh"><i class="fa-solid fa-arrows-rotate"></i> <span>Actualizar Timeline</span></button>
+                <button type="button" id="button-refresh"><i class="fa-solid fa-arrows-rotate"></i><span>Actualizar Timeline</span></button>
             </div>
 
             <div id="container-timeline" class="container-timeline"></div>

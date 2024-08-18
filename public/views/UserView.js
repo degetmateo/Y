@@ -98,7 +98,7 @@ export default class extends AbstractView {
             containerPfp.style = `
                 width: 50px;
                 height: 50px;
-                border: 1px solid black; 
+                border: 1px solid #FFF; 
                 cursor: pointer;
                 overflow: hidden;
             `;
