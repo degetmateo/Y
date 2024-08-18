@@ -131,21 +131,8 @@ module.exports = (server: Server) => {
     server.app.post('/user/register', async (req: express.Request, res: express.Response) => {
         console.log('/USER REGISTER', req.body);
 
-        const name = req.body.user.name;
         const username = req.body.user.username;
         const password = req.body.user.password;
-
-        if (!name || name.length <= 1) {
-            res.json({
-                ok: false,
-                error: {
-                    code: 'user-register',
-                    message: 'Name: Mayor a o igual a 1 caracter'
-                }
-            })
-
-            return;
-        }
         
         if (!password || password.length <= 1) {
             res.json({
@@ -171,7 +158,7 @@ module.exports = (server: Server) => {
             return;
         }
 
-        if (name.length > 16 || username.length > 16) {
+        if (username.length > 16) {
             return res.json({
                 ok: false,
                 error: {
