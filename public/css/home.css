@@ -101,8 +101,9 @@
 }
 
 .button-change-timeline {
+    border: none;
+    border-bottom: 1px solid gray;
     background-color: #000;
-    border: 1px solid gray;
     color: #FFF;
     cursor: pointer;
 }
@@ -112,7 +113,7 @@
 } 
 
 .button-change-timeline.active {
-    border-bottom: 2px solid #FFF;
+    border-bottom: 1px solid #FFF;
 }
 
 @media (max-width: 768px) {

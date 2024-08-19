@@ -6,8 +6,6 @@ import Postgres from '../database/Postgres';
 
 module.exports = (server: Server) => {
     server.app.get('/user', server.authenticate, async (req:any, res) => {
-        console.log(req.user)
-
         const queryUser = await Postgres.query()`
             SELECT * FROM
                 member m
@@ -31,7 +29,6 @@ module.exports = (server: Server) => {
 
 
     server.app.post('/user/auth', server.authenticate, async (req: express.Request, res: express.Response) => {
-        console.log('USER AUTH', req.body)
         const username = req.body.user.username;
 
         const queryUser = await Postgres.query() `
@@ -72,8 +69,6 @@ module.exports = (server: Server) => {
     })
 
     server.app.post('/user/login', async (req: express.Request, res: express.Response) => {
-        console.log('/USER LOGIN', req.body);
-
         const username = req.body.user.username;
         const password = req.body.user.password;
 

@@ -20,6 +20,7 @@ export default class extends AbstractView {
         this.eventButtonLogout();
         this.eventInputBio();
         this.eventName();
+        this.eventUsername();
         this.eventInputImageUrl();
     }
 
@@ -41,9 +42,33 @@ export default class extends AbstractView {
             .addEventListener('click', () => this.updateName());
     }
 
+    eventUsername () {
+        document.getElementById('settings-button-username')
+            .addEventListener('click', () => this.updateUsername());
+    }
+
     eventInputImageUrl () {
         const button = document.getElementById('load-button');
         button.addEventListener('click', () => this.loadImage());
+    }
+
+    async updateUsername () {
+        const inputUsername = document.getElementById('settings-input-username');   
+        const username = inputUsername.value;
+        if (username.length <= 0) return alert('Username: Desde 1 caracter.');
+        if (username.length > 16) return alert('Username: Hasta 16 caracteres.');
+        inputUsername.value = '';
+        const request = await fetch ('/api/user/update/username', {
+            method: 'POST',
+            headers: { 
+                "Authorization": "Bearer " + window.app.user.token,
+                "Content-Type": "Application/JSON"
+            },
+            body: JSON.stringify({ user: window.app.user, username })
+        });
+        const response = await request.json();
+        if (!response.ok) return alert(response.error.message);
+        alert("Nombre de usuario actualizado.");
     }
 
     async updateName () {
@@ -188,6 +213,24 @@ const VIEW = `
 
                     <div class="container-settings-bio-button">
                         <button type="button" id="settings-name-button" class="settings-bio-button">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-settings">
+                <div class="container-settings-title">
+                    <p class="settings-title">
+                        Cambiar Nombre de Usuario
+                    </p>
+                </div>
+
+                <div class="container-settings-name">
+                    <div class="container-settings-bio-input">
+                        <input type="text" class="settings-pfp-img-input" id="settings-input-username" placeholder="@NombreDeUsuario" />
+                    </div>
+
+                    <div class="container-settings-bio-button">
+                        <button type="button" id="settings-button-username" class="settings-bio-button">Enviar</button>
                     </div>
                 </div>
             </div>

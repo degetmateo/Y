@@ -45,7 +45,7 @@ export default class Server {
     public authenticate (req, res: express.Response, next: express.NextFunction) {
         const header = req.headers['authorization'];
         const token = header && header.split(' ')[1];
-        console.log(token)
+
         if (!token) {
             res.json({
                 ok: false,
