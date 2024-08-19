@@ -92,6 +92,13 @@
     background-color: gray;
 }
 
+.container-settings-name {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    gap: 5px;
+}
+
 .container-settings-pfp-img-input {
     width: 100%;
     display: grid;

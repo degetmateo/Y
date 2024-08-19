@@ -19,6 +19,7 @@ export default class extends AbstractView {
     async events () {
         this.eventButtonLogout();
         this.eventInputBio();
+        this.eventName();
         this.eventInputImageUrl();
     }
 
@@ -35,9 +36,33 @@ export default class extends AbstractView {
             .addEventListener('click', () => this.updateBio());
     }
 
+    eventName () {
+        document.getElementById('settings-name-button')
+            .addEventListener('click', () => this.updateName());
+    }
+
     eventInputImageUrl () {
         const button = document.getElementById('load-button');
         button.addEventListener('click', () => this.loadImage());
+    }
+
+    async updateName () {
+        const inputName = document.getElementById('settings-input-name'); 
+        const name = inputName.value;
+        if (name.length <= 0) return alert('Nombre: Desde 1 caracter.');
+        if (name.length > 16) return alert('Nombre: Hasta 16 caracteres.');
+        inputName.value = '';
+        const request = await fetch ('/api/user/update/name', {
+            method: 'POST',
+            headers: { 
+                "Authorization": "Bearer " + window.app.user.token,
+                "Content-Type": "Application/JSON"
+            },
+            body: JSON.stringify({ user: window.app.user, name })
+        });
+        const response = await request.json();
+        if (!response.ok) return alert(response.error.message);
+        alert("Nombre actualizado.");
     }
 
     async updateBio () {
@@ -150,6 +175,24 @@ const VIEW = `
             </div>
 
             <div class="container-settings">
+                <div class="container-settings-title">
+                    <p class="settings-title">
+                        Cambiar Nombre de Perfil
+                    </p>
+                </div>
+
+                <div class="container-settings-name">
+                    <div class="container-settings-bio-input">
+                        <input type="text" class="settings-pfp-img-input" id="settings-input-name" placeholder="Escribe tu nuevo nombre." />
+                    </div>
+
+                    <div class="container-settings-bio-button">
+                        <button type="button" id="settings-name-button" class="settings-bio-button">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-settings">
                 <div class="container-settings-pfp">
                     <div class="container-settings-title">
                         <p class="settings-title">
@@ -170,6 +213,7 @@ const VIEW = `
                             <div id="container-image"></div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
