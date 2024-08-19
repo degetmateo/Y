@@ -17,6 +17,8 @@ module.exports = (server: Server) => {
                 m.username_member = ${req.user.username};
         `;
 
+        if (!queryUserParams[0] || !queryUserRequest[0]) return res.json({ ok: false, error: { message: '404: Not found.' } });
+
         const follow = await Postgres.query() `
             SELECT * FROM
                 follow
