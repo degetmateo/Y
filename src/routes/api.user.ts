@@ -37,17 +37,19 @@ module.exports = (server: Server) => {
         }
 
         const queryFollowedCount = await Postgres.query()`
-            SELECT COUNT(id_member_followed) FROM
-                follow
+            SELECT f.id_member_followed, m.name_member, m.username_member FROM
+                follow f, member m
             WHERE
-                id_member_follower = ${queryUserParams[0].id_member};
+                f.id_member_follower = ${queryUserParams[0].id_member} and
+                m.id_member = f.id_member_followed;
         `;
 
         const queryFollowersCount = await Postgres.query()`
-            SELECT COUNT(id_member_follower) FROM
-                follow
+            SELECT f.id_member_follower, m.name_member, m.username_member FROM
+                follow f, member m
             WHERE
-                id_member_followed = ${queryUserParams[0].id_member};
+                f.id_member_followed = ${queryUserParams[0].id_member} and
+                m.id_member = f.id_member_follower;
         `;
 
         const user = queryUserParams[0];
@@ -61,8 +63,8 @@ module.exports = (server: Server) => {
                 created_at: new Date(user.date_creation_member),
                 isFollowed: follow[0] ? true : false,
                 follows: {
-                    followed: queryFollowedCount[0].count,
-                    followers: queryFollowersCount[0].count
+                    followed: queryFollowedCount,
+                    followers: queryFollowersCount
                 },
                 profilePic: {
                     url: user.profile_pic_url_member,

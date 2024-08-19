@@ -32,6 +32,12 @@ export default class extends AbstractView {
         }
 
         this.user = resUser.user;
+        this.user.follows = {
+            followed: this.user.follows.followed,
+            followers: this.user.follows.followers,
+            followedCount: this.user.follows.followed.length,
+            followersCount: this.user.follows.followers.length
+        }
         this.drawProfile();
 
         const resUserPosts = await this.getUserPosts();
@@ -80,13 +86,89 @@ export default class extends AbstractView {
             <img class="img-profile" src="${this.user.profilePic.url || URL_NO_IMAGE}" />
         `;
 
+        const containerDetailsFollows = document.getElementById('container-details-follows');
+        containerDetailsFollows.style = `
+            display: none;
+            width: 300px;
+            height: 300px;
+
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            
+            overflow-y: scroll;
+            background-color: #000;
+            border: 2px solid #FFF;
+        `;
+
+        const follows = this.user.follows;
+
+        console.log(follows)
+
         const spanFollowed = document.getElementById('span-followed');
-        spanFollowed.textContent = this.user.follows.followed + ' seguidos'
+        spanFollowed.textContent = this.user.follows.followed.length + ' seguidos'
+
+        const containerFollows = document.getElementById('container-followed');
+        containerFollows.style.cursor = 'pointer';
+        const containerFollows2 = document.getElementById('container-follows');
+        containerFollows.addEventListener('click', ()=>{
+            containerFollows2.style = `
+                display: grid;
+                grid=template-columns: auto;
+                grid-template-rows: ${follows.followed.map(fu => 'auto').join(' ')};
+                gap: 5px;
+             `;
+            containerDetailsFollows.style.display = 'initial';
+            containerFollows2.innerHTML = '';
+            for (const f of follows.followed) {
+                const userContainer = document.createElement('a');
+                userContainer.setAttribute('data-link', '');
+                userContainer.setAttribute('href', '/user/'+f.username_member);
+                userContainer.textContent =  `@${f.username_member}`;
+                userContainer.style = `
+                    padding: 10px;
+                    cursor:pointer;
+                    border-bottom: 1px solid gray;
+                `;
+                containerFollows2.appendChild(userContainer);
+            }
+        })
 
         const spanFollowers = document.getElementById('span-followers');
-        spanFollowers.textContent = this.user.follows.followers == 1 ?
+        spanFollowers.textContent = follows.followers.length === 1 ?
             1 + ' seguidor' : 
-            this.user.follows.followers + ' seguidores'; 
+            follows.followers.length + ' seguidores'; 
+
+        const containerFollowers= document.getElementById('container-followers');
+        containerFollowers.style.cursor = 'pointer';
+        containerFollowers.addEventListener('click', ()=>{
+            containerFollows2.style = `
+                display: grid;
+                grid=template-columns: auto;
+                grid-template-rows: ${follows.followers.map(fu => 'auto').join(' ')};
+                gap: 5px;
+            `;
+            containerDetailsFollows.style.display = 'initial';
+            containerFollows2.innerHTML = '';
+            for (const f of follows.followers) {
+                const userContainer = document.createElement('a');
+                userContainer.setAttribute('data-link', '');
+                userContainer.setAttribute('href', '/user/'+f.username_member);
+                userContainer.textContent =  `@${f.username_member}`;
+                userContainer.style = `
+                    padding: 10px;
+                    cursor:pointer;
+                    border-bottom: 1px solid gray;
+                `;
+                containerFollows2.appendChild(userContainer);
+            }
+        })
+
+        document.getElementById('button-close-details-follows')
+            .addEventListener('click', () => {
+                containerDetailsFollows.style.display = 'none';
+            })
 
         document.getElementById('span-bio')
             .innerText = this.user.bio;
@@ -105,11 +187,11 @@ export default class extends AbstractView {
         document.getElementById('button-follow').remove();
         document.getElementById('container-button-follow').appendChild(this.createButtonUnfollow());
 
-        this.user.follows.followers = parseInt(this.user.follows.followers) + 1;
+        this.user.follows.followersCount += 1;
 
-        document.getElementById('span-followers').textContent = this.user.follows.followers === 1 ?
+        document.getElementById('span-followers').textContent = this.user.follows.followersCount === 1 ?
             1 + ' seguidor' : 
-            this.user.follows.followers + ' seguidores';
+            this.user.follows.followersCount + ' seguidores';
 
         const request = await fetch('/api/user/'+this.user.username+'/follow', {
             method: 'PUT',
@@ -133,11 +215,11 @@ export default class extends AbstractView {
         document.getElementById('button-unfollow').remove();
         document.getElementById('container-button-follow').appendChild(this.createButtonFollow());
 
-        this.user.follows.followers = parseInt(this.user.follows.followers) - 1;
+        this.user.follows.followersCount -= 1;
 
-        document.getElementById('span-followers').textContent = this.user.follows.followers === 1 ?
+        document.getElementById('span-followers').textContent = this.user.follows.followersCount === 1 ?
             1 + ' seguidor' : 
-            this.user.follows.followers + ' seguidores';
+            this.user.follows.followersCount + ' seguidores';
 
         const request = await fetch('/api/user/'+this.user.username+'/unfollow', {
             method: 'DELETE',
@@ -236,7 +318,12 @@ const VIEW = `
     <div class="container-profile-view">
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
         <div class="container-nav" id="container-nav"></div>
-        
+        <div class="container-details-follows" id="container-details-follows">
+            <button style="padding: 10px; background-color: #000; color: #FFF; cursor:pointer; border:none;border-bottom: 1px solid gray; width:100%;outline:none;" id="button-close-details-follows">Cerrar</button>
+            <div id="container-follows">
+            
+            </div>
+        </div>
         <div class="container-main">
             <div class="container-profile">
                 <div class="container-pfp" id="container-pfp">
@@ -255,11 +342,11 @@ const VIEW = `
                 </div>
 
                 <div class="container-follows">
-                    <div class="container-follow">
+                    <div class="container-follow" id="container-followed">
                         <span id="span-followed">0 seguidos</span>
                     </div>
 
-                    <div class="container-follow">
+                    <div class="container-follow" id="container-followers">
                         <span id="span-followers">0 seguidores</span>
                     </div>
                 </div>
