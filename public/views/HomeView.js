@@ -2,6 +2,7 @@ import {URL_NO_IMAGE} from "../consts.js";
 import { getDateMessage, hasDisallowedTags } from "../helpers.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
+import Post from "./elements/Post.js";
 import { CreateNavigation } from "./templates/nav.js";
 
 export default class extends AbstractView {
@@ -77,85 +78,7 @@ export default class extends AbstractView {
         timelineContainer.innerHTML = '';
 
         for (const post of posts) {
-            const containerPost = document.createElement('div');
-            containerPost.style = 'padding: 10px 10px 10px 10px; border-bottom: 1px solid gray;';
-            containerPost.setAttribute('class', 'post-container');
-
-            const containerSign = document.createElement('div');
-            containerSign.style = 'display: flex; align-items: center;';
-            containerSign.setAttribute('class', 'container-sign');
-
-            const containerPfp = document.createElement('div');
-            containerPfp.setAttribute('class', 'container-pfp'); 
-            containerPfp.style = `
-                width: 50px;
-                height: 50px;
-                border: 1px solid #FFF; 
-                cursor: pointer;
-                overflow: hidden;
-            `;
-            
-            containerPfp.appendChild(createProfileImage(post));
-
-            containerSign.appendChild(containerPfp);
-            containerPost.appendChild(containerSign);
-
-            const pSign = document.createElement('p');
-            const strongSign = document.createElement('strong');
-            const aSign = document.createElement('a');
-            const spanSign = document.createElement('span');
-            
-            aSign.setAttribute('href', '/user/'+post.creator.username);
-            aSign.setAttribute('data-link', '');
-            aSign.textContent = post.creator.name;
-            
-            strongSign.appendChild(aSign);
-            strongSign.style = 'cursor:pointer; margin-left: 10px;';
-            
-            pSign.appendChild(strongSign);
-
-            spanSign.textContent = ' ▪ '+getDateMessage(post.date);
-            pSign.appendChild(spanSign);
-
-            containerSign.appendChild(pSign);
-
-            const pContent = document.createElement('p');
-            pContent.style = 'overflow-wrap: break-word;';
-
-            const urlPattern = /(https?:\/\/[^\s]+)/g;
-            const htmlWithLinks = post.content.replace(urlPattern, '<a class="link" href="$1" target="_blank">$1</a>');
-            pContent.innerHTML = htmlWithLinks.replace(/\n/g, '<br>');
-
-            containerPost.appendChild(pContent);
-
-            const containerPostInteractions = document.createElement('div');
-            containerPostInteractions.style = 'display:flex;';
-            containerPostInteractions.innerHTML = `
-                <span style="margin: 0 5px 0 0">${0} 💬</span>
-                <span style="margin: 0 5px 0 0">${0} ❤️</span>
-            `;
-
-            containerPost.appendChild(containerPostInteractions);
-            timelineContainer.appendChild(containerPost);
-        }
-    
-        function createProfileImage (post) {
-            const creator = post.creator;
-            const image = creator.profilePicture;
-            const imageUrl = image.url || URL_NO_IMAGE;
-
-            const img = new Image();
-            img.src = imageUrl;
-            img.setAttribute('href', '/user/'+post.creator.username);
-            img.setAttribute('data-link', '');
-            img.addEventListener('load', () => {                
-                img.style = `
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                `;
-            });
-            return img;
+            timelineContainer.appendChild(new Post(post));
         }
     }
 

@@ -66,7 +66,7 @@ module.exports = (server: Server) => {
                     followed: queryFollowedCount,
                     followers: queryFollowersCount
                 },
-                profilePic: {
+                profilePicture: {
                     url: user.profile_pic_url_member,
                     crop: {
                         x: 0,

@@ -208,7 +208,7 @@ const VIEW = `
 
                 <div class="container-settings-name">
                     <div class="container-settings-bio-input">
-                        <input type="text" class="settings-pfp-img-input" id="settings-input-name" placeholder="Escribe tu nuevo nombre." />
+                        <input type="text" class="settings-pfp-img-input" id="settings-input-name" placeholder="Nombre" />
                     </div>
 
                     <div class="container-settings-bio-button">
@@ -226,7 +226,7 @@ const VIEW = `
 
                 <div class="container-settings-name">
                     <div class="container-settings-bio-input">
-                        <input type="text" class="settings-pfp-img-input" id="settings-input-username" placeholder="@NombreDeUsuario" />
+                        <input type="text" class="settings-pfp-img-input" id="settings-input-username" placeholder="Nombre De Usuario" />
                     </div>
 
                     <div class="container-settings-bio-button">
