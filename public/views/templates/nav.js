@@ -95,6 +95,6 @@ async function setEventFormPostCreate () {
         inputContent.value = ''
         buttonPost.style.background = 'none';
         mobile.style.display = 'none';
-        window.location.reload();
+        navigateTo('/home');
     })
 }
