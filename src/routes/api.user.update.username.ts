@@ -9,6 +9,10 @@ module.exports = (server: Server) => {
         if (username.length > 16) return res.json({ ok: false, error: { message: "Nombre de Usuario: Hasta 16 caracteres." } });
         if (username.length <= 0) return res.json({ ok: false, error: { message: "Nombre de Usuario: Minimo 1 caracter." } });
 
+        const regexUsername = /^[a-zA-Z0-9_]+$/;
+        const isValid = regexUsername.test(username);
+        if (!isValid) return res.json({ ok: false, error: { message: 'Username: Solo numeros, letras y guiones bajos.' } });
+
         try {
             await Postgres.query().begin(async (sql) => {
                 await sql `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
