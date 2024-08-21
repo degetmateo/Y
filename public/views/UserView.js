@@ -244,7 +244,7 @@ export default class extends AbstractView {
 
         if (!this.posts || this.posts.length <= 0) return;
 
-        for (const post of this.posts.reverse()) {
+        for (const post of this.posts) {
             post.creator = this.user;
             post.creator.profilePic = this.user.profilePic;
             postsContainer.appendChild(new Post(post));

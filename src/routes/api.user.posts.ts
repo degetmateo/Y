@@ -9,7 +9,10 @@ module.exports = (server: Server) => {
                 post p, member m
             WHERE
                 m.username_member = ${req.params.username} and
-                p.id_member = m.id_member;
+                p.id_member = m.id_member
+            ORDER BY 
+                p.date_post DESC
+            LIMIT 50;
         `;
         
         if (!queryUserPosts[0]) {
