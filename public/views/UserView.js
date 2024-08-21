@@ -1,6 +1,5 @@
 import auth from "../auth.js";
 import {URL_NO_IMAGE} from "../consts.js";
-import {getDateMessage} from "../helpers.js";
 import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
 import Post from "./elements/Post.js";
@@ -246,6 +245,7 @@ export default class extends AbstractView {
 
         for (const post of this.posts) {
             post.creator = this.user;
+            console.log(this.user)
             post.creator.profilePic = this.user.profilePic;
             postsContainer.appendChild(new Post(post));
         }

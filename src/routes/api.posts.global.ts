@@ -13,7 +13,8 @@ module.exports = (server: Server) => {
                 p.content_post,
                 p.date_post,
                 m.name_member,
-                m.profile_pic_url_member
+                m.profile_pic_url_member,
+                m.role_member
             FROM 
                 post p, member m
             WHERE
@@ -33,6 +34,7 @@ module.exports = (server: Server) => {
                     id: p.id_member,
                     name: p.name_member,
                     username: p.username_member,
+                    role: p.role_member,
                     profilePicture: {
                         url: p.profile_pic_url_member,
                         x: 0,

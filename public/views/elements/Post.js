@@ -6,6 +6,7 @@ export default function (post) {
 }
 
 function createPost (post) {
+    console.log(post)
     const postContainer = document.createElement('div');
     postContainer.setAttribute('class', 'container-post');
     // postContainer.setAttribute('data-link', '');
@@ -40,16 +41,63 @@ function createPostHeader (post) {
     aSign.textContent = post.creator.name;
 
     strongSign.appendChild(aSign);
-    strongSign.style = 'cursor:pointer; margin-left: 10px;';
+    strongSign.style = 'cursor:pointer;';
     
     pSign.appendChild(strongSign);
 
-    spanSign.textContent = ' ▪ '+getDateMessage(post.date);
+    spanSign.textContent = ' - '+getDateMessage(post.date);
     pSign.appendChild(spanSign);
+    pSign.style.margin = '0';
+    pSign.style.padding = '0';
 
-    headerContainer.style = 'display: flex; align-items: center;';
+    const containerRole = document.createElement('div');
+    const spanRole = document.createElement('span');
+    spanRole.innerText = post.creator.role.toUpperCase();
+
+    const colorMap = {
+        "admin": "red",
+        "member": "aqua",
+        "beta": "yellow",
+        "mod": "green"
+    }
+
+    spanRole.style = `
+        padding: 5px;
+        color: ${colorMap[post.creator.role]};
+        font-size: 12px;
+        border: 1px solid ${colorMap[post.creator.role]};
+        border-radius: 8px;
+    `
+    containerRole.appendChild(spanRole);
+    containerRole.style = `
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    `;
+
+    const containerNameRole = document.createElement('div');
+    containerNameRole.appendChild(pSign);
+    containerNameRole.appendChild(containerRole);
+    containerNameRole.style = `
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: auto auto;
+        gap: 5px;
+
+        justify-items: start;
+        align-content: start;
+    `;
+
+    headerContainer.style = `        
+        display: grid;
+        grid-template-columns: min-content auto;
+        grid-template-rows: auto;
+        justify-items: start;
+        align-content: center;
+        gap: 10px;
+    `;
     headerContainer.appendChild(createPostUserPicture(post));
-    headerContainer.appendChild(pSign);
+    headerContainer.appendChild(containerNameRole);
     return headerContainer;
 }
 

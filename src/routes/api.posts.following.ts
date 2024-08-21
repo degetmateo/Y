@@ -28,7 +28,8 @@ module.exports = (server: Server) => {
                         p.content_post,
                         p.date_post,
                         m2.name_member,
-                        m2.profile_pic_url_member
+                        m2.profile_pic_url_member,
+                        m2.role_member
                     FROM
                         follow f, post p, member m1, member m2
                     WHERE
@@ -47,10 +48,12 @@ module.exports = (server: Server) => {
                         id: p.id_post,
                         content: p.content_post,
                         date: getTimeDifference(new Date(p.date_post)),
+                        role: p.role_member,
                         creator: {
                             id: p.id_member,
                             name: p.name_member,
                             username: p.username_member,
+                            role: p.role_member,
                             profilePicture: {
                                 url: p.profile_pic_url_member,
                             }

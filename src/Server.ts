@@ -45,24 +45,36 @@ export default class Server {
     public authenticate (req, res: express.Response, next: express.NextFunction) {
         const header = req.headers['authorization'];
         const token = header && header.split(' ')[1];
-
-        if (!token) {
-            res.json({
-                ok: false,
-                error: {
-                    code: 'auth',
-                    message: 'Error en la autentificacion.'
-                }
-            })
-            return;
-        }
-
+        if (!token) return res.json({ ok: false, error: { message: 'Error en la autentificacion.' } });
         jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
             if (err) return res.json({ ok: false, error: { code: 'auth', message: 'Error en la autentificacion.' } });
-            // const newToken = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '2h' });
             req.user = { username: user.username }
             next();
-        })
+        });
+    }
+
+    public async authenticateBeta (req, res, next) {
+        const header = req.headers['authorization'];
+        const token = header && header.split(' ')[1];
+        if (!token) return res.json({ ok: false, error: { message: 'Authorization Error.' } });
+        jwt.verify(token, process.env.SECRET_KEY, async (err, user) => {
+            if (err) return res.json({ ok: false, error: { message: "Authorization Error." } });
+            req.user = { username: user.username };
+            try {
+                const query = await Postgres.query()`
+                    SELECT * FROM
+                        member
+                    WHERE
+                        username_member = ${req.user.username} and
+                        role_member = 'beta';
+                `;
+                if (!query[0]) return res.json({ ok: false, error: { message: "Authorization Error." } });
+                next();
+            } catch (error) {
+                console.error(error);
+                return res.json({ ok: false, error: { message: "Authorization Error." } });
+            }
+        });
     }
 
     public async authenticateAdministrator (req, res: express.Response, next: express.NextFunction) {
@@ -86,6 +98,6 @@ export default class Server {
                 console.error(error);
                 return res.json({ ok: false, error: { message: "Authorization Error." } });
             }
-        })
+        });
     }
 }

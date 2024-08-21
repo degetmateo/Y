@@ -62,6 +62,7 @@ module.exports = (server: Server) => {
                 bio: user.bio_member,
                 created_at: new Date(user.date_creation_member),
                 isFollowed: follow[0] ? true : false,
+                role: user.role_member,
                 follows: {
                     followed: queryFollowedCount,
                     followers: queryFollowersCount
