@@ -1,5 +1,3 @@
-import { load } from 'cheerio';
-
 import Postgres from "../database/Postgres";
 import Server from "../Server";
 
@@ -39,20 +37,4 @@ module.exports = (server: Server) => {
             ok: true
         })
     })
-}
-
-function containsDisallowedTags (html: string, allowedTags: string[]) {
-    const $ = load(html);
-    const elements = $('*');
-
-    let hasDisallowed = false;
-    elements.each(function () {
-        const tagName = $(this).prop('tagName').toLowerCase();
-        if (!allowedTags.includes(tagName)) {
-            hasDisallowed = true;
-            return false;
-        }
-    });
-
-    return hasDisallowed;
 }

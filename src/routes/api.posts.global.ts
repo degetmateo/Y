@@ -4,8 +4,7 @@ import Postgres from '../database/Postgres';
 import getTimeDifference from '../helpers/get_time_difference';
 
 module.exports = (server: Server) => {
-    server.app.get('/posts', server.authenticate, async (req: express.Request, res: express.Response) => {
-        
+    server.app.get('/api/posts/global', server.authenticate, async (req: express.Request, res: express.Response) => {
         const queryPosts = await Postgres.query() `
             SELECT 
                 p.id_post,

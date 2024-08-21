@@ -55,6 +55,7 @@ module.exports = (server: Server) => {
                 username: queryUser[0].username_member,
                 name: queryUser[0].name_member,
                 token: queryUser[0].token_member,
+                role: queryUser[0].role_member,
                 profilePic: {
                     url: queryUser[0].profile_pic_url_member,
                     crop: {
@@ -82,7 +83,7 @@ module.exports = (server: Server) => {
                 ok: false,
                 error: {
                     code: 'login',
-                    message: 'Credenciales invalidas.'
+                    message: 'Ese usuario no existe.'
                 }
             })
             return;
@@ -93,7 +94,7 @@ module.exports = (server: Server) => {
                 ok: false,
                 error: {
                     code: 'login',
-                    message: 'Credenciales invalidas.'
+                    message: 'Esa contraesña es incorrecta.'
                 }
             })
 

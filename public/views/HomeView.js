@@ -1,5 +1,4 @@
-import {URL_NO_IMAGE} from "../consts.js";
-import { getDateMessage, hasDisallowedTags } from "../helpers.js";
+import { hasDisallowedTags } from "../helpers.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
 import Post from "./elements/Post.js";
@@ -15,6 +14,7 @@ export default class extends AbstractView {
         if (window.location.pathname === '/') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
+        this.timelineContainer = document.getElementById('container-timeline');
         CreateNavigation();
         this.setGlobalTimeline();
         this.events();
@@ -50,13 +50,14 @@ export default class extends AbstractView {
         });
         const response = await request.json();
         if (!response.ok) return alert(response.error.message);
+        this.timelineContainer.innerHTML = '';
         this.drawPosts(response.posts);
     }
 
     async setGlobalTimeline () {
         if (window.location.pathname != '/home') return;
         const user = JSON.parse(localStorage.getItem('user'));
-        const request = await fetch ('/posts', {
+        const request = await fetch ('/api/posts/global/', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
@@ -70,15 +71,13 @@ export default class extends AbstractView {
             navigateTo('/login');
             return;
         }
+        this.timelineContainer.innerHTML = '';
         this.drawPosts(response.posts);
     }
 
     drawPosts (posts) {
-        const timelineContainer = document.getElementById('container-timeline');
-        timelineContainer.innerHTML = '';
-
         for (const post of posts) {
-            timelineContainer.appendChild(new Post(post));
+            this.timelineContainer.appendChild(new Post(post));
         }
     }
 
@@ -119,6 +118,20 @@ export default class extends AbstractView {
             this.setGlobalTimeline();
         })
     }
+
+    eventTimelineScroll () {
+        const mainContainer = document.getElementById('container-main');
+        mainContainer.addEventListener('scroll', (e) => {
+            const scrollHeight = mainContainer.scrollHeight;
+            const clientHeight = mainContainer.clientHeight;
+            const scrollTop = mainContainer.scrollTop;
+            const umbral = 1;
+
+            if (scrollTop + clientHeight >= scrollHeight - umbral) {
+
+            }
+        });
+    }
 }
 
 const VIEW_CONTENT = `
@@ -126,7 +139,7 @@ const VIEW_CONTENT = `
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
         <div class="container-nav" id="container-nav"></div>
 
-        <div class="container-main">
+        <div class="container-main" id="container-main">
             <div class="container-form-post-create">
                 <form action="/post/create" method="post" id="form-post-create">
                     <div class="container-inputs">

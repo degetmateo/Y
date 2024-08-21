@@ -97,8 +97,18 @@ function createPostContent (post) {
     const pContent = document.createElement('p');
     pContent.style = 'overflow-wrap: break-word; margin: 0;';
 
+    const escapedText = post.content
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
     const urlPattern = /(https?:\/\/[^\s]+)/g;
-    const htmlWithLinks = post.content.replace(urlPattern, '<a class="link" href="$1" target="_blank">$1</a>');
-    pContent.innerHTML = htmlWithLinks.replace(/\n/g, '<br>');
+    const clickableText = escapedText.replace(urlPattern, function(url) {
+        return `<a href="${url}" class="link" target="_blank">${url}</a>`;
+    });
+
+    pContent.innerHTML = clickableText.replace(/\n/g, '<br>');   
     return pContent;
 }

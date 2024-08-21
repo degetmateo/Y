@@ -5,6 +5,7 @@ export default async () => {
             name: '',
             username: '',
             token: '',
+            role: '',
             profilePic: {
                 url: '',
                 crop: {

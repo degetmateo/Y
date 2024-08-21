@@ -21,6 +21,7 @@ export default class extends AbstractView {
         this.eventInputBio();
         this.eventName();
         this.eventUsername();
+        this.eventPassword();
         this.eventInputImageUrl();
     }
 
@@ -45,6 +46,11 @@ export default class extends AbstractView {
     eventUsername () {
         document.getElementById('settings-button-username')
             .addEventListener('click', () => this.updateUsername());
+    }
+
+    eventPassword () {
+        document.getElementById('settings-button-password')
+            .addEventListener('click', () => this.updatePassword());
     }
 
     eventInputImageUrl () {
@@ -110,6 +116,32 @@ export default class extends AbstractView {
             return alert(response.error.message);
         }
         alert('Biografia actualizada correctamente.');
+    }
+
+    async updatePassword () {
+        const inputPassword = document.getElementById('settings-input-password');
+        const inputNewPassword = document.getElementById('settings-input-new_password');
+        const inputNewPasswordConfirm = document.getElementById('settings-input-new_password-confirm');
+        const password = inputPassword.value;
+        const newPassword = inputNewPassword.value;
+        const newPasswordConfirm = inputNewPasswordConfirm.value;
+        if (!password || password.length <= 0) return alert('Debes ingresar tu contraseña actual.');
+        if (!newPassword || newPassword.length <= 5) return alert('Debes ingresar una nueva contraseña más larga.');
+        if (newPassword != newPasswordConfirm) return alert('Tu nueva contraseña y su confirmación no coinciden.');
+        inputPassword.value = '';
+        inputNewPassword.value = '';
+        inputNewPasswordConfirm.value = '';
+        const request = await fetch('/api/user/update/password', {
+            method: 'POST',
+            headers: {
+                "Authorization": "Bearer "+window.app.user.token,
+                "Content-Type": "Application/JSON"
+            },
+            body: JSON.stringify({ user: { password, new_password: newPassword } })
+        });
+        const response = await request.json();
+        if (!response.ok) return alert(response.error.message);
+        alert('Contraseña actualizada.'); 
     }
 
     async loadImage () {
@@ -213,6 +245,32 @@ const VIEW = `
 
                     <div class="container-settings-bio-button">
                         <button type="button" id="settings-name-button" class="settings-bio-button">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-settings">
+                <div class="container-settings-title">
+                    <p class="settings-title">
+                        Cambiar Contraseña
+                    </p>
+                </div>
+
+                <div class="container-settings-name">
+                    <div class="container-settings-bio-input">
+                        <input type="password" class="settings-pfp-img-input" id="settings-input-password" placeholder="Tu Contraseña" />
+                    </div>
+
+                    <div class="container-settings-bio-input">
+                        <input type="password" class="settings-pfp-img-input" id="settings-input-new_password" placeholder="Nueva Contraseña" />
+                    </div>
+
+                    <div class="container-settings-bio-input">
+                        <input type="password" class="settings-pfp-img-input" id="settings-input-new_password-confirm" placeholder="Confirmar Nueva Contraseña" />
+                    </div>
+
+                    <div class="container-settings-bio-button">
+                        <button type="button" id="settings-button-password" class="settings-bio-button">Enviar</button>
                     </div>
                 </div>
             </div>

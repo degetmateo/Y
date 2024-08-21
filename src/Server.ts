@@ -64,4 +64,28 @@ export default class Server {
             next();
         })
     }
+
+    public async authenticateAdministrator (req, res: express.Response, next: express.NextFunction) {
+        const header = req.headers['authorization'];
+        const token = header && header.split(' ')[1];
+        if (!token) return res.json({ ok: false, error: { message: 'Authorization Error.' } });
+        jwt.verify(token, process.env.SECRET_KEY, async (err, user) => {
+            if (err) return res.json({ ok: false, error: { message: "Authorization Error." } });
+            req.user = { username: user.username };
+            try {
+                const query = await Postgres.query()`
+                    SELECT * FROM
+                        member
+                    WHERE
+                        username_member = ${req.user.username} and
+                        role_member = 'admin';
+                `;
+                if (!query[0]) return res.json({ ok: false, error: { message: "Authorization Error." } });
+                next();
+            } catch (error) {
+                console.error(error);
+                return res.json({ ok: false, error: { message: "Authorization Error." } });
+            }
+        })
+    }
 }
