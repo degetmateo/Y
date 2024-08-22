@@ -12,6 +12,9 @@ export default class extends AbstractView {
 
         this.user = {};
         this.posts = {};
+
+        this.limit = 20;
+        this.offset = 0;
     }
 
     async init () {
@@ -42,7 +45,8 @@ export default class extends AbstractView {
 
         const resUserPosts = await this.getUserPosts();
         this.posts = resUserPosts.posts;
-        this.drawPosts();
+        this.drawPosts(resUserPosts.posts);
+        this.eventTimelineScroll();
     }
 
     async getUser () {
@@ -57,14 +61,14 @@ export default class extends AbstractView {
     }
 
     async getUserPosts () {
-        const request = await fetch(`/api/user/${this.params.username}/posts`, {
+        const request = await fetch(`/api/user/${this.params.username}/posts/${this.limit}/${this.offset}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + window.app.user.token
             }
         });
-
-        return await request.json();
+        const response = await request.json();
+        return response;
     }
 
     drawProfile () {
@@ -237,18 +241,29 @@ export default class extends AbstractView {
         if (!response.ok) return alert(response.error.message);
     }
     
-    drawPosts () {
+    drawPosts (posts) {
         const postsContainer = document.getElementById('container-posts');
-        postsContainer.innerHTML = '';
-
-        if (!this.posts || this.posts.length <= 0) return;
-
-        for (const post of this.posts) {
+        for (const post of posts) {
             post.creator = this.user;
-            console.log(this.user)
-            post.creator.profilePic = this.user.profilePic;
             postsContainer.appendChild(new Post(post));
         }
+    }
+
+    eventTimelineScroll () {
+        const mainContainer = document.getElementById('container-main');
+        mainContainer.addEventListener('scroll', async () => {
+            const scrollHeight = mainContainer.scrollHeight;
+            const clientHeight = mainContainer.clientHeight;
+            const scrollTop = mainContainer.scrollTop;
+            const umbral = 1;
+
+            if (scrollTop + clientHeight >= scrollHeight - umbral) {
+                this.offset += this.limit;
+                const res = await this.getUserPosts();
+                if (!res.ok) return;
+                this.drawPosts(res.posts);
+            }
+        });
     }
 }
 
@@ -262,7 +277,7 @@ const VIEW = `
             
             </div>
         </div>
-        <div class="container-main">
+        <div class="container-main" id="container-main">
             <div class="container-profile">
                 <div class="container-pfp" id="container-pfp">
 

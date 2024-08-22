@@ -13,8 +13,10 @@ declare global {
   }
 
 module.exports = (server: Server) => {
-    server.app.get('/api/posts/following', server.authenticate, async (req, res) => {
+    server.app.get('/api/posts/following/:limit/:offset', server.authenticate, async (req, res) => {
         const username = req.user.username;
+        const limit = parseInt(req.params.limit as string) || 20;
+        const offset = parseInt(req.params.offset as string) || 0;
 
         try {
             await Postgres.query().begin(async sql => {
@@ -40,8 +42,10 @@ module.exports = (server: Server) => {
                     ORDER BY
                         p.date_post DESC
                     LIMIT
-                        50;
-                `;
+                        ${limit}
+                    OFFSET
+                        ${offset};
+                    `;
     
                 const posts = queryFollowedUsersPosts.map(p => {
                     return {

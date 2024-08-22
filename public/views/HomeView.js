@@ -8,6 +8,9 @@ export default class extends AbstractView {
     constructor (params) {
         super(params);
         this.setTitle('Inicio');
+        this.limit = 20;
+        this.offset = 0;
+        this.mode = 'global';
     }
 
     async init () {
@@ -23,6 +26,7 @@ export default class extends AbstractView {
     async events () {
         this.eventChangeTimeline();
         this.eventFormPostCreate();
+        this.eventTimelineScroll();
     }
 
     eventChangeTimeline () {
@@ -44,35 +48,43 @@ export default class extends AbstractView {
 
     async setFollowingTimeline () {
         if (window.location.pathname != '/home') return;
-        const request = await fetch ("/api/posts/following", {
-            method: 'GET',
-            headers: { "Authorization": "Bearer "+window.app.user.token }
-        });
-        const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
-        this.timelineContainer.innerHTML = '';
-        this.drawPosts(response.posts);
+        this.offset = 0;
+        this.mode = 'following';
+        try {
+            const posts = await this.getPosts();
+            this.timelineContainer.innerHTML = '';
+            this.drawPosts(posts);
+        } catch (error) {
+            localStorage.remove('user');
+            alert(error.message);
+            navigateTo('/login');  
+        }
     }
 
     async setGlobalTimeline () {
         if (window.location.pathname != '/home') return;
-        const user = JSON.parse(localStorage.getItem('user'));
-        const request = await fetch ('/api/posts/global/', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${user.token}`,
-            }
-        })
-    
-        const response = await request.json();
-        if (!response.ok) {
-            if (response.error) alert(response.error.message);
-            localStorage.removeItem('user')
+        this.offset = 0;
+        this.mode = 'global';
+        try {
+            const posts = await this.getPosts();
+            this.timelineContainer.innerHTML = '';
+            this.drawPosts(posts);
+        } catch (error) {
+            localStorage.remove('user');
+            alert(error.message);
             navigateTo('/login');
-            return;
         }
-        this.timelineContainer.innerHTML = '';
-        this.drawPosts(response.posts);
+    }
+
+    async getPosts () {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const request = await fetch (`/api/posts/${this.mode}/${this.limit}/${this.offset}`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${user.token}` }
+        });
+        const response = await request.json();
+        if (!response.ok) throw new Error(res.error.message);
+        return response.posts;
     }
 
     drawPosts (posts) {
@@ -121,14 +133,16 @@ export default class extends AbstractView {
 
     eventTimelineScroll () {
         const mainContainer = document.getElementById('container-main');
-        mainContainer.addEventListener('scroll', (e) => {
+        mainContainer.addEventListener('scroll', async () => {
             const scrollHeight = mainContainer.scrollHeight;
             const clientHeight = mainContainer.clientHeight;
             const scrollTop = mainContainer.scrollTop;
             const umbral = 1;
 
             if (scrollTop + clientHeight >= scrollHeight - umbral) {
-
+                this.offset += this.limit;
+                const posts = await this.getPosts();
+                this.drawPosts(posts);
             }
         });
     }

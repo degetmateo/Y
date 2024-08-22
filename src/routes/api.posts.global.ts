@@ -4,7 +4,10 @@ import Postgres from '../database/Postgres';
 import getTimeDifference from '../helpers/get_time_difference';
 
 module.exports = (server: Server) => {
-    server.app.get('/api/posts/global', server.authenticate, async (req: express.Request, res: express.Response) => {
+    server.app.get('/api/posts/global/:limit/:offset', server.authenticate, async (req: express.Request, res: express.Response) => {
+        const limit = parseInt(req.params.limit as string) || 20;
+        const offset = parseInt(req.params.offset as string) || 0;
+        
         const queryPosts = await Postgres.query() `
             SELECT 
                 p.id_post,
@@ -22,7 +25,9 @@ module.exports = (server: Server) => {
             ORDER BY
                 p.date_post DESC
             LIMIT
-                50;
+                ${limit}
+            OFFSET
+                ${offset};
         `;
 
         const posts = queryPosts.map(p => {
