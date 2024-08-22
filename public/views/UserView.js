@@ -109,8 +109,6 @@ export default class extends AbstractView {
 
         const follows = this.user.follows;
 
-        console.log(follows)
-
         const spanFollowed = document.getElementById('span-followed');
         spanFollowed.textContent = this.user.follows.followed.length + ' seguidos'
 
@@ -182,8 +180,8 @@ export default class extends AbstractView {
             hyphens: auto;
         `;
 
-        const spanBio = document.getElementById('span-bio'); 
-        spanBio.innerHTML = cleanContent(this.user.bio);
+        const spanBio = document.getElementById('span-bio');
+        spanBio.innerHTML = this.user.bio ? cleanContent(this.user.bio) : '';
     }
 
     createButtonFollow () {

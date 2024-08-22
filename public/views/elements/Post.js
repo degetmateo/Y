@@ -1,12 +1,11 @@
 import {URL_NO_IMAGE} from "../../consts.js";
-import {getDateMessage} from "../../helpers.js";
+import {cleanContent, getDateMessage} from "../../helpers.js";
 
 export default function (post) {
     return createPost(post);
 }
 
 function createPost (post) {
-    console.log(post)
     const postContainer = document.createElement('div');
     postContainer.setAttribute('class', 'container-post');
     // postContainer.setAttribute('data-link', '');
@@ -144,19 +143,6 @@ function createProfileImage (post) {
 function createPostContent (post) {
     const pContent = document.createElement('p');
     pContent.style = 'overflow-wrap: break-word; margin: 0;';
-
-    const escapedText = post.content
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
-    const clickableText = escapedText.replace(urlPattern, function(url) {
-        return `<a href="${url}" class="link" target="_blank">${url}</a>`;
-    });
-
-    pContent.innerHTML = clickableText.replace(/\n/g, '<br>');   
+    pContent.innerHTML = cleanContent(post.content);   
     return pContent;
 }
