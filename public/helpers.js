@@ -67,3 +67,19 @@ export function hasDisallowedTags (content, allowedTags) {
 
     return false;
 }
+
+export function cleanContent (content) {
+    const escapedText = content
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    const clickableText = escapedText.replace(urlPattern, function(url) {
+        return `<a href="${url}" class="link" target="_blank">${url}</a>`;
+    });
+
+    return clickableText.replace(/\n/g, '<br>');   
+}

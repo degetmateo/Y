@@ -1,5 +1,6 @@
 import auth from "../auth.js";
 import {URL_NO_IMAGE} from "../consts.js";
+import {cleanContent} from "../helpers.js";
 import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
 import Post from "./elements/Post.js";
@@ -182,7 +183,7 @@ export default class extends AbstractView {
         `;
 
         const spanBio = document.getElementById('span-bio'); 
-        spanBio.innerText = this.user.bio;
+        spanBio.innerHTML = cleanContent(this.user.bio);
     }
 
     createButtonFollow () {

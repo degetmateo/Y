@@ -71,11 +71,6 @@ async function setEventFormPostCreate () {
             return;
         }
 
-        if (hasDisallowedTags(content, ['img', 'span'])) {
-            alert('Contenido no permitido por el momento.');
-            return;
-        }
-
         const user = JSON.parse(localStorage.getItem('user'));
         const request = await fetch ('/post/create', {
             method: 'POST',
