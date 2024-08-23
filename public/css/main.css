@@ -90,3 +90,15 @@ a {
 .link:hover {
     text-decoration: underline;
 }
+
+.container-upvote-interaction {
+    cursor: pointer;
+}
+
+.container-upvote-interaction:hover {
+    background-color: gray;
+}
+
+.container-upvote-interaction:active {
+    background-color: gray;
+}

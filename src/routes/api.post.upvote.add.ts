@@ -2,7 +2,7 @@ import Postgres from "../database/Postgres";
 import Server from "../Server";
 
 module.exports = (server: Server) => {
-    server.app.put('/api/post/:id_post/upvote/add', server.authenticateTester, async (req, res) => {
+    server.app.put('/api/post/:id_post/upvote/add', server.authenticate, async (req, res) => {
         const id_post = req.params.id_post;
         const username_member = req.user.username;
         if (!id_post) return res.json({ ok: false, error: { message: "INVALID POST ID." } });

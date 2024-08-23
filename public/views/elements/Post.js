@@ -46,6 +46,7 @@ function createPost (post) {
     containerCommentsInteraction.appendChild(spanComment);
 
     const containerUpvoteInteraction = document.createElement('div');
+    containerUpvoteInteraction.classList.add('container-upvote-interaction');
     containerUpvoteInteraction.style = `
         width: 100%;
                 border: 1px solid #303030;
@@ -71,11 +72,24 @@ function createPost (post) {
         font-size: 14px;
     `;
 
-    if (window.app.user.role === 'tester' || window.app.user.role === 'admin') {
-        containerUpvoteInteraction.addEventListener('click', () => upvote(post));
-        containerUpvoteInteraction.style.cursor = 'pointer';
+    if (post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) {
+        containerUpvoteInteraction.style.color = "red";
+        upvoteButton.style.color = "red";
+    } else {
+        containerUpvoteInteraction.addEventListener('click', () => {
+            if (post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) return;
+            fetch(`/api/post/${post.id}/upvote/add`, { 
+                method: 'PUT',
+                headers: { "Authorization": "Bearer "+window.app.user.token } });
+    
+            post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: post.creator.id, id_post: post.id });
+            containerUpvoteInteraction.style.color = "red";
+            upvoteButton.style.color = "red";
+            spanCountUpvotes.innerText = (parseInt(spanCountUpvotes.innerText)) + 1;
+        });
     }
 
+    containerUpvoteInteraction.style.cursor = 'pointer';
     const containerInteraction = document.createElement('div');
     containerInteraction.style = `
         width: 100%;
@@ -95,9 +109,7 @@ function createPost (post) {
 }
 
 function upvote (post) {
-    fetch(`/api/post/${post.id}/upvote/add`, { 
-        method: 'PUT',
-        headers: { "Authorization": "Bearer "+window.app.user.token } });
+
 }
 
 function deleteUpvote (post) {
