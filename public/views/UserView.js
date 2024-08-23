@@ -62,7 +62,7 @@ export default class extends AbstractView {
     }
 
     async getUserPosts () {
-        const request = await fetch(`/api/user/${this.params.username}/posts/${this.limit}/${this.offset}`, {
+        const request = await fetch(`/api/posts/user/${this.params.username}/${this.limit}/${this.offset}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + window.app.user.token

@@ -21,31 +21,62 @@ module.exports = (server: Server) => {
         try {
             await Postgres.query().begin(async sql => {
                 await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
-            
+
+                // const queryFollowedUsersPosts = await sql`
+                //     SELECT 
+                //         p.*,
+                //         m2.username_member,
+                //         m2.name_member,
+                //         m2.profile_pic_url_member,
+                //         m2.role_member
+                //     FROM
+                //         follow f, post p, member m1, member m2
+                //     WHERE
+                //         m1.username_member = ${username} and
+                //         f.id_member_follower = m1.id_member and
+                //         p.id_member = f.id_member_followed and
+                //         m2.id_member = f.id_member_followed
+                //     ORDER BY
+                //         p.date_post DESC
+                //     LIMIT
+                //         ${limit}
+                //     OFFSET
+                //         ${offset};
+                // `;
+
                 const queryFollowedUsersPosts = await sql`
                     SELECT 
-                        p.id_post,
-                        p.id_member,
+                        p.*,
                         m2.username_member,
-                        p.content_post,
-                        p.date_post,
                         m2.name_member,
                         m2.profile_pic_url_member,
-                        m2.role_member
+                        m2.role_member,
+                        COALESCE(json_agg(jsonb_build_object(
+                            'id_member_upvote', u.id_member_upvote,
+                            'id_member_post', u.id_member_post,
+                            'id_post', u.id_post
+                        )) FILTER (WHERE u.id_member_upvote IS NOT NULL), '[]') AS upvotes
                     FROM
-                        follow f, post p, member m1, member m2
+                        follow f
+                    JOIN
+                        member m1 ON m1.username_member = ${username} 
+                    JOIN
+                        post p ON p.id_member = f.id_member_followed
+                    JOIN
+                        member m2 ON m2.id_member = f.id_member_followed
+                    LEFT JOIN
+                        upvote u ON p.id_post = u.id_post
                     WHERE
-                        m1.username_member = ${username} and
-                        f.id_member_follower = m1.id_member and
-                        p.id_member = f.id_member_followed and
-                        m2.id_member = f.id_member_followed
+                        f.id_member_follower = m1.id_member
+                    GROUP BY
+                        p.id_post, p.id_member, m2.username_member, m2.name_member, m2.profile_pic_url_member, m2.role_member
                     ORDER BY
                         p.date_post DESC
                     LIMIT
                         ${limit}
                     OFFSET
                         ${offset};
-                    `;
+                `;
     
                 const posts = queryFollowedUsersPosts.map(p => {
                     return {
@@ -53,6 +84,7 @@ module.exports = (server: Server) => {
                         content: p.content_post,
                         date: getTimeDifference(new Date(p.date_post)),
                         role: p.role_member,
+                        upvotes: p.upvotes,
                         creator: {
                             id: p.id_member,
                             name: p.name_member,

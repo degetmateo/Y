@@ -53,7 +53,7 @@ export default class Server {
         });
     }
 
-    public async authenticateBeta (req, res, next) {
+    public async authenticateTester (req, res, next) {
         const header = req.headers['authorization'];
         const token = header && header.split(' ')[1];
         if (!token) return res.json({ ok: false, error: { message: 'Authorization Error.' } });
@@ -66,7 +66,7 @@ export default class Server {
                         member
                     WHERE
                         username_member = ${req.user.username} and
-                        role_member = 'beta';
+                        (role_member = 'tester' or role_member = 'admin');
                 `;
                 if (!query[0]) return res.json({ ok: false, error: { message: "Authorization Error." } });
                 next();

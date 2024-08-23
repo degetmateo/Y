@@ -16,14 +16,97 @@ function createPost (post) {
 
         display: grid;
         grid-template-columns: auto;
-        grid-template-rows: auto auto;
+        grid-template-rows: auto auto auto;
         gap: 15px;
     `;
 
     postContainer.appendChild(createPostHeader(post));
     // if (post.image) postContainer.appendChild(createPostImage(post));
     postContainer.appendChild(createPostContent(post));
+
+    const containerInteractions = document.createElement('div');
+    containerInteractions.style = `
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows;
+        gap: 10px;
+        justify-items: center;
+    `;
+
+    const containerCommentsInteraction = document.createElement('div');
+    containerCommentsInteraction.style = `
+        border: 1px solid gray;
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    `;
+
+    const spanComment = document.createElement('span');
+    spanComment.innerHTML = '???';
+    containerCommentsInteraction.appendChild(spanComment);
+
+    const containerUpvoteInteraction = document.createElement('div');
+    containerUpvoteInteraction.style = `
+        border: 1px solid gray;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    `;
+
+    const spanCountUpvotes = document.createElement('span');
+    const upvoteButton = document.createElement('button');
+
+    containerUpvoteInteraction.appendChild(spanCountUpvotes);
+    containerUpvoteInteraction.appendChild(upvoteButton);
+
+    spanCountUpvotes.innerText = post.upvotes.length;
+
+    upvoteButton.innerHTML = '<i class="fa-solid fa-paw"></i>';
+    upvoteButton.style =`
+        color: #FFF;
+        background: none;
+        border: none;
+        outline: none;
+        font-size: 14px;
+    `;
+
+    if (window.app.user.role === 'tester' || window.app.user.role === 'admin') {
+        containerUpvoteInteraction.addEventListener('click', () => upvote(post));
+        containerUpvoteInteraction.style.cursor = 'pointer';
+    }
+
+    const containerInteraction = document.createElement('div');
+    containerInteraction.style = `
+        border: 1px solid gray;
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    `;
+    containerInteraction.innerText = '???';
+
+    containerInteractions.appendChild(containerCommentsInteraction);
+    containerInteractions.appendChild(containerUpvoteInteraction);
+    containerInteractions.appendChild(containerInteraction);
+
+    postContainer.appendChild(containerInteractions);
     return postContainer;
+}
+
+function upvote (post) {
+    fetch(`/api/post/${post.id}/upvote/add`, { 
+        method: 'PUT',
+        headers: { "Authorization": "Bearer "+window.app.user.token } });
+}
+
+function deleteUpvote (post) {
+    fetch(`/api/post/${post.id}/upvote/delete`, { 
+        method: 'DELETE',
+        headers: { "Authorization": "Bearer "+window.app.user.token } });
 }
 
 function createPostHeader (post) {
@@ -56,7 +139,7 @@ function createPostHeader (post) {
     const colorMap = {
         "admin": "red",
         "member": "aqua",
-        "beta": "yellow",
+        "tester": "yellow",
         "mod": "green"
     }
 

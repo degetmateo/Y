@@ -17,6 +17,7 @@ export default class extends AbstractView {
         if (window.location.pathname === '/') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
+        this.mainContainer = document.getElementById('container-main');
         this.timelineContainer = document.getElementById('container-timeline');
         CreateNavigation();
         this.setGlobalTimeline();
@@ -48,6 +49,7 @@ export default class extends AbstractView {
 
     async setFollowingTimeline () {
         if (window.location.pathname != '/home') return;
+        this.mainContainer.scrollTop = 0;
         this.offset = 0;
         this.mode = 'following';
         try {
@@ -55,7 +57,7 @@ export default class extends AbstractView {
             this.timelineContainer.innerHTML = '';
             this.drawPosts(posts);
         } catch (error) {
-            localStorage.remove('user');
+            window.localStorage.remove('user');
             alert(error.message);
             navigateTo('/login');  
         }
@@ -63,6 +65,7 @@ export default class extends AbstractView {
 
     async setGlobalTimeline () {
         if (window.location.pathname != '/home') return;
+        this.mainContainer.scrollTop = 0;
         this.offset = 0;
         this.mode = 'global';
         try {
@@ -70,7 +73,7 @@ export default class extends AbstractView {
             this.timelineContainer.innerHTML = '';
             this.drawPosts(posts);
         } catch (error) {
-            localStorage.remove('user');
+            window.localStorage.remove('user');
             alert(error.message);
             navigateTo('/login');
         }
@@ -127,11 +130,10 @@ export default class extends AbstractView {
     }
 
     eventTimelineScroll () {
-        const mainContainer = document.getElementById('container-main');
-        mainContainer.addEventListener('scroll', async () => {
-            const scrollHeight = mainContainer.scrollHeight;
-            const clientHeight = mainContainer.clientHeight;
-            const scrollTop = mainContainer.scrollTop;
+        this.mainContainer.addEventListener('scroll', async () => {
+            const scrollHeight = this.mainContainer.scrollHeight;
+            const clientHeight = this.mainContainer.clientHeight;
+            const scrollTop = this.mainContainer.scrollTop;
             const umbral = 1;
 
             if (scrollTop + clientHeight >= scrollHeight - umbral) {
