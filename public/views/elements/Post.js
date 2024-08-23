@@ -30,14 +30,12 @@ function createPost (post) {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows;
         gap: 10px;
-        justify-items: center;
     `;
 
     const containerCommentsInteraction = document.createElement('div');
     containerCommentsInteraction.style = `
-        border: 1px solid gray;
         width: 100%;
-
+        border: 1px solid #303030;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -49,8 +47,8 @@ function createPost (post) {
 
     const containerUpvoteInteraction = document.createElement('div');
     containerUpvoteInteraction.style = `
-        border: 1px solid gray;
         width: 100%;
+                border: 1px solid #303030;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -80,9 +78,8 @@ function createPost (post) {
 
     const containerInteraction = document.createElement('div');
     containerInteraction.style = `
-        border: 1px solid gray;
         width: 100%;
-
+        border: 1px solid #303030;
         display: flex;
         justify-content: center;
         align-items: center;
