@@ -75,18 +75,50 @@ function createPost (post) {
     if (post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) {
         containerUpvoteInteraction.style.color = "red";
         upvoteButton.style.color = "red";
+        eventDeleteUpvote();
     } else {
-        containerUpvoteInteraction.addEventListener('click', () => {
-            if (post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) return;
-            fetch(`/api/post/${post.id}/upvote/add`, { 
-                method: 'PUT',
-                headers: { "Authorization": "Bearer "+window.app.user.token } });
-    
-            post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: post.creator.id, id_post: post.id });
-            containerUpvoteInteraction.style.color = "red";
-            upvoteButton.style.color = "red";
-            spanCountUpvotes.innerText = (parseInt(spanCountUpvotes.innerText)) + 1;
-        });
+        eventUpvote();
+    }
+
+    function eventUpvote () {
+        containerUpvoteInteraction.addEventListener('click', () => upvote());
+    }
+
+    function eventDeleteUpvote () {
+        containerUpvoteInteraction.addEventListener('click', () => deleteUpvote());
+    }
+
+    function upvote () {
+        if (post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) return;
+
+        fetch(`/api/post/${post.id}/upvote/add`, { 
+            method: 'PUT',
+            headers: { "Authorization": "Bearer "+window.app.user.token } });
+
+        post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: post.creator.id, id_post: post.id });
+        containerUpvoteInteraction.style.color = "red";
+        upvoteButton.style.color = "red";
+        spanCountUpvotes.innerText = (parseInt(spanCountUpvotes.innerText)) + 1;
+
+        containerUpvoteInteraction.removeEventListener('click', () => upvote());
+        eventDeleteUpvote();
+    }
+
+    function deleteUpvote () {
+        if (!post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) return;
+
+        fetch(`/api/post/${post.id}/upvote/delete`, { 
+            method: 'DELETE',
+            headers: { "Authorization": "Bearer "+window.app.user.token } });
+
+        post.upvotes = post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == post.id);
+
+        containerUpvoteInteraction.style.color = "#FFF";
+        upvoteButton.style.color = "#FFF";
+        spanCountUpvotes.innerText = (parseInt(spanCountUpvotes.innerText)) - 1;
+
+        containerUpvoteInteraction.removeEventListener('click', () => deleteUpvote());
+        eventUpvote();
     }
 
     containerUpvoteInteraction.style.cursor = 'pointer';
