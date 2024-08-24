@@ -9,7 +9,7 @@
 }
 
 body {
-    font-family: "JetBrainsMono-Regular", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
 }
@@ -50,7 +50,7 @@ body {
 
 .container-post-header-signature {
     display: grid;
-    grid-template-columns: min-content auto;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto;
     gap: 10px;
 }

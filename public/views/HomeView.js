@@ -52,15 +52,13 @@ export default class extends AbstractView {
         this.mainContainer.scrollTop = 0;
         this.offset = 0;
         this.mode = 'following';
-        try {
-            const posts = await this.getPosts();
-            this.timelineContainer.innerHTML = '';
-            this.drawPosts(posts);
-        } catch (error) {
-            window.localStorage.remove('user');
-            alert(error.message);
-            navigateTo('/login');  
+        const res = await this.getPosts();
+        if (!res.ok) {
+            alert(res.error.message);
+            return navigateTo('/login');
         }
+        this.timelineContainer.innerHTML = '';
+        this.drawPosts(res.posts);
     }
 
     async setGlobalTimeline () {
@@ -68,9 +66,13 @@ export default class extends AbstractView {
         this.mainContainer.scrollTop = 0;
         this.offset = 0;
         this.mode = 'global';
-        const posts = await this.getPosts();
+        const res = await this.getPosts();
+        if (!res.ok) {
+            alert(res.error.message);
+            return navigateTo('/login');
+        }
         this.timelineContainer.innerHTML = '';
-        this.drawPosts(posts);
+        this.drawPosts(res.posts);
     }
 
     async getPosts () {
@@ -79,13 +81,7 @@ export default class extends AbstractView {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${user.token}` }
         });
-        const response = await request.json();
-        if (!response.ok) {
-            localStorage.remove('user');
-            alert(error.message);
-            return navigateTo('/login');
-        }
-        return response.posts;
+        return await request.json();
     }
 
     drawPosts (posts) {
