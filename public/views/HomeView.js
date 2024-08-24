@@ -132,8 +132,12 @@ export default class extends AbstractView {
 
             if (scrollTop + clientHeight >= scrollHeight - umbral) {
                 this.offset += this.limit;
-                const posts = await this.getPosts();
-                this.drawPosts(posts);
+                const res = await this.getPosts();
+                if (!res.ok) {
+                    alert(res.error.message);
+                    return navigateTo("/login");
+                }
+                this.drawPosts(res.posts);
             }
         });
     }
