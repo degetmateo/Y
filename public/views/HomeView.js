@@ -68,15 +68,9 @@ export default class extends AbstractView {
         this.mainContainer.scrollTop = 0;
         this.offset = 0;
         this.mode = 'global';
-        try {
-            const posts = await this.getPosts();
-            this.timelineContainer.innerHTML = '';
-            this.drawPosts(posts);
-        } catch (error) {
-            window.localStorage.remove('user');
-            alert(error.message);
-            navigateTo('/login');
-        }
+        const posts = await this.getPosts();
+        this.timelineContainer.innerHTML = '';
+        this.drawPosts(posts);
     }
 
     async getPosts () {
@@ -86,7 +80,11 @@ export default class extends AbstractView {
             headers: { 'Authorization': `Bearer ${user.token}` }
         });
         const response = await request.json();
-        if (!response.ok) throw new Error(res.error.message);
+        if (!response.ok) {
+            localStorage.remove('user');
+            alert(error.message);
+            return navigateTo('/login');
+        }
         return response.posts;
     }
 

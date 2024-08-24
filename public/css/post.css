@@ -1,0 +1,147 @@
+@font-face {
+    font-family: 'JetBrainsMono-Regular';
+    src: url('/public/fonts/JetBrainsMono_Complete/JetBrainsMono-Regular.otf') format('truetype');
+}
+
+@font-face {
+    font-family: 'JetBrainsMono-Light';
+    src: url('/public/fonts/JetBrainsMono_Complete/JetBrainsMono-Light.otf') format('truetype');
+}
+
+body {
+    font-family: "JetBrainsMono-Regular", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.container-post {
+    background-color: #000;
+    color: #FFF;
+    
+    padding: 10px;
+    border-bottom: 1px solid gray;
+
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+}
+
+.container-post-header {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto;
+    gap: 10px;
+}
+
+.container-post-header-picture {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #FFF;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.post-header-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.container-post-header-signature {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto;
+    gap: 10px;
+}
+
+.container-post-header-signature-name {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    align-content: center;
+}
+
+.post-header-signature-name {
+    font-weight: bold;
+}
+
+.post-header-signature-username {
+    font-weight: lighter;
+}
+
+.container-post-header-signature-role {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.post-header-signature-role {
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 5px;
+    border-radius: 2px;
+}
+
+.post-header-signature-role--member {
+    color: aqua;
+    border: 1px solid aqua;
+}
+
+.post-header-signature-role--tester {
+    color: yellow;
+    border: 1px solid yellow;
+}
+
+.post-header-signature-role--mod {
+    color: deeppink;
+    border: 1px solid deeppink;
+}
+
+.post-header-signature-role--admin {
+    color: red;
+    border: 1px solid red;
+}
+
+/* .container-post-body {
+    
+} */
+
+.post-body-content {
+    overflow-wrap: break-word; 
+}
+
+.container-post-footer {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    gap: 5px;
+}
+
+.container-post-footer-date {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.post-footer-date {
+    font-family: "JetBrainsMono-Light", sans-serif;
+    font-size: 12px
+}
+
+.container-post-footer-interactions-upvote {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto;
+    align-content: center;
+    gap: 5px;
+}
+
+.post-footer-interactions-upvote {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.post-footer-interactions-upvote--active {
+    color: red;
+}

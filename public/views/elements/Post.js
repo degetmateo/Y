@@ -1,272 +1,143 @@
-import {URL_NO_IMAGE} from "../../consts.js";
-import {cleanContent, getDateMessage} from "../../helpers.js";
+import { URL_NO_IMAGE } from "../../consts.js";
+import { cleanContent, getDateMessage } from "../../helpers.js";
 
 export default function (post) {
-    return createPost(post);
+    const container = document.createElement('div');
+    container.classList.add('container-post');
+    container.appendChild(CreatePostHeader(post));
+    container.appendChild(CreatePostBody(post));
+    container.appendChild(CreatePostFooter(post));
+    return container;
 }
 
-function createPost (post) {
-    const postContainer = document.createElement('div');
-    postContainer.setAttribute('class', 'container-post');
-    // postContainer.setAttribute('data-link', '');
-    // postContainer.setAttribute('href', '/post/'+post.id);
-    postContainer.style = `
-        padding: 10px;
-        border-bottom: 1px solid gray;
-
-        display: grid;
-        grid-template-columns: auto;
-        grid-template-rows: auto auto auto;
-        gap: 15px;
-    `;
-
-    postContainer.appendChild(createPostHeader(post));
-    // if (post.image) postContainer.appendChild(createPostImage(post));
-    postContainer.appendChild(createPostContent(post));
-
-    const containerInteractions = document.createElement('div');
-    containerInteractions.style = `
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows;
-        gap: 10px;
-    `;
-
-    const containerCommentsInteraction = document.createElement('div');
-    containerCommentsInteraction.style = `
-        width: 100%;
-        border: 1px solid #303030;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    `;
-
-    const spanComment = document.createElement('span');
-    spanComment.innerHTML = '???';
-    containerCommentsInteraction.appendChild(spanComment);
-
-    const containerUpvoteInteraction = document.createElement('div');
-    containerUpvoteInteraction.classList.add('container-upvote-interaction');
-    containerUpvoteInteraction.style = `
-        width: 100%;
-                border: 1px solid #303030;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    `;
-
-    const spanCountUpvotes = document.createElement('span');
-    const upvoteButton = document.createElement('button');
-
-    containerUpvoteInteraction.appendChild(spanCountUpvotes);
-    containerUpvoteInteraction.appendChild(upvoteButton);
-
-    spanCountUpvotes.innerText = post.upvotes.length;
-
-    upvoteButton.innerHTML = '<i class="fa-solid fa-paw"></i>';
-    upvoteButton.style =`
-        color: #FFF;
-        background: none;
-        border: none;
-        outline: none;
-        font-size: 14px;
-    `;
-
-    if (post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) {
-        containerUpvoteInteraction.style.color = "red";
-        upvoteButton.style.color = "red";
-        eventDeleteUpvote();
-    } else {
-        eventUpvote();
-    }
-
-    function eventUpvote () {
-        containerUpvoteInteraction.addEventListener('click', () => upvote());
-    }
-
-    function eventDeleteUpvote () {
-        containerUpvoteInteraction.addEventListener('click', () => deleteUpvote());
-    }
-
-    function upvote () {
-        if (post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) return;
-
-        fetch(`/api/post/${post.id}/upvote/add`, { 
-            method: 'PUT',
-            headers: { "Authorization": "Bearer "+window.app.user.token } });
-
-        post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: post.creator.id, id_post: post.id });
-        containerUpvoteInteraction.style.color = "red";
-        upvoteButton.style.color = "red";
-        spanCountUpvotes.innerText = (parseInt(spanCountUpvotes.innerText)) + 1;
-
-        containerUpvoteInteraction.removeEventListener('click', () => upvote());
-        eventDeleteUpvote();
-    }
-
-    function deleteUpvote () {
-        if (!post.upvotes.find(member => member.id_member_upvote == window.app.user.id)) return;
-
-        fetch(`/api/post/${post.id}/upvote/delete`, { 
-            method: 'DELETE',
-            headers: { "Authorization": "Bearer "+window.app.user.token } });
-
-        post.upvotes = post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == post.id);
-
-        containerUpvoteInteraction.style.color = "#FFF";
-        upvoteButton.style.color = "#FFF";
-        spanCountUpvotes.innerText = (parseInt(spanCountUpvotes.innerText)) - 1;
-
-        containerUpvoteInteraction.removeEventListener('click', () => deleteUpvote());
-        eventUpvote();
-    }
-
-    containerUpvoteInteraction.style.cursor = 'pointer';
-    const containerInteraction = document.createElement('div');
-    containerInteraction.style = `
-        width: 100%;
-        border: 1px solid #303030;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    `;
-    containerInteraction.innerText = '???';
-
-    containerInteractions.appendChild(containerCommentsInteraction);
-    containerInteractions.appendChild(containerUpvoteInteraction);
-    containerInteractions.appendChild(containerInteraction);
-
-    postContainer.appendChild(containerInteractions);
-    return postContainer;
+function CreatePostHeader (post) {
+    const containerHeader = document.createElement('div');
+    containerHeader.classList.add('container-post-header');
+    containerHeader.appendChild(CreatePostHeaderPicture(post));
+    containerHeader.appendChild(CreatePostHeaderSignature(post));
+    return containerHeader;
 }
 
-function upvote (post) {
-
+function CreatePostBody (post) {
+    const containerBody = document.createElement('div');
+    containerBody.classList.add('container-post-body');
+    const bodyContent = document.createElement('span');
+    bodyContent.classList.add('post-body-content');
+    bodyContent.innerHTML = cleanContent(post.content);
+    containerBody.appendChild(bodyContent);
+    return containerBody;
 }
 
-function deleteUpvote (post) {
-    fetch(`/api/post/${post.id}/upvote/delete`, { 
-        method: 'DELETE',
-        headers: { "Authorization": "Bearer "+window.app.user.token } });
+function CreatePostFooter (post) {
+    const containerFooter = document.createElement('div');
+    containerFooter.classList.add('container-post-footer');
+    containerFooter.appendChild(CreatePostFooterInteractions(post));
+    containerFooter.appendChild(CreatePostFooterDate(post));
+    return containerFooter;
 }
 
-function createPostHeader (post) {
-    const headerContainer = document.createElement('div');
-    headerContainer.setAttribute('class', 'container-sign');
+function CreatePostHeaderPicture (post) {
+    const containerHeaderPicture = document.createElement('div');
+    containerHeaderPicture.classList.add('container-post-header-picture');
+    const headerPicture = new Image();
+    headerPicture.src = post.creator.profilePicture.url || URL_NO_IMAGE;
+    headerPicture.classList.add('post-header-picture');
+    headerPicture.setAttribute('href', '/user/'+post.creator.username);
+    headerPicture.setAttribute('data-link', '');
+    containerHeaderPicture.appendChild(headerPicture);
+    return containerHeaderPicture;
+}
 
-    const pSign = document.createElement('p');
-    const strongSign = document.createElement('strong');
-    const aSign = document.createElement('a');
-    const spanSign = document.createElement('span');
+function CreatePostHeaderSignature (post) {
+    const containerHeaderSignature = document.createElement('div');
+    containerHeaderSignature.classList.add('container-post-header-signature');
+    containerHeaderSignature.appendChild(CreatePostHeaderSignatureName(post));
+    containerHeaderSignature.appendChild(CreatePostHeaderSignatureRole(post));
+    return containerHeaderSignature;
+}
+
+function CreatePostHeaderSignatureName (post) {
+    const containerHeaderSignatureName = document.createElement('div');
+    containerHeaderSignatureName.classList.add('container-post-header-signature-name');
+
+    const headerSignatureName = document.createElement('span');
+    headerSignatureName.classList.add('post-header-signature-name');
+    headerSignatureName.textContent = post.creator.name;
+
+    const headerSignatureUsername = document.createElement('span');
+    headerSignatureUsername.classList.add('post-header-signature-username');
+    headerSignatureUsername.textContent = '@'+post.creator.username;
+
+    containerHeaderSignatureName.appendChild(headerSignatureName);
+    containerHeaderSignatureName.appendChild(headerSignatureUsername);
+    return containerHeaderSignatureName;
+}
+
+function CreatePostHeaderSignatureRole (post) {
+    const containerHeaderSignatureRole = document.createElement('div');
+    containerHeaderSignatureRole.classList.add('container-post-header-signature-role');
+
+    const headerSignatureRole = document.createElement('span');
+    headerSignatureRole.classList.add('post-header-signature-role');
+    headerSignatureRole.textContent = post.creator.role;
+    headerSignatureRole.classList.add('post-header-signature-role--'+post.creator.role);
+
+    containerHeaderSignatureRole.appendChild(headerSignatureRole);
+    return containerHeaderSignatureRole;
+}
+
+
+function CreatePostFooterDate (post) {
+    const containerFooterDate = document.createElement('div');
+    containerFooterDate.classList.add('container-post-footer-date');
+    const footerDate = document.createElement('span');
+    footerDate.classList.add('post-footer-date');
+    footerDate.textContent = getDateMessage(post.date);
+    containerFooterDate.appendChild(footerDate);
+    return containerFooterDate; 
+}
+
+function CreatePostFooterInteractions (post) {
+    const containerFooterInteractions = document.createElement('div');
+    containerFooterInteractions.classList.add('container-post-footer-interactions');
+    containerFooterInteractions.appendChild(CreatePostFooterInteractionUpvote(post));
+    return containerFooterInteractions;
+}
+
+function CreatePostFooterInteractionUpvote (post) {
+    const containerFooterUpvote = document.createElement('div');
+    containerFooterUpvote.classList.add('container-post-footer-interactions-upvote');
     
-    aSign.setAttribute('href', '/user/'+post.creator.username);
-    aSign.setAttribute('data-link', '');
-    aSign.textContent = post.creator.name;
-
-    strongSign.appendChild(aSign);
-    strongSign.style = 'cursor:pointer;';
-    
-    pSign.appendChild(strongSign);
-
-    spanSign.textContent = ' - '+getDateMessage(post.date);
-    pSign.appendChild(spanSign);
-    pSign.style.margin = '0';
-    pSign.style.padding = '0';
-
-    const containerRole = document.createElement('div');
-    const spanRole = document.createElement('span');
-    spanRole.innerText = post.creator.role.toUpperCase();
-
-    const colorMap = {
-        "admin": "red",
-        "member": "aqua",
-        "tester": "yellow",
-        "mod": "green"
+    const footerUpvote = document.createElement('span');
+    footerUpvote.innerHTML = '<i class="fa-solid fa-paw"></i>';
+    footerUpvote.classList.add('post-footer-interactions-upvote');
+    if (post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
+        console.log('is voted')
+        footerUpvote.classList.add('post-footer-interactions-upvote--active');
     }
 
-    spanRole.style = `
-        padding: 5px;
-        color: ${colorMap[post.creator.role]};
-        font-size: 12px;
-        border: 1px solid ${colorMap[post.creator.role]};
-        border-radius: 8px;
-    `
-    containerRole.appendChild(spanRole);
-    containerRole.style = `
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-    `;
+    const footerUpvoteNumber = document.createElement('span');
+    footerUpvoteNumber.textContent = post.upvotes.length;
+    footerUpvoteNumber.classList.add('post-footer-interactions-upvote-number');
 
-    const containerNameRole = document.createElement('div');
-    containerNameRole.appendChild(pSign);
-    containerNameRole.appendChild(containerRole);
-    containerNameRole.style = `
-        display: grid;
-        grid-template-columns: auto;
-        grid-template-rows: auto auto;
-        gap: 5px;
-
-        justify-items: start;
-        align-content: start;
-    `;
-
-    headerContainer.style = `        
-        display: grid;
-        grid-template-columns: min-content auto;
-        grid-template-rows: auto;
-        justify-items: start;
-        align-content: center;
-        gap: 10px;
-    `;
-    headerContainer.appendChild(createPostUserPicture(post));
-    headerContainer.appendChild(containerNameRole);
-    return headerContainer;
-}
-
-function createPostUserPicture (post) {
-    const userPictureContainer = document.createElement('div');
-    userPictureContainer.setAttribute('class', 'container-user-picture');
-    userPictureContainer.appendChild(createProfileImage(post));
-    userPictureContainer.style = `
-        width: 50px;
-        height: 50px;
-        border: 1px solid #FFF; 
-        cursor: pointer;
-        overflow: hidden;
-    `;
-    return userPictureContainer;
-}
-
-function createProfileImage (post) {
-    const creator = post.creator;
-    const image = creator.profilePicture;
-    const imageUrl = image.url || URL_NO_IMAGE;
-
-    const img = new Image();
-    img.src = imageUrl;
-    img.setAttribute('class', 'image-user-picture');
-    img.setAttribute('href', '/user/'+post.creator.username);
-    img.setAttribute('data-link', '');
-    img.addEventListener('load', () => {                
-        img.style = `
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        `;
+    footerUpvote.addEventListener('click', () => {
+        if (post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
+            footerUpvote.classList.remove('post-footer-interactions-upvote--active');
+            post.upvotes = post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == post.id);
+            fetch(`/api/post/${post.id}/upvote/delete`, { 
+                method: 'DELETE',
+                headers: { "Authorization": "Bearer "+window.app.user.token } });
+        } else {
+            footerUpvote.classList.add('post-footer-interactions-upvote--active');
+            post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: post.creator.id, id_post: post.id });
+            fetch(`/api/post/${post.id}/upvote/add`, { 
+                method: 'PUT',
+                headers: { "Authorization": "Bearer "+window.app.user.token } });
+        }
+        footerUpvoteNumber.innerText = post.upvotes.length;
     });
-    return img;
-}
 
-// function createPostImage (post) {
-//     const imageContainer = document.createElement('div');
-//     imageContainer.classList.add('container-post-image');
-
-// }
-
-function createPostContent (post) {
-    const pContent = document.createElement('p');
-    pContent.style = 'overflow-wrap: break-word; margin: 0;';
-    pContent.innerHTML = cleanContent(post.content);   
-    return pContent;
+    containerFooterUpvote.appendChild(footerUpvote);
+    containerFooterUpvote.appendChild(footerUpvoteNumber);
+    return containerFooterUpvote;
 }
