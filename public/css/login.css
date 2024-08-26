@@ -33,7 +33,7 @@
 }
 
 .container-view-login input {
-    background-color: #000;
+    background-color: #1E1E1E;
     border: 1px solid #FFF;
     color: #FFF;
     outline: none;
@@ -41,7 +41,8 @@
 }
 
 .container-view-login button {
-    background-color: #000;
+    background-color: #1E1E1E;
+    cursor: pointer;
     padding: 10px;
     outline: none;
     border: 1px solid #FFF;

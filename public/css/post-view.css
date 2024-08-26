@@ -1,0 +1,17 @@
+.container-view-post {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 0.2fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas: 
+        "nav main aside"
+        "nav main aside"
+        "nav main aside";
+}
+
+.container-view-post-main {
+    grid-area: view;
+    background-color: red;
+}

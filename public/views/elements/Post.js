@@ -21,9 +21,13 @@ function CreatePostHeader (post) {
 function CreatePostBody (post) {
     const containerBody = document.createElement('div');
     containerBody.classList.add('container-post-body');
+    
     const bodyContent = document.createElement('span');
     bodyContent.classList.add('post-body-content');
     bodyContent.innerHTML = cleanContent(post.content);
+    // CreateDataLink(containerBody, 'href', '/post/'+post.id);
+
+
     containerBody.appendChild(bodyContent);
     return containerBody;
 }
@@ -42,8 +46,8 @@ function CreatePostHeaderPicture (post) {
     const headerPicture = new Image();
     headerPicture.src = post.creator.profilePicture.url || URL_NO_IMAGE;
     headerPicture.classList.add('post-header-picture');
-    headerPicture.setAttribute('href', '/user/'+post.creator.username);
-    headerPicture.setAttribute('data-link', '');
+    CreateDataLink(headerPicture, '/user/'+post.creator.username);
+
     containerHeaderPicture.appendChild(headerPicture);
     return containerHeaderPicture;
 }
@@ -59,14 +63,17 @@ function CreatePostHeaderSignature (post) {
 function CreatePostHeaderSignatureName (post) {
     const containerHeaderSignatureName = document.createElement('div');
     containerHeaderSignatureName.classList.add('container-post-header-signature-name');
+    // CreateDataLink(containerHeaderSignatureName, '/post/'+post.id);
 
     const headerSignatureName = document.createElement('span');
     headerSignatureName.classList.add('post-header-signature-name');
     headerSignatureName.textContent = post.creator.name;
+    CreateDataLink(headerSignatureName, '/user/'+post.creator.username);
 
     const headerSignatureUsername = document.createElement('span');
     headerSignatureUsername.classList.add('post-header-signature-username');
     headerSignatureUsername.textContent = '@'+post.creator.username;
+    // CreateDataLink(headerSignatureUsername, '/post/'+post.id);
 
     containerHeaderSignatureName.appendChild(headerSignatureName);
     containerHeaderSignatureName.appendChild(headerSignatureUsername);
@@ -76,6 +83,7 @@ function CreatePostHeaderSignatureName (post) {
 function CreatePostHeaderSignatureRole (post) {
     const containerHeaderSignatureRole = document.createElement('div');
     containerHeaderSignatureRole.classList.add('container-post-header-signature-role');
+    // CreateDataLink(containerHeaderSignatureRole, '/post/'+post.id);
 
     const headerSignatureRole = document.createElement('span');
     headerSignatureRole.classList.add('post-header-signature-role');
@@ -109,11 +117,17 @@ function CreatePostFooterInteractionUpvote (post) {
     containerFooterUpvote.classList.add('container-post-footer-interactions-upvote');
     
     const footerUpvote = document.createElement('span');
-    footerUpvote.innerHTML = '<i class="fa-solid fa-paw"></i>';
+    
+    footerUpvote.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 56 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M26.731 0.0864258H38.731V3.08643H42.731V19.0864H52.731V22.0864H56.731V45.0864H52.731V52.0864H49.731V55.0864H19.731V52.0864H0.730957V26.0864H19.731V22.0864H23.731V15.0864H26.731V0.0864258ZM31.731 4.08643V16.0864H27.731V23.0864H24.731V27.0864H20.731V30.0864H17.731V47.0864H20.731V51.0864H48.731V48.0864H44.731V44.0864H52.731V40.0864H44.731V35.0864H52.731V32.0864L45.731 31.0864L44.731 27.0864H52.731V23.0864H37.731V4.08643H31.731ZM5.73096 30.0864V47.0864H12.731V30.0864H5.73096Z" fill="white"/>
+        </svg>
+    `;
+
     footerUpvote.classList.add('post-footer-interactions-upvote');
     if (post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
-        console.log('is voted')
         footerUpvote.classList.add('post-footer-interactions-upvote--active');
+        footerUpvote.children[0].children[0].setAttribute('fill', 'red');
     }
 
     const footerUpvoteNumber = document.createElement('span');
@@ -123,12 +137,14 @@ function CreatePostFooterInteractionUpvote (post) {
     footerUpvote.addEventListener('click', () => {
         if (post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
             footerUpvote.classList.remove('post-footer-interactions-upvote--active');
+            footerUpvote.children[0].children[0].setAttribute('fill', 'white');
             post.upvotes = post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == post.id);
             fetch(`/api/post/${post.id}/upvote/delete`, { 
                 method: 'DELETE',
                 headers: { "Authorization": "Bearer "+window.app.user.token } });
         } else {
             footerUpvote.classList.add('post-footer-interactions-upvote--active');
+            footerUpvote.children[0].children[0].setAttribute('fill', 'red');
             post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: post.creator.id, id_post: post.id });
             fetch(`/api/post/${post.id}/upvote/add`, { 
                 method: 'PUT',
@@ -140,4 +156,9 @@ function CreatePostFooterInteractionUpvote (post) {
     containerFooterUpvote.appendChild(footerUpvote);
     containerFooterUpvote.appendChild(footerUpvoteNumber);
     return containerFooterUpvote;
+}
+
+function CreateDataLink (element, path) {
+    element.setAttribute('href', path);
+    element.setAttribute('data-link', '');
 }
