@@ -1,4 +1,4 @@
-import { hasDisallowedTags } from "../helpers.js";
+import { hasDisallowedTags, loadImage } from "../helpers.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
 import Post from "./elements/Post.js";
@@ -11,6 +11,10 @@ export default class extends AbstractView {
         this.limit = 20;
         this.offset = 0;
         this.mode = 'global';
+
+        this.post = {
+            images: []
+        }
     }
 
     async init () {
@@ -19,7 +23,7 @@ export default class extends AbstractView {
         appContainer.innerHTML = VIEW_CONTENT;
         this.mainContainer = document.getElementById('container-main');
         this.timelineContainer = document.getElementById('container-timeline');
-        CreateNavigation();
+        CreateNavigation(this);
         this.setGlobalTimeline();
         this.events();
     }
@@ -110,8 +114,9 @@ export default class extends AbstractView {
                     'Authorization': `Bearer ${user.token}`,
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify({ user, post: { content } })
-            })
+                body: JSON.stringify({ user, post: { content: content, images: this.post.images } })
+            });
+            this.post.images = [];
     
             const res = await request.json();
     
@@ -120,7 +125,92 @@ export default class extends AbstractView {
                 return;
             }
             this.setGlobalTimeline();
-        })
+        });
+
+        this.post_image_input = null;
+        const buttonImage = document.getElementById('post-button-image');
+        const buttonMobileImage = document.getElementById('post-button-image-mobile');
+        buttonImage.addEventListener('click', () => this.eventButtonImage());
+        buttonMobileImage.addEventListener('click', () => this.eventButtonImage());
+    }
+
+    eventButtonImage () {
+        if (this.post_image_input) {
+            this.post_image_input.remove();
+            this.post_image_input = null;
+            return;
+        }
+        const containerInput = document.createElement('div');
+        containerInput.classList.add('container-input-image-url');
+        containerInput.style = `
+            background-color: #1E1E1E;
+
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-rows: auto auto auto;
+            gap: 5px;
+        `;
+
+        const buttonClose = document.createElement('button');
+        buttonClose.style = `
+            outline: none;
+            border: none;
+            background-color: #1E1E1E;
+            padding: 10px;
+            border: 1px solid #FFF;
+            color: #FFF;
+            cursor:pointer;
+        `;
+        buttonClose.textContent = 'Cerrar';
+        buttonClose.addEventListener('click', () => {
+            containerInput.remove();
+            this.post_image_input = null;
+        });
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'URL de la Imagen';
+        input.id = 'post-input-image-url';
+        input.style = `
+            outline: none;
+            border: none;
+            background-color: #1E1E1E;
+            padding: 10px;
+            border: 1px solid #FFF;
+            color: #FFF;
+        `;
+
+        const buttonLoad = document.createElement('button');
+        buttonLoad.textContent = 'Enviar';
+        buttonLoad.style = `
+            outline: none;
+            border: none;
+            background-color: #1E1E1E;
+            padding: 10px;
+            border: 1px solid #FFF;
+            color: #FFF;
+            cursor: pointer;
+        `;
+        buttonLoad.addEventListener('click', async () => {
+            const url = input.value;
+            input.value = '';
+            try {
+                await loadImage(url);
+                this.post.images.push(url);
+                console.log(this.post.images)
+                containerInput.remove();
+            } catch (error) {
+                alert(error.message);
+                this.post_image_input = null;
+                containerInput.remove();
+            }
+        });
+
+        containerInput.appendChild(buttonClose)
+        containerInput.appendChild(input);
+        containerInput.appendChild(buttonLoad);
+        this.post_image_input = containerInput;
+        document.body.appendChild(containerInput);
     }
 
     eventTimelineScroll () {
@@ -153,7 +243,12 @@ const VIEW_CONTENT = `
                 <form action="/post/create" method="post" id="form-post-create">
                     <div class="container-inputs">
                         <textarea class="textarea" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required></textarea>
-                        <button class="button-submit" type="submit">Publicar</button>
+                        <div class="container-post-create-buttons">
+                            <div class="post-button-image" id="post-button-image">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <button class="button-submit" type="submit">Publicar</button>
+                        </div>
                     </div>
                 </form>
             </div>

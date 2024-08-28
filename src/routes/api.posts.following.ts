@@ -85,6 +85,7 @@ module.exports = (server: Server) => {
                         date: getTimeDifference(new Date(p.date_post)),
                         role: p.role_member,
                         upvotes: p.upvotes,
+                        images: p.images,
                         creator: {
                             id: p.id_member,
                             name: p.name_member,

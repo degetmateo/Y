@@ -1,5 +1,5 @@
 import { URL_NO_IMAGE } from "../../consts.js";
-import { cleanContent, getDateMessage } from "../../helpers.js";
+import { cleanContent, getDateMessage, loadImage } from "../../helpers.js";
 
 export default function (post) {
     const container = document.createElement('div');
@@ -21,15 +21,28 @@ function CreatePostHeader (post) {
 function CreatePostBody (post) {
     const containerBody = document.createElement('div');
     containerBody.classList.add('container-post-body');
-    
+    containerBody.appendChild(CreatePostBodyContent(post));
+    if (post.images && post.images.length > 0) containerBody.appendChild(CreatePostBodyImages(post));
+    return containerBody;
+}
+
+function CreatePostBodyContent (post) {
     const bodyContent = document.createElement('span');
     bodyContent.classList.add('post-body-content');
     bodyContent.innerHTML = cleanContent(post.content);
-    // CreateDataLink(containerBody, 'href', '/post/'+post.id);
+    return bodyContent;
+}
 
-
-    containerBody.appendChild(bodyContent);
-    return containerBody;
+function CreatePostBodyImages (post) {
+    const imagesContainer = document.createElement('div');
+    imagesContainer.classList.add('container-post-body-images');
+    for (const image of post.images) {
+        const img = new Image();
+        img.src = image;
+        img.classList.add('post-body-image');
+        imagesContainer.appendChild(img);
+    }
+    return imagesContainer;
 }
 
 function CreatePostFooter (post) {

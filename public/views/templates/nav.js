@@ -1,13 +1,13 @@
 import {hasDisallowedTags} from "../../helpers.js";
 import {navigateTo} from "../../router.js";
 
-export const CreateNavigation = () => {
+export const CreateNavigation = (home) => {
     const navContainer = document.getElementById('container-nav');
     const mobileContainer = document.getElementById('container-mobile-form-post-create');
     navContainer.innerHTML = CONTENT_NAV;
     mobileContainer.innerHTML = CONTENT_MOBILE;
     mobileContainer.style.display = 'none';
-    CreateNavigationEvents();
+    CreateNavigationEvents(home);
 }
 
 const CONTENT_NAV = `
@@ -22,11 +22,16 @@ const CONTENT_NAV = `
 const CONTENT_MOBILE = `
         <div class="container-form">
             <textarea class="textarea" id="mobile-textarea-post-create" name="mobile-textarea-post-create" placeholder="¡¿Qué está pasando?!" required></textarea>
-            <button class="mobile-button-post-create" id="mobile-button-post-create" type="submit">Publicar</button>
+            <div class="container-post-create-buttons-mobile">
+                <div class="post-button-image-mobile" id="post-button-image-mobile">
+                    <i class="fa-solid fa-image"></i>
+                </div>
+                <button class="mobile-button-post-create" id="mobile-button-post-create" type="submit">Publicar</button>
+            </div>
         </div>
 `;
 
-const CreateNavigationEvents = () => {
+const CreateNavigationEvents = (home) => {
     document.getElementById('nav-button-home').addEventListener('click', (event) => {
         event.preventDefault();
         navigateTo('/home');
@@ -55,10 +60,10 @@ const CreateNavigationEvents = () => {
         }
     })
 
-    setEventFormPostCreate();
+    setEventFormPostCreate(home);
 }
 
-async function setEventFormPostCreate () {
+async function setEventFormPostCreate (home) {
     const mobile = document.getElementById('container-mobile-form-post-create');
     const buttonPost = document.getElementById('nav-button-post'); 
     const buttonMobile = document.getElementById('mobile-button-post-create'); 
@@ -81,7 +86,7 @@ async function setEventFormPostCreate () {
                 'Authorization': `Bearer ${user.token}`,
                 'Content-Type': "application/json"
             },
-            body: JSON.stringify({ user, post: { content } })
+            body: JSON.stringify({ user, post: { content: content, images: home.post.images || [] } })
         })
 
         const res = await request.json();

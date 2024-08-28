@@ -42,13 +42,13 @@ module.exports = (server: Server) => {
                         ${offset};
                 `;
 
-
                 const posts = queryPosts.map(p => {
                     return {
                         id: p.id_post,
                         content: p.content_post,
                         date: getTimeDifference(new Date(p.date_post)),
                         upvotes: p.upvotes,
+                        images: p.images,
                         creator: {
                             id: p.id_member,
                             name: p.name_member,

@@ -47,6 +47,7 @@ a {
     width: 20em;
     height: 15em;
     border: 1px solid #FFF;
+
     position: fixed;
     top: 50%;
     left: 50%;
@@ -57,10 +58,19 @@ a {
     width: 100%;
     height: 100%;
 
-    background-color: gray;
+    background-color: #1E1E1E;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    gap: 5px;
+}
+
+.container-post-create-buttons-mobile {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    gap: 5px;
 }
 
 .container-mobile-form-post-create .container-form .textarea {
@@ -69,14 +79,22 @@ a {
     border: gray;
     outline: none;
     padding: 10px;
-    height: 75%;
+}
+
+.post-button-image-mobile {
+    background-color: #1E1E1E;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #FFF;
 }
 
 .container-mobile-form-post-create .container-form button {
-    height: 25%;
     background-color: #1E1E1E;
     color: #FFF;
-    border: 1px solid #FFF;
+    border-top: 1px solid #FFF;
 }
 
 .container-mobile-form-post-create .container-form button:active {

@@ -53,6 +53,27 @@
     resize: none;
 }
 
+.container-post-create-buttons {
+    width: 100%;
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto;
+    gap: 5px;
+}
+
+.post-button-image {
+    border: 1px solid #FFF;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.post-button-image:active {
+    background-color: gray;
+}
+
 .container-home-view .container-main .container-form-post-create .button-submit {
     background-color: #1E1E1E;
     border: 1px solid #FFF;
@@ -114,6 +135,16 @@
 
 .button-change-timeline.active {
     border-bottom: 1px solid #FFF;
+}
+
+.container-input-image-url {
+    width: 400px;
+    height: 200px;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @media (max-width: 768px) {
@@ -180,5 +211,9 @@
 
         width: 50px;
         height: 50px;
+    }
+
+    .container-input-image-url {
+        width: 200px;
     }
 }

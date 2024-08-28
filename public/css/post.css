@@ -102,12 +102,23 @@ body {
     border: 1px solid red;
 }
 
-/* .container-post-body {
-    
-} */
+.container-post-body {
+    display: grid;
+    grid-template-columns: auto;
+    grid-row-start: auto auto;
+    gap: 10px;
+}
 
 .post-body-content {
-    overflow-wrap: break-word; 
+    overflow-wrap: break-word;
+}
+
+/* .container-post-body-images {
+
+} */
+
+.post-body-image {
+    max-width: 400px;
 }
 
 .container-post-footer {
@@ -143,4 +154,10 @@ body {
 
 .post-footer-interactions-upvote--active {
     color: red;
+}
+
+@media (max-width: 768px) {
+    .post-body-image {
+        max-width: 100%;
+    }
 }
