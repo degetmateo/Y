@@ -66,6 +66,9 @@ async function setEventFormPostCreate () {
 
     buttonMobile.addEventListener('click', async event => {
         const content = inputContent.value;
+        inputContent.value = '';
+        buttonPost.style.background = 'none';
+        mobile.style.display = 'none';
 
         if (!content || content.length <= 0) {
             return;
@@ -87,9 +90,6 @@ async function setEventFormPostCreate () {
             alert(res.error.message)
             return;
         }
-        inputContent.value = ''
-        buttonPost.style.background = 'none';
-        mobile.style.display = 'none';
         navigateTo('/home');
     })
 }

@@ -23,4 +23,17 @@ export default class Postgres {
     public static query (): postgres.Sql<{}> {
         return this.db;
     }
+
+    public static async sql (query: string): Promise<postgres.Sql<{}>> {
+        let result = null;
+        try {
+            await this.db.begin(async sql => {
+                await sql `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
+                result = await sql`${query}`;
+            });
+        } catch (error) {
+            console.error(error);
+        }
+        return result;
+    }
 }
