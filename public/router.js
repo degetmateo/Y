@@ -25,7 +25,7 @@ export const navigateTo = (url) => {
     router();
 };
 
-const router = async () => {
+export const router = async () => {
     const routes = [
         { path: "/error", view: ErrorView },
         { path: "/", view: HomeView },

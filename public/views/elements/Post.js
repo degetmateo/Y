@@ -1,5 +1,6 @@
 import { URL_NO_IMAGE } from "../../consts.js";
-import { cleanContent, getDateMessage, loadImage } from "../../helpers.js";
+import { cleanContent, getDateMessage } from "../../helpers.js";
+import {navigateTo} from "../../router.js";
 
 export default function (post) {
     const container = document.createElement('div');
@@ -15,6 +16,7 @@ function CreatePostHeader (post) {
     containerHeader.classList.add('container-post-header');
     containerHeader.appendChild(CreatePostHeaderPicture(post));
     containerHeader.appendChild(CreatePostHeaderSignature(post));
+    if (window.app.user.id == post.creator.id) containerHeader.appendChild(CreatePostHeaderDeleteButton(post));
     return containerHeader;
 }
 
@@ -107,6 +109,30 @@ function CreatePostHeaderSignatureRole (post) {
     return containerHeaderSignatureRole;
 }
 
+function CreatePostHeaderDeleteButton (post) {
+    const containerHeaderDeleteButton = document.createElement('div');
+    containerHeaderDeleteButton.classList.add('container-post-header-button-delete');
+
+    const headerDeleteButton = document.createElement('button');
+    headerDeleteButton.classList.add('post-header-button-delete');
+    headerDeleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+    headerDeleteButton.addEventListener('click', () => HeaderDeleteButtonEvent(post));
+
+    containerHeaderDeleteButton.appendChild(headerDeleteButton);
+    return containerHeaderDeleteButton;
+}
+
+async function HeaderDeleteButtonEvent (post) {
+    const request = await fetch(`/api/post/${post.id}/delete`, {
+        method: 'DELETE',
+        headers: {
+            "Authorization": "Bearer " + window.app.user.token
+        }
+    });
+    const response = await request.json();
+    if (!response.ok) return alert(response.error.message);
+    navigateTo(window.location.pathname);
+}
 
 function CreatePostFooterDate (post) {
     const containerFooterDate = document.createElement('div');
