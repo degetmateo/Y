@@ -35,6 +35,13 @@ module.exports = (server: Server) => {
     
                 await sql`
                     DELETE FROM
+                        upvote
+                    WHERE
+                        id_post = ${id_post};
+                `;
+
+                await sql`
+                    DELETE FROM
                         post
                     WHERE
                         id_post = ${id_post};

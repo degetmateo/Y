@@ -244,7 +244,7 @@ export default class extends AbstractView {
         const postsContainer = document.getElementById('container-posts');
         for (const post of posts) {
             post.creator = this.user;
-            postsContainer.appendChild(new Post(post));
+            postsContainer.appendChild(Post.Create(post));
         }
     }
 

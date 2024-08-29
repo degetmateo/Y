@@ -90,7 +90,7 @@ export default class extends AbstractView {
 
     drawPosts (posts) {
         for (const post of posts) {
-            this.timelineContainer.appendChild(new Post(post));
+            this.timelineContainer.appendChild(Post.Create(post));
         }
     }
 
