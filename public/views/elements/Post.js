@@ -182,7 +182,7 @@ export default class Post {
                 footerUpvote.classList.add('post-footer-interactions-upvote--active');
                 footerUpvote.children[0].children[0].setAttribute('fill', 'red');
                 this.post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: this.post.creator.id, id_post: this.post.id });
-                fetch(`/api/post/${post.id}/upvote/add`, { 
+                fetch(`/api/post/${this.post.id}/upvote/add`, { 
                     method: 'PUT',
                     headers: { "Authorization": "Bearer "+window.app.user.token } });
             }
