@@ -1,6 +1,6 @@
 import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
-import Popup from "./popup/popup.js";
+import Popup from "./popup/Popup.js";
 
 export default class Post {
     constructor (_post) {
