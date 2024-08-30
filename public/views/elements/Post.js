@@ -1,5 +1,6 @@
 import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
+import Popup from "./popup/popup.js";
 
 export default class Post {
     constructor (_post) {
@@ -113,22 +114,34 @@ export default class Post {
         containerHeaderDeleteButton.classList.add('container-post-header-button-delete');
         const headerDeleteButton = document.createElement('button');
         headerDeleteButton.classList.add('post-header-button-delete');
-        headerDeleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-        headerDeleteButton.addEventListener('click', () => this.HeaderDeleteButtonEvent());
+        headerDeleteButton.innerHTML = '<i class="fa-solid fa-ellipsis"></i>';
+        headerDeleteButton.addEventListener('click', () => this.CreatePopupMenu());
         containerHeaderDeleteButton.appendChild(headerDeleteButton);
         return containerHeaderDeleteButton;
     }
 
-    async HeaderDeleteButtonEvent () {
-        this.container.remove();
-        const request = await fetch(`/api/post/${this.post.id}/delete`, {
-            method: 'DELETE',
-            headers: {
-                "Authorization": "Bearer " + window.app.user.token
-            }
+    CreatePopupMenu () {
+        const popup = new Popup();
+        popup.CreateButton("Eliminar Publicacion", () => {
+            const popupConfirmation = new Popup();
+            popupConfirmation.CreateTitle('¿Estás seguro?');
+            popupConfirmation.CreateButton('Sí, estoy seguro.', async () => {
+                this.container.remove();
+                popupConfirmation.delete();
+                popup.delete();
+                const request = await fetch(`/api/post/${this.post.id}/delete`, {
+                    method: 'DELETE',
+                    headers: {
+                        "Authorization": "Bearer " + window.app.user.token
+                    }
+                });
+                const response = await request.json();
+                if (!response.ok) return alert(response.error.message);
+            });
+            popupConfirmation.CreateButton('No, no quiero.', () => {
+                popupConfirmation.delete();
+            });
         });
-        const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
     }
 
     CreatePostFooterDate () {
