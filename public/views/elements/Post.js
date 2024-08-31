@@ -1,7 +1,9 @@
 import { URL_NO_IMAGE } from "../../consts.js";
-import { cleanContent, getDateMessage, loadImage } from "../../helpers.js";
+import { cleanContent, getDateMessage } from "../../helpers.js";
 import {navigateTo} from "../../router.js";
 import Popup from "./popup/Popup.js";
+import svg_upvote_green from "./svg/upvote_blue.js";
+import upvote_red from "./svg/upvote_red.js";
 
 export default class Post {
     constructor (_post) {
@@ -198,33 +200,33 @@ export default class Post {
         
         const footerUpvote = document.createElement('span');
         
-        footerUpvote.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 56 57" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M26.731 0.0864258H38.731V3.08643H42.731V19.0864H52.731V22.0864H56.731V45.0864H52.731V52.0864H49.731V55.0864H19.731V52.0864H0.730957V26.0864H19.731V22.0864H23.731V15.0864H26.731V0.0864258ZM31.731 4.08643V16.0864H27.731V23.0864H24.731V27.0864H20.731V30.0864H17.731V47.0864H20.731V51.0864H48.731V48.0864H44.731V44.0864H52.731V40.0864H44.731V35.0864H52.731V32.0864L45.731 31.0864L44.731 27.0864H52.731V23.0864H37.731V4.08643H31.731ZM5.73096 30.0864V47.0864H12.731V30.0864H5.73096Z" fill="white"/>
-            </svg>
-        `;
+        const FILLED = upvote_red.filled;
+        const UNFILLED = upvote_red.unfilled;
+
+        footerUpvote.innerHTML = UNFILLED;
     
         footerUpvote.classList.add('post-footer-interactions-upvote');
         if (this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
             footerUpvote.classList.add('post-footer-interactions-upvote--active');
-            footerUpvote.children[0].children[0].setAttribute('fill', 'red');
+            footerUpvote.innerHTML = FILLED;
         }
     
         const footerUpvoteNumber = document.createElement('span');
         footerUpvoteNumber.textContent = this.post.upvotes.length;
+        footerUpvoteNumber.style.fontSize = '20px';
         footerUpvoteNumber.classList.add('post-footer-interactions-upvote-number');
     
         footerUpvote.addEventListener('click', () => {
             if (this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
                 footerUpvote.classList.remove('post-footer-interactions-upvote--active');
-                footerUpvote.children[0].children[0].setAttribute('fill', 'white');
+                footerUpvote.innerHTML = UNFILLED;
                 this.post.upvotes = this.post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == this.post.id);
                 fetch(`/api/post/${this.post.id}/upvote/delete`, { 
                     method: 'DELETE',
                     headers: { "Authorization": "Bearer "+window.app.user.token } });
             } else {
                 footerUpvote.classList.add('post-footer-interactions-upvote--active');
-                footerUpvote.children[0].children[0].setAttribute('fill', 'red');
+                footerUpvote.innerHTML = FILLED;
                 this.post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: this.post.creator.id, id_post: this.post.id });
                 fetch(`/api/post/${this.post.id}/upvote/add`, { 
                     method: 'PUT',

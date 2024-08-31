@@ -1,16 +1,25 @@
+:root {
+    --primary-color: #111921;
+    --secondary-color: #2ecc71;
+    --accent-color: #e74c3c;
+    --background-color: #ecf0f1;
+    --text-color: #2c3e50;
+  }
+  
 body {
+    background-color: var(--primary-color);
     font-family: "Roboto", sans-serif;
-    background-color: #1E1E1E;
     color: #FFF;
 }
 
 input {
-    background-color: gray;
+    background-color: var(--primary-color);
 }
 
 textarea {
     border: 1px solid gray;
     color: #FFF;
+    background-color: var(--primary-color);
 }
 
 a {
@@ -58,7 +67,7 @@ a {
     width: 100%;
     height: 100%;
 
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
 
     display: grid;
     grid-template-columns: auto;
@@ -74,7 +83,7 @@ a {
 }
 
 .container-mobile-form-post-create .container-form .textarea {
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     resize: none;
     border: gray;
     outline: none;
@@ -82,7 +91,7 @@ a {
 }
 
 .post-button-image-mobile {
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -92,7 +101,7 @@ a {
 }
 
 .container-mobile-form-post-create .container-form button {
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     color: #FFF;
     border-top: 1px solid #FFF;
 }

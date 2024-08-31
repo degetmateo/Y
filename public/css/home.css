@@ -40,7 +40,7 @@
 
 .container-home-view .container-main .container-form-post-create .textarea {
     border: 1px solid #FFF;
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     color: #FFF;
 
     border-radius: none;
@@ -75,7 +75,7 @@
 }
 
 .container-home-view .container-main .container-form-post-create .button-submit {
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     border: 1px solid #FFF;
     color: #FFF;
     padding: 10px;
@@ -87,7 +87,7 @@
 }
 
 .container-button-refresh {
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     color: #FFF;
     width: 100%;
     padding: 10px;
@@ -100,7 +100,7 @@
 
 .container-button-refresh button {
     padding: 10px;
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     border: 1px solid #FFF;
     color: #FFF;
     cursor: pointer;
@@ -124,7 +124,7 @@
 .button-change-timeline {
     border: none;
     border-bottom: 1px solid gray;
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     color: #FFF;
     cursor: pointer;
 }
@@ -154,7 +154,7 @@
     position: fixed;
     left: 20px; 
     bottom: 20px;
-    background-color: #1E1E1E;
+    background-color: var(--primary-color);
     border: 1px solid #FFF;
     width: 60px;
     height: 60px;
@@ -220,7 +220,7 @@
         left: 0;
     }
     .container-button-change-timeline button {
-        background-color: #1E1E1E;
+        background-color: var(--primary-color);
         border: none;
     }
 

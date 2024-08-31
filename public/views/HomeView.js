@@ -39,7 +39,6 @@ export default class extends AbstractView {
             const textarea = document.createElement('textarea');
             textarea.placeholder = '¿Qué tienes en mente?';
             textarea.style = `
-                background-color: #1E1E1E;
                 border: 1px solid #FFF;
                 outline: none;
                 padding: 10px;
@@ -51,7 +50,6 @@ export default class extends AbstractView {
             const input = document.createElement('input');
             input.placeholder = 'URL Imagen';
             input.style = `
-                background-color: #1E1E1E;
                 border: 1px solid #FFF;
                 outline: none;
                 padding: 10px;
