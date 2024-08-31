@@ -8,7 +8,7 @@ module.exports = (server: Server) => {
         if (content.length < 1) return res.json({ ok:false, error: {message:"Debes escribir algo."} });
         try {
             if (content.length > 400) return res.json({ ok: false, error: { message: 'Has superado el limite de caracteres (400).'} });
-            if (images.length > 4) return res.json({ ok:false, error: { message: "POST IMAGES: Hasta 4." } });
+            if (images && images.length > 4) return res.json({ ok:false, error: { message: "POST IMAGES: Hasta 4." } });
     
             const user = req.body.user;
             const queryUserCreator = await Postgres.query() `
