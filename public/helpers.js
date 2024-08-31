@@ -81,5 +81,5 @@ export function cleanContent (content) {
         return `<a href="${url}" class="link" target="_blank">${url}</a>`;
     });
 
-    return clickableText.replace(/\n/g, '<br>');   
+    return clickableText.replace(/\n/g, '<br>').trim();   
 }

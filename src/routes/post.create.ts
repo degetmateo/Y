@@ -3,10 +3,10 @@ import Server from "../Server";
 
 module.exports = (server: Server) => {
     server.app.post('/post/create', server.authenticate, async (req, res) => {
-        const content = req.body.post.content;
-        const images = req.body.post.images;
-        if (content.length < 1) return res.json({ ok:false, error: {message:"Debes escribir algo."} });
         try {
+            const content = req.body.post.content;
+            const images = req.body.post.images;
+            if ((content && content.trim().length < 1) || !content) return res.json({ ok:false, error: {message:"Debes escribir algo."} });
             if (content.length > 400) return res.json({ ok: false, error: { message: 'Has superado el limite de caracteres (400).'} });
             if (images && images.length > 4) return res.json({ ok:false, error: { message: "POST IMAGES: Hasta 4." } });
     
