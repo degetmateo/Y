@@ -66,7 +66,7 @@ export default class extends AbstractView {
                 pop.delete();
                 try {
                     if (content.length <= 0) throw new Error('Debes escribir algo.');
-                    await loadImage(imageURL);
+                    if (imageURL.length > 0)await loadImage(imageURL);
                     const result = await this.SendPost({ content, images: [imageURL] });
                     if (!result.ok) throw new Error(result.error.message);
                     this.mode === 'global' ?
