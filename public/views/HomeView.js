@@ -65,9 +65,14 @@ export default class extends AbstractView {
                 const imageURL = input.value;
                 pop.delete();
                 try {
+                    let test;
                     if (content.length <= 0) throw new Error('Debes escribir algo.');
-                    if (imageURL.length > 0)await loadImage(imageURL);
-                    const result = await this.SendPost({ content, images: [imageURL] });
+                    if (imageURL.length > 0){
+                        await loadImage(imageURL);
+                        test = [imageURL];
+                    }
+                    if (imageURL.length === 0) test = null;
+                    const result = await this.SendPost({ content, images: test });
                     if (!result.ok) throw new Error(result.error.message);
                     this.mode === 'global' ?
                         this.setGlobalTimeline() : this.setFollowingTimeline();
