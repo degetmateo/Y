@@ -84,9 +84,39 @@ export default class extends AbstractView {
 
     async events () {
         this.eventChangeTimeline();
-        this.eventFormPostCreate();
         this.eventTimelineScroll();
+
+        this.CreateMainForm();
     }
+
+    CreateMainForm () {
+        const profile_pic = document.getElementById('home-main-form-post-create-profile_pic');
+        profile_pic.src = window.app.user.profilePic.url;
+
+        const name = document.getElementById('home-main-form-post-create-name');
+        name.textContent = window.app.user.name;
+
+        const button = document.getElementById('home-main-form-post-create-button');
+        button.addEventListener('click', async () => {
+            try {
+                const textarea = document.getElementById('home-main-form-post-create-textarea');
+                const value = textarea.value.trim();
+                if (value.length <= 0) return alert('Tenés que escribir algo.');
+                if (value.length > 400) return alert('Límite de carácteres: 400.');
+                textarea.value = '';
+                const res = await this.SendPost({
+                    content: value,
+                    images: null
+                });
+                if (!res.ok) throw new Error(res.error.message);
+                this.setTimeline();
+            } catch (error) {
+                console.error(error);
+                return alert("Ha ocurrido un error.");
+            }
+        });
+    }
+
 
     eventChangeTimeline () {
         const buttonGlobal = document.getElementById('button-change-timeline-global');
@@ -103,6 +133,12 @@ export default class extends AbstractView {
             buttonGlobal.classList.remove('active');
             this.setFollowingTimeline();
         });
+    }
+
+    setTimeline () {
+        this.mode === 'global' ?
+            this.setGlobalTimeline() :
+            this.setFollowingTimeline();
     }
 
     async setFollowingTimeline () {
@@ -159,44 +195,6 @@ export default class extends AbstractView {
             body: JSON.stringify({ user, post })
         });
         return await request.json();
-    }
-
-    async eventFormPostCreate () {
-        const form = document.getElementById('form-post-create');
-        const inputContent = document.getElementById('form-post-create-input-content');
-    
-        form.addEventListener('submit', async event => {
-            event.preventDefault()
-            const content = inputContent.value;
-            inputContent.value = '';
-
-            if (!content || content.length <= 0) {
-                return;
-            }
-    
-            const user = JSON.parse(localStorage.getItem('user'));
-            const request = await fetch ('/post/create', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${user.token}`,
-                    'Content-Type': "application/json"
-                },
-                body: JSON.stringify({ user, post: { content: content, images: this.post.images } })
-            });
-            this.post.images = [];
-    
-            const res = await request.json();
-    
-            if (!res.ok) {
-                alert(res.error.message)
-                return;
-            }
-            this.setGlobalTimeline();
-        });
-
-        this.post_image_input = null;
-        const buttonImage = document.getElementById('post-button-image');
-        buttonImage.addEventListener('click', () => this.eventButtonImage());
     }
 
     eventButtonImage () {
@@ -304,18 +302,42 @@ const VIEW_CONTENT = `
         <div class="container-nav" id="container-nav"></div>
 
         <div class="container-main" id="container-main">
-            <div class="container-form-post-create">
-                <form action="/post/create" method="post" id="form-post-create">
-                    <div class="container-inputs">
-                        <textarea class="textarea" id="form-post-create-input-content" name="form-post-create-input-content" placeholder="¡¿Qué está pasando?!" required></textarea>
-                        <div class="container-post-create-buttons">
-                            <div class="post-button-image" id="post-button-image">
-                                <i class="fa-solid fa-image"></i>
+
+            <div class="container-home-main-form-post-create">
+                <div class="container-home-main-form-post-create-div">
+                    <div class="container-home-main-form-post-create-profile_pic">
+                        <img class="home-main-form-post-create-profile_pic" id="home-main-form-post-create-profile_pic" src="" />
+                    </div>
+
+                    <div class="container-home-main-form-post-create-body">
+                        <div class="container-home-main-form-post-create-signature">
+                            <div class="container-home-main-form-post-create-name">
+                                <span id="home-main-form-post-create-name">Nombre</span>
                             </div>
-                            <button class="button-submit" type="submit">Publicar</button>
+
+                            <div>
+                                <img src="/public/assets/image-input.png" />
+                            </div>
+
+                            <div>
+                                <img src="/public/assets/image-form.png" />
+                            </div>
+                        </div>
+                        
+                        <div class="container-home-main-form-post-create-textarea">
+                            <textarea id="home-main-form-post-create-textarea" class="home-main-form-post-create-textarea" placeholder="¿Qué pensás?" required></textarea>
+                        </div>
+                        
+                        <div class="container-home-main-form-post-create-buttons">
+                            <div class="container-home-main-form-post-create-options">
+                                <select id="options" name="options" class="home-main-form-post-create-button home-main-form-post-create-button-options" disabled>
+                                    <option value="opcion1">Todos</option>
+                                </select>
+                            </div>
+                            <button id="home-main-form-post-create-button" class="button home-main-form-post-create-button">Publicar</button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
 
             <div class="container-button-change-timeline">
