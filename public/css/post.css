@@ -9,7 +9,7 @@
 }
 
 body {
-    font-family: "Roboto", sans-serif;
+    font-family: "JetBrainsMono-Light", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
 }
@@ -144,7 +144,6 @@ body {
 }
 
 .post-footer-date {
-    font-family: "JetBrainsMono-Light", sans-serif;
     font-size: 12px
 }
 
