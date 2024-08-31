@@ -1,7 +1,4 @@
 .container-view-post {
-    width: 100%;
-    height: 100%;
-
     display: grid;
     grid-template-columns: 0.2fr 1fr 0.2fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -12,6 +9,32 @@
 }
 
 .container-view-post-main {
-    grid-area: view;
-    background-color: red;
+    grid-area: main;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    overflow-y: scroll;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto 1fr;
+}
+
+.container-view-post-main-replies {
+    padding: 0 10px;
+}
+
+@media (max-width: 768px) {
+    .container-view-post {
+        grid-template-areas: 
+            "main main main"
+            "main main main"
+            "main main main";
+    }
+
+    .container-view-post-main {
+        border:none;
+    }
+
+    .container-view-post-main-replies {
+        padding-bottom: 50px;
+    }
 }

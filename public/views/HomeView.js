@@ -1,6 +1,7 @@
 import { hasDisallowedTags, loadImage } from "../helpers.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
+import Popup from "./elements/popup/Popup.js";
 import Post from "./elements/Post.js";
 import { CreateNavigation } from "./templates/nav.js";
 
@@ -26,6 +27,56 @@ export default class extends AbstractView {
         CreateNavigation(this);
         this.setGlobalTimeline();
         this.events();
+        this.CreateMobileButtonPost();
+    }
+
+    CreateMobileButtonPost () {
+        const container = document.createElement('div');
+        container.classList.add('container-home-mobile-button');
+        container.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+        container.addEventListener('click', () => {
+            const pop = new Popup();
+            const textarea = document.createElement('textarea');
+            textarea.placeholder = '¿Qué tienes en mente?';
+            textarea.style = `
+                background-color: #1E1E1E;
+                border: 1px solid #FFF;
+                outline: none;
+                padding: 10px;
+                border-radius: 10px;
+                width: 300px;
+                height: 100px;
+                resize: none;
+            `;
+            const input = document.createElement('input');
+            input.placeholder = 'URL Imagen';
+            input.style = `
+                background-color: #1E1E1E;
+                border: 1px solid #FFF;
+                outline: none;
+                padding: 10px;
+                border-radius: 10px;
+                color: #FFF;
+            `;
+            pop.body().appendChild(textarea);
+            pop.body().appendChild(input);
+            pop.CreateButton("Enviar", async () => {
+                const content = textarea.value.trim();
+                const imageURL = input.value;
+                pop.delete();
+                try {
+                    if (content.length <= 0) throw new Error('Debes escribir algo.');
+                    await loadImage(imageURL);
+                    const result = await this.SendPost({ content, images: [imageURL] });
+                    if (!result.ok) throw new Error(result.error.message);
+                    this.mode === 'global' ?
+                        this.setGlobalTimeline() : this.setFollowingTimeline();
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+        });
+        this.mainContainer.appendChild(container);
     }
 
     async events () {
@@ -94,6 +145,19 @@ export default class extends AbstractView {
         }
     }
 
+    async SendPost (post) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const request = await fetch ('/post/create', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${user.token}`,
+                'Content-Type': "Application/JSON"
+            },
+            body: JSON.stringify({ user, post })
+        });
+        return await request.json();
+    }
+
     async eventFormPostCreate () {
         const form = document.getElementById('form-post-create');
         const inputContent = document.getElementById('form-post-create-input-content');
@@ -129,9 +193,7 @@ export default class extends AbstractView {
 
         this.post_image_input = null;
         const buttonImage = document.getElementById('post-button-image');
-        const buttonMobileImage = document.getElementById('post-button-image-mobile');
         buttonImage.addEventListener('click', () => this.eventButtonImage());
-        buttonMobileImage.addEventListener('click', () => this.eventButtonImage());
     }
 
     eventButtonImage () {

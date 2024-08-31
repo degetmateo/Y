@@ -27,6 +27,10 @@ export default class Popup {
         });
     }
 
+    body () {
+        return this.containerBody;
+    }
+
     CreateContentHeader () {
         this.containerHeader = document.createElement('div');
         this.containerHeader.classList.add('container-popup-content-header');

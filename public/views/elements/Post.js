@@ -1,5 +1,6 @@
 import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
+import {navigateTo} from "../../router.js";
 import Popup from "./popup/Popup.js";
 
 export default class Post {
@@ -25,7 +26,7 @@ export default class Post {
         containerHeader.classList.add('container-post-header');
         containerHeader.appendChild(this.CreatePostHeaderPicture());
         containerHeader.appendChild(this.CreatePostHeaderSignature());
-        if (window.app.user.id == this.post.creator.id) containerHeader.appendChild(this.CreatePostHeaderDeleteButton());
+        containerHeader.appendChild(this.CreatePostHeaderButtonOptions());
         return containerHeader;
     }
 
@@ -109,19 +110,25 @@ export default class Post {
         return containerHeaderSignatureRole;
     }
 
-    CreatePostHeaderDeleteButton () {
-        const containerHeaderDeleteButton = document.createElement('div');
-        containerHeaderDeleteButton.classList.add('container-post-header-button-delete');
-        const headerDeleteButton = document.createElement('button');
-        headerDeleteButton.classList.add('post-header-button-delete');
-        headerDeleteButton.innerHTML = '<i class="fa-solid fa-ellipsis"></i>';
-        headerDeleteButton.addEventListener('click', () => this.CreatePopupMenu());
-        containerHeaderDeleteButton.appendChild(headerDeleteButton);
-        return containerHeaderDeleteButton;
+    CreatePostHeaderButtonOptions () {
+        const containerHeaderButtonOptions = document.createElement('div');
+        containerHeaderButtonOptions.classList.add('container-post-header-button-delete');
+        const headerOptionsButton = document.createElement('button');
+        headerOptionsButton.classList.add('post-header-button-delete');
+        headerOptionsButton.innerHTML = '<i class="fa-solid fa-ellipsis"></i>';
+        window.app.user.id == this.post.creator.id ?
+            headerOptionsButton.addEventListener('click', () => this.CreatePopupMenuSelf()) :
+            headerOptionsButton.addEventListener('click', () => this.CreatePopupMenuOther());
+        containerHeaderButtonOptions.appendChild(headerOptionsButton);
+        return containerHeaderButtonOptions;
     }
 
-    CreatePopupMenu () {
+    CreatePopupMenuSelf () {
         const popup = new Popup();
+        popup.CreateButton("Ver detalles", () => {
+            popup.delete();
+            navigateTo("/post/"+this.post.id);
+        });
         popup.CreateButton("Eliminar Publicacion", () => {
             const popupConfirmation = new Popup();
             popupConfirmation.CreateTitle('¿Estás seguro?');
@@ -141,6 +148,14 @@ export default class Post {
             popupConfirmation.CreateButton('No, no quiero.', () => {
                 popupConfirmation.delete();
             });
+        });
+    }
+
+    CreatePopupMenuOther () {
+        const popup = new Popup();
+        popup.CreateButton("Ver detalles", () => {
+            popup.delete();
+            navigateTo("/post/"+this.post.id);
         });
     }
 
