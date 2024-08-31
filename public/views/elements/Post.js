@@ -1,5 +1,5 @@
 import { URL_NO_IMAGE } from "../../consts.js";
-import { cleanContent, getDateMessage } from "../../helpers.js";
+import { cleanContent, getDateMessage, loadImage } from "../../helpers.js";
 import {navigateTo} from "../../router.js";
 import Popup from "./popup/Popup.js";
 
@@ -34,7 +34,23 @@ export default class Post {
         const containerBody = document.createElement('div');
         containerBody.classList.add('container-post-body');
         containerBody.appendChild(this.CreatePostBodyContent());
-        if (this.post.images && this.post.images.length > 0) containerBody.appendChild(this.CreatePostBodyImages());
+
+        if (this.post.images && this.post.images.length > 0) {
+            const imagesContainer = document.createElement('div');
+            imagesContainer.classList.add('container-post-body-images');
+            for (const image of this.post.images) {
+                try {
+                    const img = new Image();
+                    img.src = image;
+                    img.addEventListener('error', () => imagesContainer.remove());
+                    img.classList.add('post-body-image');
+                    imagesContainer.appendChild(img);
+                } catch (error) {
+                    continue;
+                }
+            }
+            containerBody.appendChild(imagesContainer);
+        }
         return containerBody;
     }
 
