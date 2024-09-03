@@ -64,7 +64,7 @@ module.exports = (server: Server) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '2h' });
+        const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '24h' });
 
         await Postgres.query() `
             SELECT insert_member (

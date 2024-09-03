@@ -101,7 +101,7 @@ module.exports = (server: Server) => {
             return;
         }
 
-        const token = jwt.sign({ username: queryUser[0].username_member }, process.env.SECRET_KEY, { expiresIn: '2h' });
+        const token = jwt.sign({ username: queryUser[0].username_member }, process.env.SECRET_KEY, { expiresIn: '24h' });
 
         await Postgres.query() `
             UPDATE 
