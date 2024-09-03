@@ -91,23 +91,6 @@ export default class extends AbstractView {
         containerPfp.innerHTML = `
             <img class="img-profile" src="${this.user.profilePicture.url || URL_NO_IMAGE}" />
         `;
-
-        const containerDetailsFollows = document.getElementById('container-details-follows');
-        containerDetailsFollows.style = `
-            display: none;
-            width: 300px;
-            height: 300px;
-
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            
-            overflow-y: scroll;
-            background-color: #000;
-            border: 2px solid #FFF;
-        `;
-
         const follows = this.user.follows;
 
         const spanFollowed = document.getElementById('span-followed');
@@ -115,7 +98,6 @@ export default class extends AbstractView {
 
         const containerFollows = document.getElementById('container-followed');
         containerFollows.style.cursor = 'pointer';
-        const containerFollows2 = document.getElementById('container-follows');
         containerFollows.addEventListener('click', ()=>{
             const pop = new Popup();
             for (const user of follows.followed) {
@@ -147,12 +129,7 @@ export default class extends AbstractView {
                 userContainer.onclick = () => pop.delete();
                 pop.body().appendChild(userContainer);
             }
-        })
-
-        document.getElementById('button-close-details-follows')
-            .addEventListener('click', () => {
-                containerDetailsFollows.style.display = 'none';
-            })
+        });
 
         const spanBio = document.getElementById('span-bio');
         spanBio.innerHTML = this.user.bio ? cleanContent(this.user.bio) : '';
@@ -244,12 +221,6 @@ const VIEW = `
     <div class="container-profile-view">
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
         <div class="container-nav" id="container-nav"></div>
-        <div class="container-details-follows" id="container-details-follows">
-            <button style="padding: 10px; background-color: #000; color: #FFF; cursor:pointer; border:none;border-bottom: 1px solid gray; width:100%;outline:none;" id="button-close-details-follows">Cerrar</button>
-            <div id="container-follows">
-            
-            </div>
-        </div>
         <div class="container-main" id="container-main">
             <div class="container-profile">
                 <div class="container-pfp" id="container-pfp">
