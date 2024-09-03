@@ -1,12 +1,3 @@
-@font-face {
-    font-family: 'JetBrainsMono-Regular';
-    src: url('/public/fonts/JetBrainsMono_Complete/JetBrainsMono-Regular.otf') format('truetype');
-}
-
-@font-face {
-    font-family: 'JetBrainsMono-Light';
-    src: url('/public/fonts/JetBrainsMono_Complete/JetBrainsMono-Light.otf') format('truetype');
-}
 
 body {
     font-family: "JetBrainsMono-Light", sans-serif;
@@ -49,9 +40,15 @@ body {
 
 .container-post-header-signature {
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto;
-    gap: 10px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+}
+
+.container-post-header-signature-name_role {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .container-post-header-signature-name {
@@ -80,27 +77,27 @@ body {
     font-size: 12px;
     text-transform: uppercase;
     padding: 5px;
-    border-radius: 2px;
+    border-radius: 8px;
 }
 
 .post-header-signature-role--member {
-    color: aqua;
-    border: 1px solid aqua;
+    color: #64C2D8;
+    border: 1px solid #64C2D8;
 }
 
 .post-header-signature-role--tester {
-    color: yellow;
-    border: 1px solid yellow;
+    color: #CECE77;
+    border: 1px solid #CECE77;
 }
 
 .post-header-signature-role--mod {
-    color: deeppink;
-    border: 1px solid deeppink;
+    color: #D166D3;
+    border: 1px solid #D166D3;
 }
 
 .post-header-signature-role--admin {
-    color: red;
-    border: 1px solid red;
+    color: #D36666;
+    border: 1px solid #D36666;
 }
 
 .post-header-button-delete {
@@ -119,18 +116,15 @@ body {
 }
 
 .post-body-content {
-    font-family: "Roboto", sans-serif;
+    font-family: "Inter-Regular", sans-serif;
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
 }
 
-/* .container-post-body-images {
-
-} */
-
 .post-body-image {
     max-width: 400px;
+    border: 1px solid gray;
 }
 
 .container-post-footer {
@@ -150,6 +144,27 @@ body {
     font-size: 12px
 }
 
+.container-post-footer-interactions {
+    display: grid;
+    grid-template-columns: min-content min-content;
+    justify-items: center;
+    align-content: center;
+    gap: 15px;
+    font-size: 20px;
+}
+
+.container-post-footer-interactions-comments {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto;
+    align-content: center;
+    gap: 5px;
+}
+
+.post-footer-interactions-comments-icon {
+    cursor: pointer;
+}
+
 .container-post-footer-interactions-upvote {
     display: grid;
     grid-template-columns: min-content auto;
@@ -159,7 +174,6 @@ body {
 }
 
 .post-footer-interactions-upvote {
-    font-size: 18px;
     cursor: pointer;
 }
 

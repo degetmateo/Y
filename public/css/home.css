@@ -99,7 +99,7 @@
     font-size: 20px;
     cursor: pointer;
 
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
 }
@@ -142,14 +142,17 @@
     display: grid;
     grid-template-columns: max-content;
     grid-template-rows: auto auto auto;
-    gap: 5px;
+    gap: 8px;
 }
 
 .container-home-main-form-post-create-signature {
     display: grid;
-    grid-template-columns: 1fr min-content min-content;
+    grid-template-columns: 1fr;
     grid-template-rows: auto;
     gap: 5px;
+}
+.home-main-form-post-create-name {
+    font-family: JetBrainsMono-Bold;
 }
 
 .home-main-form-post-create-textarea {
@@ -159,6 +162,7 @@
     resize: none;
     border: 1px solid #FFF;
     outline: none;
+    font-family: "Inter-Regular", sans-serif;
 }
 
 @media (max-width: 1024px) {
@@ -187,7 +191,7 @@
 }
 
 .home-main-form-post-create-button:active {
-    background-color: gray;
+    background-color: var(--accent-color);
 }
 
 .home-main-form-post-create-button-options {
@@ -260,6 +264,7 @@
         left: initial;
         bottom: 70px;
         right: 20px;
+        display: flex;
     }
 
 

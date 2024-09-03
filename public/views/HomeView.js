@@ -37,23 +37,21 @@ export default class extends AbstractView {
         container.addEventListener('click', () => {
             const pop = new Popup();
             const textarea = document.createElement('textarea');
-            textarea.placeholder = '¿Qué tienes en mente?';
+            textarea.placeholder = '¿Qué pasa?';
             textarea.style = `
                 border: 1px solid #FFF;
                 outline: none;
                 padding: 10px;
-                border-radius: 10px;
                 width: 300px;
                 height: 100px;
                 resize: none;
             `;
             const input = document.createElement('input');
-            input.placeholder = 'URL Imagen';
+            input.placeholder = 'URL de una Imagen';
             input.style = `
                 border: 1px solid #FFF;
                 outline: none;
                 padding: 10px;
-                border-radius: 10px;
                 color: #FFF;
             `;
             pop.body().appendChild(textarea);
@@ -312,15 +310,7 @@ const VIEW_CONTENT = `
                     <div class="container-home-main-form-post-create-body">
                         <div class="container-home-main-form-post-create-signature">
                             <div class="container-home-main-form-post-create-name">
-                                <span id="home-main-form-post-create-name">Nombre</span>
-                            </div>
-
-                            <div>
-                                <img src="/public/assets/image-input.png" />
-                            </div>
-
-                            <div>
-                                <img src="/public/assets/image-form.png" />
+                                <span class="home-main-form-post-create-name" id="home-main-form-post-create-name"></span>
                             </div>
                         </div>
                         

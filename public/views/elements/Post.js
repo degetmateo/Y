@@ -2,8 +2,6 @@ import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
 import {navigateTo} from "../../router.js";
 import Popup from "./popup/Popup.js";
-import svg_upvote_green from "./svg/upvote_blue.js";
-import upvote_red from "./svg/upvote_red.js";
 
 export default class Post {
     constructor (_post) {
@@ -97,8 +95,23 @@ export default class Post {
     CreatePostHeaderSignature () {
         const containerHeaderSignature = document.createElement('div');
         containerHeaderSignature.classList.add('container-post-header-signature');
-        containerHeaderSignature.appendChild(this.CreatePostHeaderSignatureName());
-        containerHeaderSignature.appendChild(this.CreatePostHeaderSignatureRole());
+
+        containerHeaderSignature.innerHTML = `
+            <div class="container-post-header-signature-name_role">
+                <span class="post-header-signature-name" id="post-member-name">${this.post.creator.name}</span>
+
+                <span 
+                    class="post-header-signature-role post-header-signature-role--${this.post.creator.role}" 
+                    id="post-member-role">
+                        ${this.post.creator.role}
+                </span>
+            </div>
+
+            <span class="post-header-signature-username" id="post-member-username">@${this.post.creator.username}</span>
+        `;
+
+        // containerHeaderSignature.appendChild(this.CreatePostHeaderSignatureName());
+        // containerHeaderSignature.appendChild(this.CreatePostHeaderSignatureRole());
         return containerHeaderSignature;
     }
 
@@ -109,11 +122,13 @@ export default class Post {
         headerSignatureName.classList.add('post-header-signature-name');
         headerSignatureName.textContent = this.post.creator.name;
         CreateDataLink(headerSignatureName, '/user/'+this.post.creator.username);
-        const headerSignatureUsername = document.createElement('span');
-        headerSignatureUsername.classList.add('post-header-signature-username');
-        headerSignatureUsername.textContent = '@'+this.post.creator.username;
-        containerHeaderSignatureName.appendChild(headerSignatureName);
-        containerHeaderSignatureName.appendChild(headerSignatureUsername);
+
+
+        // const headerSignatureUsername = document.createElement('span');
+        // headerSignatureUsername.classList.add('post-header-signature-username');
+        // headerSignatureUsername.textContent = '@'+this.post.creator.username;
+        // containerHeaderSignatureName.appendChild(headerSignatureName);
+        // containerHeaderSignatureName.appendChild(headerSignatureUsername);
         return containerHeaderSignatureName;
     }
 
@@ -143,11 +158,10 @@ export default class Post {
 
     CreatePopupMenuSelf () {
         const popup = new Popup();
-        popup.CreateButton("Ver detalles", () => {
+        popup.CreateButton("Reportar Publicación", () => {
             popup.delete();
-            navigateTo("/post/"+this.post.id);
         });
-        popup.CreateButton("Eliminar Publicacion", () => {
+        popup.CreateButton("Eliminar Publicación", () => {
             const popupConfirmation = new Popup();
             popupConfirmation.CreateTitle('¿Estás seguro?');
             popupConfirmation.CreateButton('Sí, estoy seguro.', async () => {
@@ -171,9 +185,8 @@ export default class Post {
 
     CreatePopupMenuOther () {
         const popup = new Popup();
-        popup.CreateButton("Ver detalles", () => {
+        popup.CreateButton("Reportar Publicación", () => {
             popup.delete();
-            navigateTo("/post/"+this.post.id);
         });
     }
 
@@ -191,6 +204,7 @@ export default class Post {
         const containerFooterInteractions = document.createElement('div');
         containerFooterInteractions.classList.add('container-post-footer-interactions');
         containerFooterInteractions.appendChild(this.CreatePostFooterInteractionUpvote());
+        containerFooterInteractions.appendChild(this.CreatePostFooterInteractionComments());
         return containerFooterInteractions;
     }
 
@@ -198,17 +212,29 @@ export default class Post {
         const containerFooterUpvote = document.createElement('div');
         containerFooterUpvote.classList.add('container-post-footer-interactions-upvote');
         
-        const footerUpvote = document.createElement('span');
+        const containerFooterUpvoteIcon = document.createElement('div');
+        containerFooterUpvoteIcon.classList.add('container-post-footer-upvote-icon');
         
-        const FILLED = upvote_red.filled;
-        const UNFILLED = upvote_red.unfilled;
 
-        footerUpvote.innerHTML = UNFILLED;
+        const getIconUpvoteFilled = () => {
+            const UPVOTE_IMG_FILLED = document.createElement('img');
+            UPVOTE_IMG_FILLED.src = '/public/views/elements/svg/upvote-filled.svg';
+            UPVOTE_IMG_FILLED.classList.add('post-footer-interactions-comments-icon');
+            return UPVOTE_IMG_FILLED;
+        }
+
+        const getIconUpvoteUnfilled = () => {
+            const UPVOTE_IMG_UNFILLED = document.createElement('img');
+            UPVOTE_IMG_UNFILLED.src = '/public/views/elements/svg/upvote-unfilled.svg';
+            UPVOTE_IMG_UNFILLED.classList.add('post-footer-interactions-comments-icon');
+            return UPVOTE_IMG_UNFILLED;
+        }
+
+        containerFooterUpvoteIcon.appendChild(getIconUpvoteUnfilled());
     
-        footerUpvote.classList.add('post-footer-interactions-upvote');
         if (this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
-            footerUpvote.classList.add('post-footer-interactions-upvote--active');
-            footerUpvote.innerHTML = FILLED;
+            containerFooterUpvoteIcon.firstChild.remove();
+            containerFooterUpvoteIcon.appendChild(getIconUpvoteFilled());
         }
     
         const footerUpvoteNumber = document.createElement('span');
@@ -216,17 +242,17 @@ export default class Post {
         footerUpvoteNumber.style.fontSize = '20px';
         footerUpvoteNumber.classList.add('post-footer-interactions-upvote-number');
     
-        footerUpvote.addEventListener('click', () => {
+        containerFooterUpvoteIcon.addEventListener('click', () => {
             if (this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
-                footerUpvote.classList.remove('post-footer-interactions-upvote--active');
-                footerUpvote.innerHTML = UNFILLED;
+                containerFooterUpvoteIcon.firstChild.remove();
+                containerFooterUpvoteIcon.appendChild(getIconUpvoteUnfilled());
                 this.post.upvotes = this.post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == this.post.id);
                 fetch(`/api/post/${this.post.id}/upvote/delete`, { 
                     method: 'DELETE',
                     headers: { "Authorization": "Bearer "+window.app.user.token } });
             } else {
-                footerUpvote.classList.add('post-footer-interactions-upvote--active');
-                footerUpvote.innerHTML = FILLED;
+                containerFooterUpvoteIcon.firstChild.remove();
+                containerFooterUpvoteIcon.appendChild(getIconUpvoteFilled());
                 this.post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: this.post.creator.id, id_post: this.post.id });
                 fetch(`/api/post/${this.post.id}/upvote/add`, { 
                     method: 'PUT',
@@ -234,10 +260,29 @@ export default class Post {
             }
             footerUpvoteNumber.innerText = this.post.upvotes.length;
         });
-    
-        containerFooterUpvote.appendChild(footerUpvote);
+
+        containerFooterUpvote.appendChild(containerFooterUpvoteIcon);
         containerFooterUpvote.appendChild(footerUpvoteNumber);
         return containerFooterUpvote;
+    }
+
+    CreatePostFooterInteractionComments () {
+        const container = document.createElement('div');
+        container.classList.add('container-post-footer-interactions-comments');
+
+        const containerIcon = document.createElement('div');
+        containerIcon.classList.add('container-post-footer-interactions-comments-icon');
+
+        const icon = document.createElement('img');
+        icon.classList.add('post-footer-interactions-comments-icon');
+        icon.src = '/public/views/elements/svg/comments.svg';
+        containerIcon.appendChild(icon);
+
+        const number = document.createElement('span');
+        number.textContent = '0';
+        container.appendChild(containerIcon);
+        container.appendChild(number);
+        return container;
     }
 }
 

@@ -82,6 +82,9 @@
 
 .container-profile-view .container-main .container-profile .container-bio {
     grid-area: bio;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-family: "Inter-Regular";
 }
 
 .container-follows {

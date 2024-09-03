@@ -3,6 +3,7 @@ import {URL_NO_IMAGE} from "../consts.js";
 import {cleanContent} from "../helpers.js";
 import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
+import Popup from "./elements/popup/Popup.js";
 import Post from "./elements/Post.js";
 import {CreateNavigation} from "./templates/nav.js";
 
@@ -116,27 +117,17 @@ export default class extends AbstractView {
         containerFollows.style.cursor = 'pointer';
         const containerFollows2 = document.getElementById('container-follows');
         containerFollows.addEventListener('click', ()=>{
-            containerFollows2.style = `
-                display: grid;
-                grid=template-columns: auto;
-                grid-template-rows: ${follows.followed.map(fu => 'auto').join(' ')};
-                gap: 5px;
-             `;
-            containerDetailsFollows.style.display = 'initial';
-            containerFollows2.innerHTML = '';
-            for (const f of follows.followed) {
+            const pop = new Popup();
+            for (const user of follows.followed) {
                 const userContainer = document.createElement('a');
                 userContainer.setAttribute('data-link', '');
-                userContainer.setAttribute('href', '/user/'+f.username_member);
-                userContainer.textContent =  `@${f.username_member}`;
-                userContainer.style = `
-                    padding: 10px;
-                    cursor:pointer;
-                    border-bottom: 1px solid gray;
-                `;
-                containerFollows2.appendChild(userContainer);
+                userContainer.setAttribute('href', '/user/'+user.username_member);
+                userContainer.textContent =  `@${user.username_member}`;
+                userContainer.classList.add('popup-list-item');
+                userContainer.onclick = () => pop.delete();
+                pop.body().appendChild(userContainer);
             }
-        })
+        });
 
         const spanFollowers = document.getElementById('span-followers');
         spanFollowers.textContent = follows.followers.length === 1 ?
@@ -146,25 +137,15 @@ export default class extends AbstractView {
         const containerFollowers= document.getElementById('container-followers');
         containerFollowers.style.cursor = 'pointer';
         containerFollowers.addEventListener('click', ()=>{
-            containerFollows2.style = `
-                display: grid;
-                grid=template-columns: auto;
-                grid-template-rows: ${follows.followers.map(fu => 'auto').join(' ')};
-                gap: 5px;
-            `;
-            containerDetailsFollows.style.display = 'initial';
-            containerFollows2.innerHTML = '';
-            for (const f of follows.followers) {
+            const pop = new Popup();
+            for (const user of follows.followers) {
                 const userContainer = document.createElement('a');
                 userContainer.setAttribute('data-link', '');
-                userContainer.setAttribute('href', '/user/'+f.username_member);
-                userContainer.textContent =  `@${f.username_member}`;
-                userContainer.style = `
-                    padding: 10px;
-                    cursor:pointer;
-                    border-bottom: 1px solid gray;
-                `;
-                containerFollows2.appendChild(userContainer);
+                userContainer.setAttribute('href', '/user/'+user.username_member);
+                userContainer.textContent =  `@${user.username_member}`;
+                userContainer.classList.add('popup-list-item');
+                userContainer.onclick = () => pop.delete();
+                pop.body().appendChild(userContainer);
             }
         })
 
@@ -172,13 +153,6 @@ export default class extends AbstractView {
             .addEventListener('click', () => {
                 containerDetailsFollows.style.display = 'none';
             })
-
-        const bioContainer = document.getElementById('container-bio');
-        bioContainer.style = `
-            word-break: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
-        `;
 
         const spanBio = document.getElementById('span-bio');
         spanBio.innerHTML = this.user.bio ? cleanContent(this.user.bio) : '';

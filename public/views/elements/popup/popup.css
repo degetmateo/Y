@@ -46,6 +46,9 @@ button {
     grid-template-columns: auto;
     grid-template-rows: min-content 1fr;
     gap: 10px;
+
+    max-width: 600px;
+    max-height: 400px;
 }
 
 /* .container-popup-content-header {
@@ -59,11 +62,23 @@ button {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
+    overflow-y: auto;
+}
+
+.popup-list-item {
+    padding: 10px;
 }
 /* 
 .container-popup-body-button-delete {
 
 } */
+
+.container-popup-content-header {
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid gray;
+    padding-bottom: 10px;
+}
 
 .popup-button {
     background-color: var(--primary-color);
