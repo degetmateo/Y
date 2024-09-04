@@ -98,7 +98,13 @@ export default class Post {
 
         containerHeaderSignature.innerHTML = `
             <div class="container-post-header-signature-name_role">
-                <span class="post-header-signature-name" id="post-member-name">${this.post.creator.name}</span>
+                <span 
+                    class="post-header-signature-name" id="post-member-name"
+                    href="/user/${this.post.creator.username}"
+                    data-link
+                >
+                    ${this.post.creator.name}
+                </span>
 
                 <span 
                     class="post-header-signature-role post-header-signature-role--${this.post.creator.role}" 
