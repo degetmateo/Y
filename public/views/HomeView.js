@@ -1,4 +1,4 @@
-import { hasDisallowedTags, loadImage } from "../helpers.js";
+import { loadImage } from "../helpers.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
 import Popup from "./elements/popup/Popup.js";
@@ -14,7 +14,7 @@ export default class extends AbstractView {
         this.mode = 'global';
 
         this.post = {
-            images: []
+            images: new Array()
         }
     }
 
@@ -104,8 +104,9 @@ export default class extends AbstractView {
                 textarea.value = '';
                 const res = await this.SendPost({
                     content: value,
-                    images: null
+                    images: this.post.images
                 });
+                this.post.images = new Array();
                 if (!res.ok) throw new Error(res.error.message);
                 this.setTimeline();
             } catch (error) {
@@ -113,8 +114,40 @@ export default class extends AbstractView {
                 return alert("Ha ocurrido un error.");
             }
         });
-    }
 
+        const buttonImage = document.getElementById('home-main-form-post-create-button-image');
+        buttonImage.onclick = () => {
+            const popup = new Popup();
+            const input = popup.CreateInput('text', 'URL de la Imagen');
+            popup.CreateButton('Enviar', async () => {
+                try {
+                    const value = input.value.trim();
+                    if (!value || value.length <= 0) {
+                        const p2 = new Popup();
+                        p2.body().innerHTML = '<span>Debes ingresar un enlace valido.</span>';
+                        return;
+                    }
+                    const popEspere = new Popup();
+                    const popTitle = popEspere.CreateTitle('Espere...');
+                    try {
+                        await loadImage(value);
+                        this.post.images.push(value);
+                        popEspere.delete();
+                        popup.delete();
+                    } catch (error) {
+                        console.error(error)
+                        popTitle.textContent = 'Esa imagen no está disponible.';
+                        return;
+                    }
+                } catch (error) {
+                    console.error(error)
+                    const popError = new Popup();
+                    popError.CreateTitle('Ha ocurrido un error.');
+                    return;
+                }
+            });
+        }
+    }
 
     eventChangeTimeline () {
         const buttonGlobal = document.getElementById('button-change-timeline-global');
@@ -195,85 +228,6 @@ export default class extends AbstractView {
         return await request.json();
     }
 
-    eventButtonImage () {
-        if (this.post_image_input) {
-            this.post_image_input.remove();
-            this.post_image_input = null;
-            return;
-        }
-        const containerInput = document.createElement('div');
-        containerInput.classList.add('container-input-image-url');
-        containerInput.style = `
-            background-color: #1E1E1E;
-
-            display: grid;
-            grid-template-columns: auto;
-            grid-template-rows: auto auto auto;
-            gap: 5px;
-        `;
-
-        const buttonClose = document.createElement('button');
-        buttonClose.style = `
-            outline: none;
-            border: none;
-            background-color: #1E1E1E;
-            padding: 10px;
-            border: 1px solid #FFF;
-            color: #FFF;
-            cursor:pointer;
-        `;
-        buttonClose.textContent = 'Cerrar';
-        buttonClose.addEventListener('click', () => {
-            containerInput.remove();
-            this.post_image_input = null;
-        });
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = 'URL de la Imagen';
-        input.id = 'post-input-image-url';
-        input.style = `
-            outline: none;
-            border: none;
-            background-color: #1E1E1E;
-            padding: 10px;
-            border: 1px solid #FFF;
-            color: #FFF;
-        `;
-
-        const buttonLoad = document.createElement('button');
-        buttonLoad.textContent = 'Enviar';
-        buttonLoad.style = `
-            outline: none;
-            border: none;
-            background-color: #1E1E1E;
-            padding: 10px;
-            border: 1px solid #FFF;
-            color: #FFF;
-            cursor: pointer;
-        `;
-        buttonLoad.addEventListener('click', async () => {
-            const url = input.value;
-            input.value = '';
-            try {
-                await loadImage(url);
-                this.post.images.push(url);
-                console.log(this.post.images)
-                containerInput.remove();
-            } catch (error) {
-                alert(error.message);
-                this.post_image_input = null;
-                containerInput.remove();
-            }
-        });
-
-        containerInput.appendChild(buttonClose)
-        containerInput.appendChild(input);
-        containerInput.appendChild(buttonLoad);
-        this.post_image_input = containerInput;
-        document.body.appendChild(containerInput);
-    }
-
     eventTimelineScroll () {
         this.mainContainer.addEventListener('scroll', async () => {
             const scrollHeight = this.mainContainer.scrollHeight;
@@ -323,6 +277,8 @@ const VIEW_CONTENT = `
                                 <select id="options" name="options" class="home-main-form-post-create-button home-main-form-post-create-button-options" disabled>
                                     <option value="opcion1">Todos</option>
                                 </select>
+
+                                <img src="/public/assets/imagen.svg" class="home-main-form-post-create-button-image" id="home-main-form-post-create-button-image" />
                             </div>
                             <button id="home-main-form-post-create-button" class="button home-main-form-post-create-button">Publicar</button>
                         </div>

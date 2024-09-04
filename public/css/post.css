@@ -14,7 +14,7 @@ body {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto auto auto;
-    gap: 10px;
+    gap: 20px;
 }
 
 .container-post-header {
@@ -39,9 +39,10 @@ body {
 }
 
 .container-post-header-signature {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
 }
 
 .container-post-header-signature-name_role {
@@ -123,6 +124,7 @@ body {
 
 .post-body-image {
     max-width: 400px;
+    max-height: 600px;
     border: 1px solid gray;
 }
 
@@ -144,19 +146,15 @@ body {
 }
 
 .container-post-footer-interactions {
-    display: grid;
-    grid-template-columns: min-content min-content;
-    justify-items: center;
-    align-content: center;
-    gap: 15px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
     font-size: 20px;
 }
 
 .container-post-footer-interactions-comments {
-    display: grid;
-    grid-template-columns: min-content auto;
-    grid-template-rows: auto;
-    align-content: center;
+    display: flex;
+    align-items: center;
     gap: 5px;
 }
 
@@ -165,10 +163,8 @@ body {
 }
 
 .container-post-footer-interactions-upvote {
-    display: grid;
-    grid-template-columns: min-content auto;
-    grid-template-rows: auto;
-    align-content: center;
+    display: flex;
+    align-items: center;
     gap: 5px;
 }
 

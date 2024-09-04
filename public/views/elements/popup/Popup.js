@@ -62,6 +62,7 @@ export default class Popup {
         title.classList.add('popup-title');
         title.innerText = text;
         this.containerBody.appendChild(title);
+        return title;
     }
 
     CreateButton (text, func) {
@@ -70,5 +71,15 @@ export default class Popup {
         button.textContent = text;
         button.addEventListener('click', () => func());
         this.containerBody.appendChild(button);
+        return button;
+    }
+
+    CreateInput (type, placeholder) {
+        const input = document.createElement('input');
+        input.classList.add('popup-input');
+        input.type = type;
+        input.placeholder = placeholder;
+        this.containerBody.appendChild(input);
+        return input;
     }
 }

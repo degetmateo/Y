@@ -6,7 +6,7 @@ module.exports = (server: Server) => {
             const _post = req.body.post;
             const _content = _post.content;
             const _images = _post.images;
-            const _username = req.user.username;
+            // const _username = req.user.username;
             return res.json({ ok: true });
         } catch (error) {
             console.error(error);
