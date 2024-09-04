@@ -15,6 +15,23 @@ export default async () => {
                     h: -1
                 }
             }
+        },
+
+        views: {
+            home: {
+                timelines: {
+                    global: {
+                        posts: new Array()
+                    },
+                    following: {
+                        posts: new Array()
+                    }
+                }
+            },
+
+            member: {
+                members: new Array()
+            }
         }
     }
 
