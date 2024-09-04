@@ -1,7 +1,7 @@
 import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
 import {navigateTo} from "../../router.js";
-import Popup from "./popup/Popup.js";
+import Popup from "../../components/popup/Popup.js";
 
 export default class Post {
     constructor (_post) {

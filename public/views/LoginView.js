@@ -1,4 +1,5 @@
 import auth from "../auth.js";
+import Alert from "../components/alert/alert.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
 
@@ -37,10 +38,7 @@ export default class extends AbstractView {
         const password = inputPassword.value;
         const passwordConfirmation = inputPassConfirm.value;
 
-        if (password != passwordConfirmation) {
-            alert('Contraseñas no coinciden.')
-            return;
-        }
+        if (password != passwordConfirmation) return new Alert('Las contraseñas no coinciden.');
 
         const request = await fetch('/user/register', {
             method: 'POST',
@@ -60,7 +58,7 @@ export default class extends AbstractView {
             navigateTo('/home');
         } else {
             console.error(res.error.message);
-            alert(res.error.message)
+            return new Alert(res.error.message);
         }
     }
 
@@ -81,8 +79,7 @@ export default class extends AbstractView {
         const response = await request.json();
 
         if (!response.ok) {
-            alert(response.error.message);
-            return;
+            return new Alert(response.error.message);
         }
         localStorage.setItem('user', JSON.stringify({ id: response.user.id, username: response.user.username, token: response.user.token }));
         window.app.user.id = response.user.id;

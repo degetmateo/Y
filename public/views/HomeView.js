@@ -1,8 +1,8 @@
 import { loadImage } from "../helpers.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
-import Alert from "./elements/alert/alert.js";
-import Popup from "./elements/popup/Popup.js";
+import Alert from "../components/alert/alert.js";
+import Popup from "../components/popup/Popup.js";
 import Post from "./elements/Post.js";
 import { CreateNavigation } from "./templates/nav.js";
 
@@ -124,9 +124,7 @@ export default class extends AbstractView {
                 try {
                     const value = input.value.trim();
                     if (!value || value.length <= 0) {
-                        const p2 = new Popup();
-                        p2.body().innerHTML = '<span>Debes ingresar un enlace valido.</span>';
-                        return;
+                        return new Alert('Debes ingresar un enlace.');
                     }
                     const popEspere = new Popup();
                     const popTitle = popEspere.CreateTitle('Espere...');

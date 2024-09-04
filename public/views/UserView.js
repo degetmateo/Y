@@ -3,7 +3,7 @@ import {URL_NO_IMAGE} from "../consts.js";
 import {cleanContent} from "../helpers.js";
 import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
-import Popup from "./elements/popup/Popup.js";
+import Popup from "../components/popup/Popup.js";
 import Post from "./elements/Post.js";
 import {CreateNavigation} from "./templates/nav.js";
 
