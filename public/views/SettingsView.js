@@ -2,6 +2,7 @@ import AbstractView from "./AbstractView.js";
 import { navigateTo } from '../router.js';
 import {CreateNavigation} from "./templates/nav.js";
 import {loadImage} from "../helpers.js";
+import Alert from "../components/alert/alert.js";
 
 export default class extends AbstractView {
     constructor (params) {
@@ -61,8 +62,8 @@ export default class extends AbstractView {
     async updateUsername () {
         const inputUsername = document.getElementById('settings-input-username');   
         const username = inputUsername.value;
-        if (username.length <= 0) return alert('Username: Desde 1 caracter.');
-        if (username.length > 16) return alert('Username: Hasta 16 caracteres.');
+        if (username.length <= 0) return new Alert('Username: Desde 1 caracter.');
+        if (username.length > 16) return new Alert('Username: Hasta 16 caracteres.');
         inputUsername.value = '';
         const request = await fetch ('/api/user/update/username', {
             method: 'POST',
@@ -73,15 +74,15 @@ export default class extends AbstractView {
             body: JSON.stringify({ user: window.app.user, username })
         });
         const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
-        alert("Nombre de usuario actualizado.");
+        if (!response.ok) return new Alert(response.error.message);
+        new Alert("Nombre de usuario actualizado.");
     }
 
     async updateName () {
         const inputName = document.getElementById('settings-input-name'); 
         const name = inputName.value;
-        if (name.length <= 0) return alert('Nombre: Desde 1 caracter.');
-        if (name.length > 16) return alert('Nombre: Hasta 16 caracteres.');
+        if (name.length <= 0) return new Alert('Nombre: Desde 1 caracter.');
+        if (name.length > 16) return new Alert('Nombre: Hasta 16 caracteres.');
         inputName.value = '';
         const request = await fetch ('/api/user/update/name', {
             method: 'POST',
@@ -92,13 +93,14 @@ export default class extends AbstractView {
             body: JSON.stringify({ user: window.app.user, name })
         });
         const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
-        alert("Nombre actualizado.");
+        if (!response.ok) return new Alert(response.error.message);
+        new Alert("Nombre actualizado.");
     }
 
     async updateBio () {
         const input = document.getElementById('settings-bio-input');
         const content = input.value;
+        input.value = '';
         const user = JSON.parse(localStorage.getItem('user'));
         const request = await fetch ('/api/user/update/bio', {
             method: 'POST',
@@ -113,9 +115,9 @@ export default class extends AbstractView {
         });
         const response = await request.json();
         if (!response.ok) {
-            return alert(response.error.message);
+            return new Alert(response.error.message);
         }
-        alert('Biografia actualizada correctamente.');
+        new Alert('Biografia actualizada correctamente.');
     }
 
     async updatePassword () {
@@ -125,9 +127,9 @@ export default class extends AbstractView {
         const password = inputPassword.value;
         const newPassword = inputNewPassword.value;
         const newPasswordConfirm = inputNewPasswordConfirm.value;
-        if (!password || password.length <= 0) return alert('Debes ingresar tu contraseña actual.');
-        if (!newPassword || newPassword.length <= 5) return alert('Debes ingresar una nueva contraseña más larga.');
-        if (newPassword != newPasswordConfirm) return alert('Tu nueva contraseña y su confirmación no coinciden.');
+        if (!password || password.length <= 0) return new Alert('Debes ingresar tu contraseña actual.');
+        if (!newPassword || newPassword.length <= 5) return new Alert('Debes ingresar una nueva contraseña más larga.');
+        if (newPassword != newPasswordConfirm) return new Alert('Tu nueva contraseña y su confirmación no coinciden.');
         inputPassword.value = '';
         inputNewPassword.value = '';
         inputNewPasswordConfirm.value = '';
@@ -140,13 +142,13 @@ export default class extends AbstractView {
             body: JSON.stringify({ user: { password, new_password: newPassword } })
         });
         const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
-        alert('Contraseña actualizada.'); 
+        if (!response.ok) return new Alert(response.error.message);
+        new Alert('Contraseña actualizada.'); 
     }
 
     async loadImage () {
         const inputImageURL = document.getElementById('input-image-url');
-        if (!inputImageURL.value) return alert('Debes ingresar un enlace.');
+        if (!inputImageURL.value) return new Alert('Debes ingresar un enlace.');
 
         let image;
 
@@ -154,8 +156,7 @@ export default class extends AbstractView {
             image = await loadImage(inputImageURL.value);
             await this.uploadImage(image);
         } catch (error) {
-            alert(error.message);
-            return;
+            return new Alert(error.message);
         }
     }
 
@@ -199,7 +200,7 @@ export default class extends AbstractView {
             }
         }
         
-        alert('Imagen de perfil actualizada.');
+        new Alert('Imagen de perfil actualizada.');
     }
 }
 
@@ -240,37 +241,11 @@ const VIEW = `
 
                 <div class="container-settings-name">
                     <div class="container-settings-bio-input">
-                        <input type="text" class="settings-pfp-img-input" id="settings-input-name" placeholder="Nombre" />
+                        <input type="text" class="settings-pfp-img-input" id="settings-input-name" placeholder="Nombre" autocomplete="off" />
                     </div>
 
                     <div class="container-settings-bio-button">
                         <button type="button" id="settings-name-button" class="settings-bio-button">Enviar</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container-settings">
-                <div class="container-settings-title">
-                    <p class="settings-title">
-                        Cambiar Contraseña
-                    </p>
-                </div>
-
-                <div class="container-settings-name">
-                    <div class="container-settings-bio-input">
-                        <input type="password" class="settings-pfp-img-input" id="settings-input-password" placeholder="Tu Contraseña" />
-                    </div>
-
-                    <div class="container-settings-bio-input">
-                        <input type="password" class="settings-pfp-img-input" id="settings-input-new_password" placeholder="Nueva Contraseña" />
-                    </div>
-
-                    <div class="container-settings-bio-input">
-                        <input type="password" class="settings-pfp-img-input" id="settings-input-new_password-confirm" placeholder="Confirmar Nueva Contraseña" />
-                    </div>
-
-                    <div class="container-settings-bio-button">
-                        <button type="button" id="settings-button-password" class="settings-bio-button">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -284,11 +259,37 @@ const VIEW = `
 
                 <div class="container-settings-name">
                     <div class="container-settings-bio-input">
-                        <input type="text" class="settings-pfp-img-input" id="settings-input-username" placeholder="Nombre De Usuario" />
+                        <input type="text" class="settings-pfp-img-input" id="settings-input-username" placeholder="Nombre De Usuario" autocomplete="off" />
                     </div>
 
                     <div class="container-settings-bio-button">
                         <button type="button" id="settings-button-username" class="settings-bio-button">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-settings">
+                <div class="container-settings-title">
+                    <p class="settings-title">
+                        Cambiar Contraseña
+                    </p>
+                </div>
+
+                <div class="container-settings-name">
+                    <div class="container-settings-bio-input">
+                        <input type="password" class="settings-pfp-img-input" id="settings-input-password" placeholder="Tu Contraseña" autocomplete="off" />
+                    </div>
+
+                    <div class="container-settings-bio-input">
+                        <input type="password" class="settings-pfp-img-input" id="settings-input-new_password" placeholder="Nueva Contraseña" autocomplete="off" />
+                    </div>
+
+                    <div class="container-settings-bio-input">
+                        <input type="password" class="settings-pfp-img-input" id="settings-input-new_password-confirm" placeholder="Confirmar Nueva Contraseña" autocomplete="off" />
+                    </div>
+
+                    <div class="container-settings-bio-button">
+                        <button type="button" id="settings-button-password" class="settings-bio-button">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -306,7 +307,7 @@ const VIEW = `
                         <p>2) Presiona el botón para cargar la imagen. Si el enlace no es valido, te lo haremos saber.</p>
 
                         <div class="container-settings-pfp-img-input">
-                            <input type="text" class="settings-pfp-img-input" id="input-image-url" placeholder="URL de la imagen." />
+                            <input type="text" class="settings-pfp-img-input" id="input-image-url" placeholder="URL de la imagen." autocomplete="off" />
                             <button id="load-button" class="settings-pfp-img-button">Cargar Imagen</button>
                         </div>
 

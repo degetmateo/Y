@@ -1,5 +1,7 @@
 export default async () => {
     window.app = {
+        alerts: new Array(),
+
         user: {
             id: -1,
             name: '',

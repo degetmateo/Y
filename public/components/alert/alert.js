@@ -9,6 +9,10 @@ export default class Alert {
         document.body.appendChild(this.container);
         this.CreateContentBody();
         this.events();
+
+        if (!window.app.alerts) window.app.alerts = new Array();
+        if (window.app.alerts[0]) window.app.alerts[0].delete();
+        window.app.alerts[0] = this;
     }
 
     getElement () {
