@@ -1,0 +1,11 @@
+.container-alert {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid var(--accent-color);
+    background-color: var(--primary-color);
+    width: max-content;
+}

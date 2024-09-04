@@ -1,6 +1,7 @@
 import { loadImage } from "../helpers.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
+import Alert from "./elements/alert/alert.js";
 import Popup from "./elements/popup/Popup.js";
 import Post from "./elements/Post.js";
 import { CreateNavigation } from "./templates/nav.js";
@@ -61,19 +62,19 @@ export default class extends AbstractView {
                 const imageURL = input.value;
                 pop.delete();
                 try {
-                    let test;
                     if (content.length <= 0) throw new Error('Debes escribir algo.');
                     if (imageURL.length > 0){
                         await loadImage(imageURL);
-                        test = [imageURL];
+                        this.post.images = new Array();
+                        this.post.images.push(imageURL);
                     }
-                    if (imageURL.length === 0) test = null;
-                    const result = await this.SendPost({ content, images: test });
+                    const result = await this.SendPost({ content, images: this.post.images });
                     if (!result.ok) throw new Error(result.error.message);
+                    new Alert('Publicación enviada.');
                     this.mode === 'global' ?
                         this.setGlobalTimeline() : this.setFollowingTimeline();
                 } catch (error) {
-                    alert(error.message);
+                    return new Alert(error.message);
                 }
             });
         });
@@ -83,7 +84,6 @@ export default class extends AbstractView {
     async events () {
         this.eventChangeTimeline();
         this.eventTimelineScroll();
-
         this.CreateMainForm();
     }
 
@@ -99,8 +99,8 @@ export default class extends AbstractView {
             try {
                 const textarea = document.getElementById('home-main-form-post-create-textarea');
                 const value = textarea.value.trim();
-                if (value.length <= 0) return alert('Tenés que escribir algo.');
-                if (value.length > 400) return alert('Límite de carácteres: 400.');
+                if (value.length <= 0) return new Alert('Tenés que escribir algo.');
+                if (value.length > 400) return new Alert('Límite de carácteres: 400.');
                 textarea.value = '';
                 const res = await this.SendPost({
                     content: value,
@@ -108,10 +108,11 @@ export default class extends AbstractView {
                 });
                 this.post.images = new Array();
                 if (!res.ok) throw new Error(res.error.message);
+                new Alert('Publicación enviada.');
                 this.setTimeline();
             } catch (error) {
                 console.error(error);
-                return alert("Ha ocurrido un error.");
+                return new Alert('Ha ocurrido un error.');
             }
         });
 
@@ -131,19 +132,19 @@ export default class extends AbstractView {
                     const popTitle = popEspere.CreateTitle('Espere...');
                     try {
                         await loadImage(value);
+                        this.post.images = new Array();
                         this.post.images.push(value);
+                        new Alert('Imagen guardada con éxito.');
                         popEspere.delete();
                         popup.delete();
                     } catch (error) {
-                        console.error(error)
-                        popTitle.textContent = 'Esa imagen no está disponible.';
-                        return;
+                        console.error(error);
+                        popEspere.delete();
+                        return new Alert('Esa imagen no está disponible.');
                     }
                 } catch (error) {
-                    console.error(error)
-                    const popError = new Popup();
-                    popError.CreateTitle('Ha ocurrido un error.');
-                    return;
+                    console.error(error);
+                    return new Alert('Esa imagen no está disponible.');
                 }
             });
         }
@@ -217,7 +218,7 @@ export default class extends AbstractView {
 
     async SendPost (post) {
         const user = JSON.parse(localStorage.getItem('user'));
-        const request = await fetch ('/post/create', {
+        const request = await fetch ('/api/post/create', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
