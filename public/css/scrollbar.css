@@ -1,0 +1,33 @@
+/* BASICOS */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* FONDO */
+::-webkit-scrollbar-track {
+    background: gray;    
+}
+
+/* ESTILO BARRITA */
+::-webkit-scrollbar-thumb {
+    background: #FFF;   
+    border-radius: 6px;
+    /* border: 1px solid #f1f1f1; */
+}
+
+/* HOVER SOBRE LA BARRA */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+/* FIREFOX */
+/* html {
+    scrollbar-width: thin;
+    scrollbar-color: #FFF gray;
+} */
+
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
