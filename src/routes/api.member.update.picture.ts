@@ -2,11 +2,10 @@ import Postgres from "../database/Postgres";
 import Server from "../Server";
 
 module.exports = (server: Server) => {
-    server.app.post('/api/user/update/picture', server.authenticate, async (req, res) => {        
-        const user = req.body.user;
-        const image = req.body.image;
-
+    server.app.post('/api/member/update/picture', server.authenticate, async (req, res) => {        
         try {
+            const user = req.body.user;
+            const image = req.body.image;
             await Postgres.query() `
                 UPDATE 
                     member

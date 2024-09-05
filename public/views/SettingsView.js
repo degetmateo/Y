@@ -65,7 +65,7 @@ export default class extends AbstractView {
         if (username.length <= 0) return new Alert('Username: Desde 1 caracter.');
         if (username.length > 16) return new Alert('Username: Hasta 16 caracteres.');
         inputUsername.value = '';
-        const request = await fetch ('/api/user/update/username', {
+        const request = await fetch ('/api/user/member/username', {
             method: 'POST',
             headers: { 
                 "Authorization": "Bearer " + window.app.user.token,
@@ -84,7 +84,7 @@ export default class extends AbstractView {
         if (name.length <= 0) return new Alert('Nombre: Desde 1 caracter.');
         if (name.length > 16) return new Alert('Nombre: Hasta 16 caracteres.');
         inputName.value = '';
-        const request = await fetch ('/api/user/update/name', {
+        const request = await fetch ('/api/member/update/name', {
             method: 'POST',
             headers: { 
                 "Authorization": "Bearer " + window.app.user.token,
@@ -102,7 +102,7 @@ export default class extends AbstractView {
         const content = input.value;
         input.value = '';
         const user = JSON.parse(localStorage.getItem('user'));
-        const request = await fetch ('/api/user/update/bio', {
+        const request = await fetch ('/api/member/update/bio', {
             method: 'POST',
             headers: { 
                 "Authorization": "Bearer " + user.token,    
@@ -133,7 +133,7 @@ export default class extends AbstractView {
         inputPassword.value = '';
         inputNewPassword.value = '';
         inputNewPasswordConfirm.value = '';
-        const request = await fetch('/api/user/update/password', {
+        const request = await fetch('/api/member/update/password', {
             method: 'POST',
             headers: {
                 "Authorization": "Bearer "+window.app.user.token,
@@ -169,7 +169,7 @@ export default class extends AbstractView {
     async uploadImage (image) {
         const user = JSON.parse(localStorage.getItem('user'));
 
-        const request = await fetch("/api/user/update/picture", {
+        const request = await fetch("/api/member/update/picture", {
             method: 'POST',
             headers: {
                 "Authorization": 'Bearer ' + user.token,

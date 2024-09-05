@@ -3,13 +3,13 @@ import Server from "../Server";
 import bcrypt from 'bcrypt';
 
 module.exports = (server: Server) => {
-    server.app.post('/api/user/update/password', server.authenticate, async (req, res) => {
-        const password = req.body.user.password;
-        const newPassword = req.body.user.new_password;
-        if (!password || password.length <= 0) return res.json({ ok: false, error: { message: "Debes ingresar tu PASSWORD." } });
-        if (!newPassword || newPassword.length <= 5) return res.json({ ok: false, error: { message: "Debes ingresar una PASSWORD mas larga." } });
-
+    server.app.post('/api/member/update/password', server.authenticate, async (req, res) => {
         try {
+            const password = req.body.user.password;
+            const newPassword = req.body.user.new_password;
+            if (!password || password.length <= 0) return res.json({ ok: false, error: { message: "Debes ingresar tu PASSWORD." } });
+            if (!newPassword || newPassword.length <= 5) return res.json({ ok: false, error: { message: "Debes ingresar una PASSWORD mas larga." } });
+            
             await Postgres.query().begin(async sql => {
                 await sql`
                     SET TRANSACTION ISOLATION LEVEL READ COMMITTED;

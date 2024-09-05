@@ -40,7 +40,7 @@ export default class extends AbstractView {
 
         if (password != passwordConfirmation) return new Alert('Las contraseñas no coinciden.');
 
-        const request = await fetch('/user/register', {
+        const request = await fetch('/api/member/register', {
             method: 'POST',
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ user: { username: username, password: password } })
@@ -71,7 +71,7 @@ export default class extends AbstractView {
         const name = inputUsername.value;
         const password = inputPassword.value;
 
-        const request = await fetch('/user/login', {
+        const request = await fetch('/api/member/login', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user: { username: name, password: password } })

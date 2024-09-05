@@ -52,7 +52,7 @@ export default class extends AbstractView {
     }
 
     async getUser () {
-        const request = await fetch(`/api/user/${this.params.username}`, {
+        const request = await fetch(`/api/member/${this.params.username}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + window.app.user.token
@@ -63,7 +63,7 @@ export default class extends AbstractView {
     }
 
     async getUserPosts () {
-        const request = await fetch(`/api/posts/user/${this.params.username}/${this.limit}/${this.offset}`, {
+        const request = await fetch(`/api/posts/member/${this.params.username}/${this.limit}/${this.offset}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + window.app.user.token
@@ -103,7 +103,7 @@ export default class extends AbstractView {
             for (const user of follows.followed) {
                 const userContainer = document.createElement('a');
                 userContainer.setAttribute('data-link', '');
-                userContainer.setAttribute('href', '/user/'+user.username_member);
+                userContainer.setAttribute('href', '/member/'+user.username_member);
                 userContainer.textContent =  `@${user.username_member}`;
                 userContainer.classList.add('popup-list-item');
                 userContainer.onclick = () => pop.delete();
@@ -123,7 +123,7 @@ export default class extends AbstractView {
             for (const user of follows.followers) {
                 const userContainer = document.createElement('a');
                 userContainer.setAttribute('data-link', '');
-                userContainer.setAttribute('href', '/user/'+user.username_member);
+                userContainer.setAttribute('href', '/member/'+user.username_member);
                 userContainer.textContent =  `@${user.username_member}`;
                 userContainer.classList.add('popup-list-item');
                 userContainer.onclick = () => pop.delete();
@@ -154,7 +154,7 @@ export default class extends AbstractView {
             1 + ' seguidor' : 
             this.user.follows.followersCount + ' seguidores';
 
-        const request = await fetch('/api/user/'+this.user.username+'/follow', {
+        const request = await fetch('/api/member/'+this.user.username+'/follow', {
             method: 'PUT',
             headers: { "Authorization": "Bearer "+window.app.user.token }
         });
@@ -182,7 +182,7 @@ export default class extends AbstractView {
             1 + ' seguidor' : 
             this.user.follows.followersCount + ' seguidores';
 
-        const request = await fetch('/api/user/'+this.user.username+'/unfollow', {
+        const request = await fetch('/api/member/'+this.user.username+'/unfollow', {
             method: 'DELETE',
             headers: { "Authorization": "Bearer "+window.app.user.token }
         });

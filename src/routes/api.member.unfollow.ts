@@ -2,14 +2,13 @@ import Postgres from "../database/Postgres";
 import Server from "../Server";
 
 module.exports = (server: Server) => {
-    server.app.delete("/api/user/:username/unfollow", server.authenticate, async (req, res) => {
-        const reqUser = req.user.username;
-        const userToFollow = req.params.username;
-        if (!reqUser || reqUser.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
-        if (!userToFollow || userToFollow.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
-        if (reqUser === userToFollow) return res.json({ ok: false, error: { message: "Ha ocurrido un error." } });
-
+    server.app.delete("/api/member/:username/unfollow", server.authenticate, async (req, res) => {
         try {
+            const reqUser = req.user.username;
+            const userToFollow = req.params.username;
+            if (!reqUser || reqUser.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
+            if (!userToFollow || userToFollow.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
+            if (reqUser === userToFollow) return res.json({ ok: false, error: { message: "Ha ocurrido un error." } });
             await Postgres.query().begin(async sql => {
                 await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
 

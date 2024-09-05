@@ -1,6 +1,5 @@
 import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
-import {navigateTo} from "../../router.js";
 import Popup from "../../components/popup/Popup.js";
 
 export default class Post {
@@ -87,7 +86,7 @@ export default class Post {
         const headerPicture = new Image();
         headerPicture.src = this.post.creator.profilePicture.url || URL_NO_IMAGE;
         headerPicture.classList.add('post-header-picture');
-        CreateDataLink(headerPicture, '/user/'+this.post.creator.username);
+        CreateDataLink(headerPicture, '/member/'+this.post.creator.username);
         containerHeaderPicture.appendChild(headerPicture);
         return containerHeaderPicture;
     }
@@ -100,7 +99,7 @@ export default class Post {
             <div class="container-post-header-signature-name_role">
                 <span 
                     class="post-header-signature-name" id="post-member-name"
-                    href="/user/${this.post.creator.username}"
+                    href="/member/${this.post.creator.username}"
                     data-link
                 >
                     ${this.post.creator.name}
@@ -127,7 +126,7 @@ export default class Post {
         const headerSignatureName = document.createElement('span');
         headerSignatureName.classList.add('post-header-signature-name');
         headerSignatureName.textContent = this.post.creator.name;
-        CreateDataLink(headerSignatureName, '/user/'+this.post.creator.username);
+        CreateDataLink(headerSignatureName, '/member/'+this.post.creator.username);
 
 
         // const headerSignatureUsername = document.createElement('span');

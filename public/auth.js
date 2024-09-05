@@ -44,7 +44,7 @@ export default async () => {
         return false;
     };
 
-    const request = await fetch ('/user/auth', {
+    const request = await fetch ('/api/member/auth', {
         method: 'POST',
         headers: { 
             "Authorization": `Bearer ${credentials.token}`,

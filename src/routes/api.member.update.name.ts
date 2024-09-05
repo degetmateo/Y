@@ -2,14 +2,14 @@ import Postgres from "../database/Postgres";
 import Server from "../Server";
 
 module.exports = (server: Server) => {
-    server.app.post('/api/user/update/name', server.authenticate, async (req, res) => {        
-        const user = req.body.user;
-        const name = req.body.name;
-
-        if (name.length > 16) return res.json({ ok: false, error: { message: "Nombre: Hasta 16 caracteres." } });
-        if (name.length <= 0) return res.json({ ok: false, error: { message: "Nombre: Minimo 1 caracter." } });
-
+    server.app.post('/api/member/update/name', server.authenticate, async (req, res) => {        
         try {
+            const user = req.body.user;
+            const name = req.body.name;
+    
+            if (name.length > 16) return res.json({ ok: false, error: { message: "Nombre: Hasta 16 caracteres." } });
+            if (name.length <= 0) return res.json({ ok: false, error: { message: "Nombre: Minimo 1 caracter." } });
+            
             await Postgres.query().begin(async sql => {
                 await sql `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
     

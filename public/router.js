@@ -33,7 +33,7 @@ export const router = async () => {
         { path: "/login", view: LoginView },
         { path: "/settings", view: SettingsView },
         //todo: /member/:username_member
-        { path: "/user/:username", view: UserView },
+        { path: "/member/:username", view: UserView },
         { path: "/admin", view: AdminView },
         { path: "/post/:id_post", view: PostView }
     ];

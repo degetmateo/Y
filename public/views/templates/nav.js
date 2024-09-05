@@ -67,6 +67,6 @@ const CreateNavigationEvents = (home) => {
 
     document.getElementById('nav-button-profile').addEventListener('click', (event) => {
         event.preventDefault();
-        navigateTo('/user/'+window.app.user.username);
+        navigateTo('/member/'+window.app.user.username);
     });
 }

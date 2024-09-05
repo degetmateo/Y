@@ -12,14 +12,15 @@ declare global {
 }
 
 module.exports = (server: Server) => {
-    server.app.put("/api/user/:username/follow", server.authenticate, async (req, res) => {
-        const reqUser = req.user.username;
-        const userToFollow = req.params.username;
-        if (!reqUser || reqUser.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
-        if (!userToFollow || userToFollow.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
-        if (reqUser === userToFollow) return res.json({ ok: false, error: { message: "Ha ocurrido un error." } });
-
+    server.app.put("/api/member/:username/follow", server.authenticate, async (req, res) => {
+        
         try {
+            const reqUser = req.user.username;
+            const userToFollow = req.params.username;
+            if (!reqUser || reqUser.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
+            if (!userToFollow || userToFollow.length <= 0) return res.json({ ok: false, error: { message: 'Ha ocurrido un error.' } });
+            if (reqUser === userToFollow) return res.json({ ok: false, error: { message: "Ha ocurrido un error." } });
+            
             await Postgres.query().begin(async sql => {
                 await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
                 
