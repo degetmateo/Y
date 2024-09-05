@@ -17,6 +17,10 @@ export default class extends AbstractView {
         this.post = {
             images: new Array()
         }
+
+        document.onvisibilitychange = () => {
+            if (document.visibilityState === 'visible') this.setTimeline();
+        }
     }
 
     async init () {
@@ -183,6 +187,14 @@ export default class extends AbstractView {
         }
         this.timelineContainer.innerHTML = '';
         this.drawPosts(res.posts);
+    }
+
+    clearPosts () {
+        this.timelineContainer.innerHTML = '';
+    }
+
+    resetScroll () {
+        this.mainContainer.scrollTop = 0;
     }
 
     async setGlobalTimeline () {
