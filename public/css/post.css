@@ -8,7 +8,7 @@ body {
 .container-post {
     color: #FFF;
     
-    padding: 10px;
+    padding: 20px;
     border-bottom: 1px solid gray;
 
     display: grid;
@@ -145,6 +145,7 @@ body {
     grid-template-columns: auto auto;
     grid-template-rows: auto;
     gap: 5px;
+    padding-top: 10px;
 }
 
 .container-post-footer-date {
