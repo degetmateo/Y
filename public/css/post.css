@@ -101,12 +101,24 @@ body {
     border: 1px solid #D36666;
 }
 
-.post-header-button-delete {
+.post-header-button {
     border: none;
     outline: none;
     background-color: var(--primary-color);
     color: #FFF;
     cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 2px;
+    padding: 5px;
+}
+
+.post-header-button-box {
+    width: 4px;
+    height: 4px;
+    background-color: #FFF;
 }
 
 .container-post-body {

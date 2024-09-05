@@ -153,8 +153,12 @@ export default class Post {
         const containerHeaderButtonOptions = document.createElement('div');
         containerHeaderButtonOptions.classList.add('container-post-header-button-delete');
         const headerOptionsButton = document.createElement('button');
-        headerOptionsButton.classList.add('post-header-button-delete');
-        headerOptionsButton.innerHTML = '<i class="fa-solid fa-ellipsis"></i>';
+        headerOptionsButton.classList.add('post-header-button');
+        headerOptionsButton.innerHTML = `
+            <div class="post-header-button-box"></div>
+            <div class="post-header-button-box"></div>
+            <div class="post-header-button-box"></div>
+        `;
         window.app.user.id == this.post.creator.id ?
             headerOptionsButton.addEventListener('click', () => this.CreatePopupMenuSelf()) :
             headerOptionsButton.addEventListener('click', () => this.CreatePopupMenuOther());
