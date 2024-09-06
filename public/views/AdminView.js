@@ -1,6 +1,6 @@
+import Navigation from "../components/navigation/navigation.js";
 import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
-import { CreateNavigation } from "./templates/nav.js";
 
 export default class extends AbstractView {
     constructor (params) {
@@ -12,7 +12,7 @@ export default class extends AbstractView {
         if (window.app.user.role != 'admin') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
-        CreateNavigation();
+        document.getElementById('container-view').appendChild(Navigation.Create());
         this.events();
     }
 
@@ -75,9 +75,8 @@ export default class extends AbstractView {
 }
 
 const VIEW_CONTENT = `
-    <div class="container-view-admin">
+    <div class="container-view-admin" id="container-view">
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
-        <div class="container-nav" id="container-nav"></div>
 
         <input type="text" placeholder="username" id="input-username">
         <input type="text" placeholder="new username" id="input-new_username">

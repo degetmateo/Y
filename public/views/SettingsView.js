@@ -1,8 +1,8 @@
 import AbstractView from "./AbstractView.js";
 import { navigateTo } from '../router.js';
-import {CreateNavigation} from "./templates/nav.js";
 import {loadImage} from "../helpers.js";
 import Alert from "../components/alert/alert.js";
+import Navigation from "../components/navigation/navigation.js";
 
 export default class extends AbstractView {
     constructor (params) {
@@ -13,7 +13,7 @@ export default class extends AbstractView {
     async init () {
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW;
-        CreateNavigation();
+        document.getElementById('container-view').appendChild(Navigation.Create());
         await this.events();
     }
 
@@ -65,7 +65,7 @@ export default class extends AbstractView {
         if (username.length <= 0) return new Alert('Username: Desde 1 caracter.');
         if (username.length > 16) return new Alert('Username: Hasta 16 caracteres.');
         inputUsername.value = '';
-        const request = await fetch ('/api/user/member/username', {
+        const request = await fetch ('/api/member/update/username', {
             method: 'POST',
             headers: { 
                 "Authorization": "Bearer " + window.app.user.token,
@@ -205,9 +205,8 @@ export default class extends AbstractView {
 }
 
 const VIEW = `
-    <div class="container-settings-view">
+    <div class="container-settings-view" id="container-view">
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
-        <div class="container-nav" id="container-nav"></div>
 
         <div class="container-main">
             <div class="container-button-logout">

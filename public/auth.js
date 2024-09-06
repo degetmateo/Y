@@ -1,4 +1,5 @@
 export default async () => {
+    console.log('auth')
     window.app = {
         alerts: new Array(),
 

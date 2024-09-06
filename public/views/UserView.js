@@ -1,11 +1,9 @@
-import auth from "../auth.js";
 import {URL_NO_IMAGE} from "../consts.js";
 import {cleanContent} from "../helpers.js";
-import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
 import Popup from "../components/popup/Popup.js";
 import Post from "./elements/Post.js";
-import {CreateNavigation} from "./templates/nav.js";
+import Navigation from "../components/navigation/navigation.js";
 
 export default class extends AbstractView {
     constructor (params) {
@@ -20,14 +18,9 @@ export default class extends AbstractView {
     }
 
     async init () {
-        if (!await auth()) {
-            navigateTo('/login');
-            return;
-        }
-
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW;
-        CreateNavigation();
+        document.getElementById('container-view').appendChild(Navigation.Create());
     
         const resUser = await this.getUser();
 
@@ -218,9 +211,8 @@ export default class extends AbstractView {
 }
 
 const VIEW = `
-    <div class="container-profile-view">
+    <div class="container-profile-view" id="container-view">
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
-        <div class="container-nav" id="container-nav"></div>
         <div class="container-main" id="container-main">
             <div class="container-profile">
                 <div class="container-pfp" id="container-pfp">

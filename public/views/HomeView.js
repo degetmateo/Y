@@ -4,7 +4,8 @@ import AbstractView from "./AbstractView.js";
 import Alert from "../components/alert/alert.js";
 import Popup from "../components/popup/Popup.js";
 import Post from "./elements/Post.js";
-import { CreateNavigation } from "./templates/nav.js";
+import {URL_NO_IMAGE} from "../consts.js";
+import Navigation from "../components/navigation/navigation.js";
 
 export default class extends AbstractView {
     constructor (params) {
@@ -27,9 +28,11 @@ export default class extends AbstractView {
         if (window.location.pathname === '/') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
+
+
         this.mainContainer = document.getElementById('container-main');
         this.timelineContainer = document.getElementById('container-timeline');
-        CreateNavigation(this);
+        document.getElementById('container-view').appendChild(Navigation.Create());
         this.setGlobalTimeline();
         this.events();
         this.CreateMobileButtonPost();
@@ -93,7 +96,7 @@ export default class extends AbstractView {
 
     CreateMainForm () {
         const profile_pic = document.getElementById('home-main-form-post-create-profile_pic');
-        profile_pic.src = window.app.user.profilePic.url;
+        profile_pic.src = window.app.user.profilePic.url || URL_NO_IMAGE;
 
         const name = document.getElementById('home-main-form-post-create-name');
         name.textContent = window.app.user.name;
@@ -260,9 +263,8 @@ export default class extends AbstractView {
 }
 
 const VIEW_CONTENT = `
-    <div class="container-home-view">
+    <div class="container-home-view" id="container-view">
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
-        <div class="container-nav" id="container-nav"></div>
 
         <div class="container-main" id="container-main">
 

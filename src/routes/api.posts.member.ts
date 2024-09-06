@@ -4,7 +4,6 @@ import Server from "../Server";
 
 module.exports = (server: Server) => {
     server.app.get('/api/posts/member/:username/:limit/:offset', server.authenticate, async (req, res) => {
-        
         try {
             let limit = parseInt(req.params.limit as string) || 20;
             const offset = parseInt(req.params.offset as string) || 0;

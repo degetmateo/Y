@@ -14,7 +14,7 @@ module.exports = (server: Server) => {
             const isValid = regexUsername.test(username);
             if (!isValid) return res.json({ ok: false, error: { message: 'Username: Solo numeros, letras y guiones bajos.' } });
         
-            await Postgres.query().begin(async (sql) => {
+            await Postgres.query().begin(async sql => {
                 await sql `SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
     
                 const queryUserWithUsername = await sql`

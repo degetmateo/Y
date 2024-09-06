@@ -261,6 +261,7 @@
     .container-button-change-timeline button {
         background-color: var(--primary-color);
         border: none;
+        border-bottom: 1px solid gray;
     }
 
     .container-button-change-timeline button.active {
