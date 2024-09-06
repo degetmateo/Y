@@ -1,11 +1,28 @@
 import {navigateTo} from "../../router.js";
 
-const HOME_IMAGE_OFF = `<img class="nav-button-icon" src="/public/components/navigation/svg/home-off.svg" />`;
-const HOME_IMAGE_ON = `<img class="nav-button-icon" src="/public/components/navigation/svg/home-on.svg" />`;
-const PROFILE_IMAGE_OFF = `<img class="nav-button-icon" src="/public/components/navigation/svg/user-off.svg" />`;
-const PROFILE_IMAGE_ON = `<img class="nav-button-icon" src="/public/components/navigation/svg/user-on.svg" />`; 
-const SETTINGS_IMAGE_OFF = `<img class="nav-button-icon" src="/public/components/navigation/svg/config-off.svg" />`;
-const SETTINGS_IMAGE_ON = `<img class="nav-button-icon" src="/public/components/navigation/svg/config-on.svg" />`;
+const HOME_IMAGE_OFF = new Image();
+HOME_IMAGE_OFF.src = "/public/components/navigation/svg/home-off.svg";
+HOME_IMAGE_OFF.classList.add('nav-button-icon');
+
+const HOME_IMAGE_ON = new Image();
+HOME_IMAGE_ON.src = '/public/components/navigation/svg/home-on.svg';
+HOME_IMAGE_ON.classList.add('nav-button-icon');
+
+const PROFILE_IMAGE_OFF = new Image();
+PROFILE_IMAGE_OFF.src = '/public/components/navigation/svg/user-off.svg';
+PROFILE_IMAGE_OFF.classList.add('nav-button-icon');
+
+const PROFILE_IMAGE_ON = new Image();
+PROFILE_IMAGE_ON.src = '/public/components/navigation/svg/user-on.svg';
+PROFILE_IMAGE_ON.classList.add('nav-button-icon');
+
+const SETTINGS_IMAGE_OFF = new Image();
+SETTINGS_IMAGE_OFF.src = '/public/components/navigation/svg/config-off.svg';
+SETTINGS_IMAGE_OFF.classList.add('nav-button-icon');
+
+const SETTINGS_IMAGE_ON = new Image();
+SETTINGS_IMAGE_ON.src = '/public/components/navigation/svg/config-on.svg'; 
+SETTINGS_IMAGE_ON.classList.add('nav-button-icon');
 
 export default class Navigation {
     constructor () {
@@ -20,7 +37,10 @@ export default class Navigation {
         this.buttonHome.classList.add('nav-button');
         this.buttonHome.setAttribute('data-link', '');
         this.buttonHome.href = '/home';
-        this.buttonHome.innerHTML = (window.location.pathname === '/home' ? HOME_IMAGE_ON : HOME_IMAGE_OFF) + this.HOME_TEXT;
+        window.location.pathname === '/home' ?
+            this.buttonHome.appendChild(HOME_IMAGE_ON) :
+            this.buttonHome.appendChild(HOME_IMAGE_OFF);
+        this.buttonHome.innerHTML += this.HOME_TEXT;
         this.buttonHome.onclick = e => {
             e.preventDefault();
             navigateTo(this.buttonHome.href);
@@ -30,7 +50,10 @@ export default class Navigation {
         this.buttonProfile.classList.add('nav-button');
         this.buttonProfile.setAttribute('data-link', '');
         this.buttonProfile.href = '/member/'+window.app.user.username;
-        this.buttonProfile.innerHTML = (window.location.pathname === '/member/'+window.app.user.username ? PROFILE_IMAGE_ON : PROFILE_IMAGE_OFF) + this.PROFILE_TEXT;
+        window.location.pathname === '/member/'+window.app.user.username ?
+            this.buttonProfile.appendChild(PROFILE_IMAGE_ON) :
+            this.buttonProfile.appendChild(PROFILE_IMAGE_OFF);
+        this.buttonProfile.innerHTML += this.PROFILE_TEXT;
         this.buttonProfile.onclick = e => {
             e.preventDefault();
             navigateTo(this.buttonProfile.href);
@@ -40,7 +63,10 @@ export default class Navigation {
         this.buttonSettings.classList.add('nav-button');
         this.buttonSettings.setAttribute('data-link', '');
         this.buttonSettings.href = '/settings';
-        this.buttonSettings.innerHTML = (window.location.pathname === '/settings' ? SETTINGS_IMAGE_ON : SETTINGS_IMAGE_OFF) + this.SETTINGS_TEXT;
+        window.location.pathname === '/settings' ?
+            this.buttonSettings.appendChild(SETTINGS_IMAGE_ON) :
+            this.buttonSettings.appendChild(SETTINGS_IMAGE_OFF);
+        this.buttonSettings.innerHTML += this.SETTINGS_TEXT;
         this.buttonSettings.onclick = e => {
             e.preventDefault();
             navigateTo(this.buttonSettings.href);
