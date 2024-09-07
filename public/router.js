@@ -5,7 +5,8 @@ import LoginView from "./views/LoginView.js";
 import UserView from "./views/UserView.js";
 import auth from "./auth.js";
 import AdminView from "./views/AdminView.js";
-import PostView from "./views/PostView.js";
+import CommentsView from "./views/comments/CommentsView.js";
+import MessagesView from "./views/messages/MessagesView.js";
 
 const pathToRegex = (path) => {
     return new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
@@ -32,10 +33,10 @@ export const router = async () => {
         { path: "/home", view: HomeView },
         { path: "/login", view: LoginView },
         { path: "/settings", view: SettingsView },
-        //todo: /member/:username_member
         { path: "/member/:username", view: UserView },
         { path: "/admin", view: AdminView },
-        { path: "/post/:id_post", view: PostView }
+        { path: "/post/:id_post/comments", view: CommentsView },
+        { path: "/messages", view: MessagesView }
     ];
 
     const potentialMatches = routes.map(route => {

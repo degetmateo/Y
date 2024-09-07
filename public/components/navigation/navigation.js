@@ -24,59 +24,66 @@ const SETTINGS_IMAGE_ON = new Image();
 SETTINGS_IMAGE_ON.src = '/public/components/navigation/svg/config-on.svg'; 
 SETTINGS_IMAGE_ON.classList.add('nav-button-icon');
 
+const MESSAGES_IMAGES_ON = new Image();
+MESSAGES_IMAGES_ON.src = '/public/components/navigation/svg/chat-on.svg'; 
+MESSAGES_IMAGES_ON.classList.add('nav-button-icon');
+
+const MESSAGES_IMAGES_OFF = new Image();
+MESSAGES_IMAGES_OFF.src = '/public/components/navigation/svg/chat-off.svg'; 
+MESSAGES_IMAGES_OFF.classList.add('nav-button-icon');
+
 export default class Navigation {
     constructor () {
-        this.HOME_TEXT = '<span class="nav-button-text">Inicio</span>';
-        this.PROFILE_TEXT = '<span class="nav-button-text">Perfil</span>';
-        this.SETTINGS_TEXT = '<span class="nav-button-text">Configuración</span>';
-
         this.nav = document.createElement('nav');
         this.nav.classList.add('nav');
-    
-        this.buttonHome = document.createElement('a');
-        this.buttonHome.classList.add('nav-button');
-        this.buttonHome.setAttribute('data-link', '');
-        this.buttonHome.href = '/home';
-        window.location.pathname === '/home' ?
-            this.buttonHome.appendChild(HOME_IMAGE_ON) :
-            this.buttonHome.appendChild(HOME_IMAGE_OFF);
-        this.buttonHome.innerHTML += this.HOME_TEXT;
-        this.buttonHome.onclick = e => {
-            e.preventDefault();
-            navigateTo(this.buttonHome.href);
-        } 
+        this.CreateButton({ text: 'Inicio', icon_on: HOME_IMAGE_ON, icon_off: HOME_IMAGE_OFF, href: '/home' });
+        this.CreateButton({ text: 'Perfil', icon_on: PROFILE_IMAGE_ON, icon_off: PROFILE_IMAGE_OFF, href: '/member/'+window.app.user.username });
+        
+        if (window.app.user.role != 'member') {
+            const button = document.createElement('a');
+            button.setAttribute('data-link', '');
+            button.classList.add('nav-button', 'test');
+            button.href = '/messages';
+            button.onclick = e => {
+                e.preventDefault();
+                navigateTo(button.href);
+            }
+            window.location.pathname.startsWith('/messages') ? 
+                button.appendChild(MESSAGES_IMAGES_ON) :
+                button.appendChild(MESSAGES_IMAGES_OFF);
+            button.innerHTML += `
+                <span class="nav-button-text">Mensajes</span>
+                <span class="nav-button-status--test">TEST</span>
+            `;
+            this.nav.appendChild(button);
+        }
 
-        this.buttonProfile = document.createElement('a');
-        this.buttonProfile.classList.add('nav-button');
-        this.buttonProfile.setAttribute('data-link', '');
-        this.buttonProfile.href = '/member/'+window.app.user.username;
-        window.location.pathname === '/member/'+window.app.user.username ?
-            this.buttonProfile.appendChild(PROFILE_IMAGE_ON) :
-            this.buttonProfile.appendChild(PROFILE_IMAGE_OFF);
-        this.buttonProfile.innerHTML += this.PROFILE_TEXT;
-        this.buttonProfile.onclick = e => {
-            e.preventDefault();
-            navigateTo(this.buttonProfile.href);
-        } 
-
-        this.buttonSettings = document.createElement('a');
-        this.buttonSettings.classList.add('nav-button');
-        this.buttonSettings.setAttribute('data-link', '');
-        this.buttonSettings.href = '/settings';
-        window.location.pathname === '/settings' ?
-            this.buttonSettings.appendChild(SETTINGS_IMAGE_ON) :
-            this.buttonSettings.appendChild(SETTINGS_IMAGE_OFF);
-        this.buttonSettings.innerHTML += this.SETTINGS_TEXT;
-        this.buttonSettings.onclick = e => {
-            e.preventDefault();
-            navigateTo(this.buttonSettings.href);
-        } 
-
-        this.nav.appendChild(this.buttonHome);
-        this.nav.appendChild(this.buttonProfile);
-        this.nav.appendChild(this.buttonSettings);
+        this.CreateButton({ text: 'Configuración', icon_on: SETTINGS_IMAGE_ON, icon_off: SETTINGS_IMAGE_OFF, href: '/settings' });
     }
 
+    CreateButton ({ text, icon_on, icon_off, href }) {
+        const button = document.createElement('a');
+        button.classList.add('nav-button');
+        button.setAttribute('data-link', '');
+        button.href = href;
+        
+        window.location.pathname === href ?
+            button.appendChild(icon_on) :
+            button.appendChild(icon_off);
+
+        const buttonText = document.createElement('span');
+        buttonText.classList.add('nav-button-text');
+        buttonText.innerText = text;
+        button.appendChild(buttonText);
+        
+        button.onclick = e => {
+            e.preventDefault();
+            navigateTo(href);
+        }
+
+        this.nav.appendChild(button);
+    }
+ 
     getNode () {
         return this.nav;
     }

@@ -171,9 +171,6 @@ body {
     gap: 5px;
 }
 
-.post-footer-interactions-comments-icon {
-    cursor: pointer;
-}
 
 .container-post-footer-interactions-upvote {
     display: flex;
@@ -181,12 +178,8 @@ body {
     gap: 5px;
 }
 
-.post-footer-interactions-upvote {
+.post-footer-interactions-icon {
     cursor: pointer;
-}
-
-.post-footer-interactions-upvote--active {
-    color: red;
 }
 
 @media (max-width: 768px) {

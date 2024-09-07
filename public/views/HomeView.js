@@ -3,7 +3,7 @@ import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
 import Alert from "../components/alert/alert.js";
 import Popup from "../components/popup/Popup.js";
-import Post from "./elements/Post.js";
+import Post from "../components/post/Post.js";
 import {URL_NO_IMAGE} from "../consts.js";
 import Navigation from "../components/navigation/navigation.js";
 

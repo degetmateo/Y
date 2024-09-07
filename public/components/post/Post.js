@@ -1,6 +1,18 @@
 import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
-import Popup from "../../components/popup/Popup.js";
+import Popup from "../popup/Popup.js";
+
+const IMAGE_POST_UPVOTE_ON = new Image();
+IMAGE_POST_UPVOTE_ON.src = '/public/components/post/svg/upvote-on.svg';
+IMAGE_POST_UPVOTE_ON.classList.add('post-footer-interactions-icon');
+
+const IMAGE_POST_UPVOTE_OFF = new Image();
+IMAGE_POST_UPVOTE_OFF.src = '/public/components/post/svg/upvote-off.svg';
+IMAGE_POST_UPVOTE_OFF.classList.add('post-footer-interactions-icon');
+
+const IMAGE_POST_COMMENTS = new Image();
+IMAGE_POST_COMMENTS.src = '/public/components/post/svg/comments.svg';
+IMAGE_POST_COMMENTS.classList.add('post-footer-interactions-icon');
 
 export default class Post {
     constructor (_post) {
@@ -223,28 +235,10 @@ export default class Post {
         
         const containerFooterUpvoteIcon = document.createElement('div');
         containerFooterUpvoteIcon.classList.add('container-post-footer-upvote-icon');
-        
 
-        const getIconUpvoteFilled = () => {
-            const UPVOTE_IMG_FILLED = document.createElement('img');
-            UPVOTE_IMG_FILLED.src = '/public/views/elements/svg/upvote-filled.svg';
-            UPVOTE_IMG_FILLED.classList.add('post-footer-interactions-comments-icon');
-            return UPVOTE_IMG_FILLED;
-        }
-
-        const getIconUpvoteUnfilled = () => {
-            const UPVOTE_IMG_UNFILLED = document.createElement('img');
-            UPVOTE_IMG_UNFILLED.src = '/public/views/elements/svg/upvote-unfilled.svg';
-            UPVOTE_IMG_UNFILLED.classList.add('post-footer-interactions-comments-icon');
-            return UPVOTE_IMG_UNFILLED;
-        }
-
-        containerFooterUpvoteIcon.appendChild(getIconUpvoteUnfilled());
-    
-        if (this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
-            containerFooterUpvoteIcon.firstChild.remove();
-            containerFooterUpvoteIcon.appendChild(getIconUpvoteFilled());
-        }
+        this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id) ?
+            containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_ON.cloneNode(true)) :
+            containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_OFF.cloneNode(true));
     
         const footerUpvoteNumber = document.createElement('span');
         footerUpvoteNumber.textContent = this.post.upvotes.length;
@@ -254,14 +248,14 @@ export default class Post {
         containerFooterUpvoteIcon.addEventListener('click', () => {
             if (this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
                 containerFooterUpvoteIcon.firstChild.remove();
-                containerFooterUpvoteIcon.appendChild(getIconUpvoteUnfilled());
+                containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_OFF.cloneNode(true));
                 this.post.upvotes = this.post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == this.post.id);
                 fetch(`/api/post/${this.post.id}/upvote/delete`, { 
                     method: 'DELETE',
                     headers: { "Authorization": "Bearer "+window.app.user.token } });
             } else {
                 containerFooterUpvoteIcon.firstChild.remove();
-                containerFooterUpvoteIcon.appendChild(getIconUpvoteFilled());
+                containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_ON.cloneNode(true));
                 this.post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: this.post.creator.id, id_post: this.post.id });
                 fetch(`/api/post/${this.post.id}/upvote/add`, { 
                     method: 'PUT',
@@ -282,15 +276,14 @@ export default class Post {
         const containerIcon = document.createElement('div');
         containerIcon.classList.add('container-post-footer-interactions-comments-icon');
 
-        const icon = document.createElement('img');
-        icon.classList.add('post-footer-interactions-comments-icon');
-        icon.src = '/public/views/elements/svg/comments.svg';
-        containerIcon.appendChild(icon);
+        containerIcon.appendChild(IMAGE_POST_COMMENTS.cloneNode(true));
 
         const number = document.createElement('span');
         number.textContent = '0';
+
         container.appendChild(containerIcon);
         container.appendChild(number);
+
         return container;
     }
 }

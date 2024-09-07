@@ -38,6 +38,7 @@ module.exports = (server: Server) => {
                         id: p.id_post,
                         content: p.content_post,
                         date: getTimeDifference(new Date(p.date_post)),
+                        date_original: new Date(p.date_post),
                         upvotes: queryUpvotes,
                         images: p.images,
                         creator: {

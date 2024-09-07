@@ -93,7 +93,7 @@ export default class extends AbstractView {
 }
 
 const VIEW_CONTENT = `
-    <div class="container-view">
+    <div>
         <div class="container-view-login">
             <div class="container-forms">
                 <div class="container-form">

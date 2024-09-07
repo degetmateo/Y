@@ -2,7 +2,7 @@ import {URL_NO_IMAGE} from "../consts.js";
 import {cleanContent} from "../helpers.js";
 import AbstractView from "./AbstractView.js";
 import Popup from "../components/popup/Popup.js";
-import Post from "./elements/Post.js";
+import Post from "../components/post/Post.js";
 import Navigation from "../components/navigation/navigation.js";
 
 export default class extends AbstractView {
