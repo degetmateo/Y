@@ -1,3 +1,16 @@
+.container-view-comments {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 0.4fr 1fr 0.4fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas: 
+        "nav main aside"
+        "nav main aside"
+        "nav main aside";
+}
+
 .comments-view-main {
     grid-area: main;
     
@@ -6,4 +19,112 @@
 
     border-right: 1px solid gray;
     border-left: 1px solid gray;
+
+    overflow-y: scroll;
+}
+
+/* REPLY FORM STYLES */
+
+.container-comments-main-form-post-create {
+    padding: 10px;
+    border-bottom: 1px solid gray;
+}
+
+.container-comments-main-form-post-create-div {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-template-rows: auto;
+    gap: 10px;
+    width: 100%;
+}
+
+.container-comments-main-form-post-create-profile_pic {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #FFF;
+}
+
+.comments-main-form-post-create-profile_pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.container-comments-main-form-post-create-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+/* .container-comments-main-form-post-create-signature {
+
+} */
+
+.comments-main-form-post-create-name {
+    font-family: JetBrainsMono-Bold;
+}
+
+.comments-main-form-post-create-textarea {
+    padding: 10px;
+    height: 40px;
+    resize: none;
+    border: 1px solid #FFF;
+    outline: none;
+    font-family: "Inter-Regular", sans-serif;
+}
+
+.container-comments-main-form-post-create-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comments-main-form-post-create-button {
+    padding: none;
+    margin: none;
+    height: 30px;
+    width: 140px;
+    background-color: var(--primary-color);
+    color: #FFF;
+    border: none;
+    outline: none;
+    border: 1px solid #FFF;
+    cursor: pointer;
+}
+
+.comments-main-form-post-create-button:hover {
+    background-color: var(--accent-color);
+}
+
+.comments-main-form-post-create-button-image {
+    height: 30px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .container-view-comments {
+        display: flex;
+        padding: 0;
+        margin: 0;
+    }
+
+    .comments-view-main {
+        padding: 0;
+        margin: 0;
+        border-right: none;
+        border-left: none;
+    }
+
+    .container-comments-main-comments {
+        padding-bottom: 50px;
+    }
+
+    .comments-main-form-post-create-button:hover {
+        background-color: initial;
+    }
+
+    .comments-main-form-post-create-button:active {
+        background-color: var(--accent-color);
+    }
 }

@@ -23,7 +23,8 @@ module.exports = (server: Server) => {
                         ${qCreator[0].id_member},
                         ${content},
                         ${new Date().toISOString()},
-                        ${images || []}
+                        ${images || []},
+                        ${id_replied_post}
                     );
                 `;
             });

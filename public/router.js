@@ -22,6 +22,7 @@ const getParams = (match) => {
 };
 
 export const navigateTo = (url) => {
+    if (window.location.pathname === url) return;
     window.history.pushState(null, null, url);
     router();
 };
@@ -63,7 +64,7 @@ window.addEventListener("popstate", router);
 
 document.addEventListener('DOMContentLoaded', async () => {
     document.body.addEventListener("click", (e) => {
-        if (e.target.matches("[data-link]")) {
+        if (e.target.matches("[data-link]") || e.target.hasAttribute('data-link')) {
             e.preventDefault();
             navigateTo(e.target.href || e.target.getAttribute('href'));
         };

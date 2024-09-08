@@ -11,6 +11,7 @@ module.exports = (server: Server) => {
                 const queryPost = await sql`
                     SELECT
                         p.id_post,
+                        p.id_member,
                         p.content_post,
                         p.date_post,
                         p.images,

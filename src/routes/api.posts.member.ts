@@ -32,7 +32,8 @@ module.exports = (server: Server) => {
                     LEFT JOIN
                         upvote u ON p.id_post = u.id_post
                     WHERE
-                        m.username_member = ${req.params.username}
+                        m.username_member = ${req.params.username} and
+                        p.id_post_replied is null
                     GROUP BY
                         p.id_post, p.id_member, m.username_member, m.name_member, m.profile_pic_url_member, m.role_member
                     ORDER BY 

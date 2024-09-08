@@ -275,18 +275,39 @@ export default class Post {
 
         const containerIcon = document.createElement('div');
         containerIcon.classList.add('container-post-footer-interactions-comments-icon');
+        const ICON = IMAGE_POST_COMMENTS.cloneNode(true);
+        CreateDataLink(ICON, '/post/'+this.post.id+'/comments');
+        containerIcon.appendChild(ICON);
 
-        containerIcon.appendChild(IMAGE_POST_COMMENTS.cloneNode(true));
-
-        const number = document.createElement('span');
-        number.textContent = '0';
+        this.number = document.createElement('span');
+        this.number.textContent = '0';
 
         container.appendChild(containerIcon);
-        container.appendChild(number);
+        container.appendChild(this.number);
 
+        this.FetchComments();
+        
         return container;
     }
+
+    async FetchComments () {
+        const request = await fetch('/api/post/'+this.post.id+'/comments/count', {
+            method: "GET",
+            headers: { "Authorization": "Bearer "+window.app.user.token }
+        });
+        const response = await request.json();
+        if (response.ok) this.number.textContent = response.count;
+    }
+
+    incrementCommentCount () {
+        this.number.textContent = parseInt(this.number.textContent) + 1;
+    }
+    
+    decreaseCommentCount () {
+        this.number.textContent = parseInt(this.number.textContent) - 1;
+    }
 }
+
 
 function CreateDataLink (element, path) {
     element.setAttribute('href', path);

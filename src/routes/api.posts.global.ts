@@ -5,10 +5,9 @@ import getTimeDifference from '../helpers/get_time_difference';
 
 module.exports = (server: Server) => {
     server.app.get('/api/posts/global/:limit/:offset', server.authenticate, async (req: express.Request, res: express.Response) => {
-        const limit = parseInt(req.params.limit as string) || 20;
-        const offset = parseInt(req.params.offset as string) || 0;
-        
         try {
+            const limit = parseInt(req.params.limit as string) || 20;
+            const offset = parseInt(req.params.offset as string) || 0;
             await Postgres.query().begin(async sql => {
                 await sql`
                     SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
@@ -32,6 +31,8 @@ module.exports = (server: Server) => {
                         member m ON p.id_member = m.id_member
                     LEFT JOIN 
                         upvote u ON p.id_post = u.id_post
+                    WHERE
+                        p.id_post_replied is null
                     GROUP BY 
                         p.id_post, p.id_member, m.username_member, m.name_member, m.profile_pic_url_member, m.role_member
                     ORDER BY 

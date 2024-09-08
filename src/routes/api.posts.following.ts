@@ -13,36 +13,13 @@ declare global {
   }
 
 module.exports = (server: Server) => {
-    server.app.get('/api/posts/following/:limit/:offset', server.authenticate, async (req, res) => {
-        const username = req.user.username;
-        const limit = parseInt(req.params.limit as string) || 20;
-        const offset = parseInt(req.params.offset as string) || 0;
-
+    server.app.get('/api/posts/following/:limit/:offset', server.authenticate, async (req, res) => {        
         try {
+            const username = req.user.username;
+            const limit = parseInt(req.params.limit as string) || 20;
+            const offset = parseInt(req.params.offset as string) || 0;
             await Postgres.query().begin(async sql => {
                 await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
-
-                // const queryFollowedUsersPosts = await sql`
-                //     SELECT 
-                //         p.*,
-                //         m2.username_member,
-                //         m2.name_member,
-                //         m2.profile_pic_url_member,
-                //         m2.role_member
-                //     FROM
-                //         follow f, post p, member m1, member m2
-                //     WHERE
-                //         m1.username_member = ${username} and
-                //         f.id_member_follower = m1.id_member and
-                //         p.id_member = f.id_member_followed and
-                //         m2.id_member = f.id_member_followed
-                //     ORDER BY
-                //         p.date_post DESC
-                //     LIMIT
-                //         ${limit}
-                //     OFFSET
-                //         ${offset};
-                // `;
 
                 const queryFollowedUsersPosts = await sql`
                     SELECT 
@@ -67,7 +44,8 @@ module.exports = (server: Server) => {
                     LEFT JOIN
                         upvote u ON p.id_post = u.id_post
                     WHERE
-                        f.id_member_follower = m1.id_member
+                        f.id_member_follower = m1.id_member and
+                        p.id_post_replied is null
                     GROUP BY
                         p.id_post, p.id_member, m2.username_member, m2.name_member, m2.profile_pic_url_member, m2.role_member
                     ORDER BY
