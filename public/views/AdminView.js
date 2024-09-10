@@ -1,3 +1,4 @@
+import Alert from "../components/alert/alert.js";
 import Navigation from "../components/navigation/navigation.js";
 import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
@@ -44,8 +45,8 @@ export default class extends AbstractView {
             })
         });
         const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
-        alert('OK - username changed');
+        if (!response.ok) return Alert(response.error.message);
+        new Alert('OK - username changed');
     }
 
     async eventButtonPassword () {
@@ -69,8 +70,8 @@ export default class extends AbstractView {
             })
         });
         const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
-        alert('OK - password changed');
+        if (!response.ok) return new Alert(response.error.message);
+        new Alert('OK - password changed');
     }
 }
 

@@ -11,10 +11,8 @@ export default class extends AbstractView {
 
     async init () {
         if (await auth()) {
-            navigateTo('/home');
-            return;
+            return navigateTo('/home');
         };
-
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
         await this.events();
@@ -52,7 +50,7 @@ export default class extends AbstractView {
             window.app.user.id = res.user.id;
             window.app.user.username = res.user.username;
             window.app.user.token = res.user.token;
-            if(!await auth()) {
+            if (!await auth()) {
                 return;
             }
             navigateTo('/home');
@@ -85,7 +83,7 @@ export default class extends AbstractView {
         window.app.user.id = response.user.id;
         window.app.user.username = response.user.username;
         window.app.user.token = response.user.token;
-        if(!await auth()) {
+        if (!await auth()) {
             return;
         }
         navigateTo('/home');

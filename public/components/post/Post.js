@@ -1,5 +1,6 @@
 import { URL_NO_IMAGE } from "../../consts.js";
 import { cleanContent, getDateMessage } from "../../helpers.js";
+import Alert from "../alert/alert.js";
 import Popup from "../popup/Popup.js";
 
 const IMAGE_POST_UPVOTE_ON = new Image();
@@ -196,7 +197,7 @@ export default class Post {
                     }
                 });
                 const response = await request.json();
-                if (!response.ok) return alert(response.error.message);
+                if (!response.ok) return new Alert(response.error.message);
             });
             popupConfirmation.CreateButton('No, no quiero.', () => {
                 popupConfirmation.delete();

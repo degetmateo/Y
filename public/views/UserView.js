@@ -4,6 +4,7 @@ import AbstractView from "./AbstractView.js";
 import Popup from "../components/popup/Popup.js";
 import Post from "../components/post/Post.js";
 import Navigation from "../components/navigation/navigation.js";
+import Alert from "../components/alert/alert.js";
 
 export default class extends AbstractView {
     constructor (params) {
@@ -25,7 +26,7 @@ export default class extends AbstractView {
         const resUser = await this.getUser();
 
         if (!resUser.ok) {
-            alert(resUser.error.message);
+            new Alert(resUser.error.message);
             return;
         }
 
@@ -153,7 +154,7 @@ export default class extends AbstractView {
         });
 
         const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
+        if (!response.ok) return new Alert(response.error.message);
     }
 
     createButtonUnfollow () {
@@ -181,7 +182,7 @@ export default class extends AbstractView {
         });
 
         const response = await request.json();
-        if (!response.ok) return alert(response.error.message);
+        if (!response.ok) return new Alert(response.error.message);
     }
     
     drawPosts (posts) {

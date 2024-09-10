@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!await auth()) {
         navigateTo('/login');
-        return;
     };
 
     router();

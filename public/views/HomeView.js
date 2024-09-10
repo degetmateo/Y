@@ -185,7 +185,8 @@ export default class extends AbstractView {
         this.mode = 'following';
         const res = await this.getPosts();
         if (!res.ok) {
-            alert(res.error.message);
+            console.error(res.error.message);
+            new Alert(res.error.message);
             return navigateTo('/login');
         }
         this.timelineContainer.innerHTML = '';
@@ -208,7 +209,8 @@ export default class extends AbstractView {
         const res = await this.getPosts();
         console.log(res)
         if (!res.ok) {
-            alert(res.error.message);
+            console.error(res.error.message);
+            new Alert(res.error.message);
             return navigateTo('/login');
         }
         this.timelineContainer.innerHTML = '';
@@ -254,7 +256,7 @@ export default class extends AbstractView {
                 this.offset += this.limit;
                 const res = await this.getPosts();
                 if (!res.ok) {
-                    alert(res.error.message);
+                    new Alert(res.error.message);
                     return navigateTo("/login");
                 }
                 this.drawPosts(res.posts);

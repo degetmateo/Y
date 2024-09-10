@@ -36,7 +36,7 @@ module.exports = (server: Server) => {
                     UPDATE
                         member
                     SET
-                        token = ${token}
+                        token_member = ${token}
                     WHERE
                         id_member = ${qRegisteredMember[0].id_member};
                 `;
