@@ -32,6 +32,10 @@ const MESSAGES_IMAGES_OFF = new Image();
 MESSAGES_IMAGES_OFF.src = '/public/components/navigation/svg/chat-off.svg'; 
 MESSAGES_IMAGES_OFF.classList.add('nav-button-icon');
 
+const IMAGE_NOTIFICATIONS_OFF = new Image();
+IMAGE_NOTIFICATIONS_OFF.src = '/public/components/navigation/svg/notifications-off.svg'; 
+IMAGE_NOTIFICATIONS_OFF.classList.add('nav-button-icon');
+
 export default class Navigation {
     constructor () {
         this.nav = document.createElement('nav');
@@ -40,6 +44,23 @@ export default class Navigation {
         this.CreateButton({ text: 'Perfil', icon_on: PROFILE_IMAGE_ON, icon_off: PROFILE_IMAGE_OFF, href: '/member/'+window.app.user.username });
         
         if (window.app.user.role != 'member') {
+            const buttonNoti = document.createElement('a');
+            buttonNoti.setAttribute('data-link', '');
+            buttonNoti.classList.add('nav-button', 'test');
+            buttonNoti.href = '/notifications';
+            buttonNoti.onclick = e => {
+                e.preventDefault();
+                navigateTo(buttonNoti.href);
+            }
+            // window.location.pathname.startsWith('/notificactions') ? 
+            //     buttonNoti.appendChild(IMAGE_NOTIFICATIONS_OFF) :
+            //     buttonNoti.appendChild(IMAGE_NOTIFICATIONS_OFF);
+            buttonNoti.innerHTML += `
+                <span class="nav-button-text">Notificaciones</span>
+                <span class="nav-button-status--test">TEST</span>
+            `;
+            this.nav.appendChild(buttonNoti);
+
             const button = document.createElement('a');
             button.setAttribute('data-link', '');
             button.classList.add('nav-button', 'test');

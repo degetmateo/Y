@@ -16,7 +16,7 @@ module.exports = (server: Server) => {
                 if (!await bcrypt.compare(password, qMember[0].password_member)) {
                     return res.json({ ok: false, error: { message: "Contraseña incorrecta." } });
                 }
-                const newToken = jwt.sign({ username: qMember[0].username_member }, process.env.SECRET_KEY, { expiresIn: "24h" });
+                const newToken = jwt.sign({ id_member: qMember[0].id_member, username_member: qMember[0].username_member }, process.env.SECRET_KEY, { expiresIn: "24h" });
                 await sql`
                     UPDATE member
                     SET token_member = ${newToken}

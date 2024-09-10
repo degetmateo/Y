@@ -4,8 +4,9 @@ import Server from "../Server";
 
 module.exports = (server: Server) => {
     server.app.get('/api/post/:id_post', server.authenticate, async (req, res) => {
-        const id_post = req.params.id_post;
         try {
+            const id_post = req.params.id_post;
+            const id_user = req.user.id;
             await Postgres.query().begin(async sql => {
                 await sql`SET TRANSACTION ISOLATION LEVEL READ COMMITTED;`;
                 const queryPost = await sql`
@@ -18,21 +19,20 @@ module.exports = (server: Server) => {
                         m.name_member,
                         m.username_member,
                         m.profile_pic_url_member,
-                        m.role_member
-                    FROM 
+                        m.role_member,
+                        (SELECT COUNT(*) FROM upvote WHERE id_post = p.id_post) as upvotes_count_post,
+                        (SELECT COUNT(*) FROM post WHERE id_post_replied = p.id_post) as comments_count_post,
+                        (SELECT id_member_upvote FROM upvote WHERE id_post = p.id_post and id_member_upvote = ${id_user}) as is_upvoted
+                    FROM
                         post p, member m
                     WHERE 
                         p.id_post = ${id_post} and
                         p.id_member = m.id_member;
                 `;
                 if (!queryPost[0]) return res.json({ ok: false, error: { message: "Ha ocurrido un error." } });
-                const queryUpvotes = await sql`
-                    SELECT * FROM
-                        upvote
-                    WHERE
-                        id_post = ${id_post};
-                `;
+
                 const p = queryPost[0];
+
                 return res.json({ 
                     ok: true, 
                     post: {
@@ -40,8 +40,10 @@ module.exports = (server: Server) => {
                         content: p.content_post,
                         date: getTimeDifference(new Date(p.date_post)),
                         date_original: new Date(p.date_post),
-                        upvotes: queryUpvotes,
                         images: p.images,
+                        comments_count: p.comments_count_post,
+                        upvotes_count: p.upvotes_count_post,
+                        is_upvoted: p.is_upvoted ? true : false,
                         creator: {
                             id: p.id_member,
                             name: p.name_member,

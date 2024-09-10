@@ -236,37 +236,59 @@ export default class Post {
         const containerFooterUpvoteIcon = document.createElement('div');
         containerFooterUpvoteIcon.classList.add('container-post-footer-upvote-icon');
 
-        this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id) ?
+        this.isUpvoted() ?
             containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_ON.cloneNode(true)) :
             containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_OFF.cloneNode(true));
     
-        const footerUpvoteNumber = document.createElement('span');
-        footerUpvoteNumber.textContent = this.post.upvotes.length;
-        footerUpvoteNumber.style.fontSize = '20px';
-        footerUpvoteNumber.classList.add('post-footer-interactions-upvote-number');
+        this.footerUpvoteNumber = document.createElement('span');
+        this.footerUpvoteNumber.textContent = this.post.upvotes_count;
+        this.footerUpvoteNumber.style.fontSize = '20px';
+        this.footerUpvoteNumber.classList.add('post-footer-interactions-upvote-number');
     
         containerFooterUpvoteIcon.addEventListener('click', () => {
-            if (this.post.upvotes.find(vote => vote.id_member_upvote == window.app.user.id)) {
+            if (this.isUpvoted()) {
                 containerFooterUpvoteIcon.firstChild.remove();
                 containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_OFF.cloneNode(true));
-                this.post.upvotes = this.post.upvotes.filter(vote => vote.id_member_upvote != window.app.user.id && vote.id_post == this.post.id);
+                this.post.is_upvoted = false;
+                this.decreaseUpvotes();
                 fetch(`/api/post/${this.post.id}/upvote/delete`, { 
                     method: 'DELETE',
                     headers: { "Authorization": "Bearer "+window.app.user.token } });
             } else {
                 containerFooterUpvoteIcon.firstChild.remove();
                 containerFooterUpvoteIcon.appendChild(IMAGE_POST_UPVOTE_ON.cloneNode(true));
-                this.post.upvotes.push({ id_member_upvote: window.app.user.id, id_member_post: this.post.creator.id, id_post: this.post.id });
+                this.post.is_upvoted = true;
+                this.increaseUpvotes();
                 fetch(`/api/post/${this.post.id}/upvote/add`, { 
                     method: 'PUT',
                     headers: { "Authorization": "Bearer "+window.app.user.token } });
             }
-            footerUpvoteNumber.innerText = this.post.upvotes.length;
+            this.drawUpvotesCount();
         });
 
         containerFooterUpvote.appendChild(containerFooterUpvoteIcon);
-        containerFooterUpvote.appendChild(footerUpvoteNumber);
+        containerFooterUpvote.appendChild(this.footerUpvoteNumber);
         return containerFooterUpvote;
+    }
+
+    drawUpvotesCount () {
+        this.footerUpvoteNumber.innerText = this.getUpvotesCount();
+    }
+
+    increaseUpvotes () {
+        this.post.upvotes_count = parseInt(this.post.upvotes_count) + 1;
+    }
+
+    decreaseUpvotes () {
+        this.post.upvotes_count = parseInt(this.post.upvotes_count) - 1;
+    }
+
+    getUpvotesCount () {
+        return parseInt(this.post.upvotes_count);
+    }
+
+    isUpvoted () {
+        return this.post.is_upvoted;
     }
 
     CreatePostFooterInteractionComments () {
@@ -280,13 +302,11 @@ export default class Post {
         containerIcon.appendChild(ICON);
 
         this.number = document.createElement('span');
-        this.number.textContent = '0';
+        this.drawCommentsCount();
 
         container.appendChild(containerIcon);
         container.appendChild(this.number);
 
-        this.FetchComments();
-        
         return container;
     }
 
@@ -299,12 +319,20 @@ export default class Post {
         if (response.ok) this.number.textContent = response.count;
     }
 
-    incrementCommentCount () {
-        this.number.textContent = parseInt(this.number.textContent) + 1;
+    increaseComments () {
+        this.post.comments_count = parseInt(this.post.comments_count) + 1;
     }
-    
-    decreaseCommentCount () {
-        this.number.textContent = parseInt(this.number.textContent) - 1;
+
+    decreaseComments () {
+        this.post.comments_count = parseInt(this.post.comments_count) - 1;
+    }
+
+    drawCommentsCount () {
+        this.number.innerText = this.getCommentsCount();
+    }
+
+    getCommentsCount () {
+        return parseInt(this.post.comments_count);
     }
 }
 

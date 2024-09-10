@@ -53,7 +53,7 @@ export default class Server {
             if (!token) return res.json({ ok: false, error: { message: 'Error en la autentificacion.' } });
             jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
                 if (err) return res.json({ ok: false, error: { code: 'auth', message: 'Error en la autentificacion.' } });
-                req.user = { username: user.username }
+                req.user = { id: user.id_member, username: user.username_member };
                 next();
             });
         } catch (error) {
@@ -68,7 +68,7 @@ export default class Server {
             if (!token) return res.json({ ok: false, error: { message: 'Authorization Error.' } });
             jwt.verify(token, process.env.SECRET_KEY, async (err, user) => {
                 if (err) return res.json({ ok: false, error: { message: "Authorization Error." } });
-                req.user = { username: user.username };
+                req.user = { id: user.id_member, username: user.username_member };
                 try {
                     const query = await Postgres.query()`
                         SELECT * FROM
@@ -97,7 +97,7 @@ export default class Server {
             if (!token) return res.json({ ok: false, error: { message: 'Authorization Error.' } });
             jwt.verify(token, process.env.SECRET_KEY, async (err, user) => {
                 if (err) return res.json({ ok: false, error: { message: "Authorization Error." } });
-                req.user = { username: user.username };
+                req.user = { id: user.id_member, username: user.username_member };
                 try {
                     const query = await Postgres.query()`
                         SELECT * FROM

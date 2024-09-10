@@ -22,21 +22,29 @@ module.exports = (server: Server) => {
                 const qMember = await sql`SELECT * FROM member WHERE username_member = ${username};`;
                 if (qMember[0]) return res.json({ ok:false, error: { message: "Nombre de usuario no disponible." } });
                 const hashedPassword = await bcrypt.hash(password, 10);
-                const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '24h' });
                 await sql`
-                    SELECT insert_member (
+                SELECT insert_member (
                         ${username},
                         ${hashedPassword},
                         ${new Date().toISOString()},
-                        ${token} 
+                        null
                     );
                 `;
                 const qRegisteredMember = await sql`SELECT * FROM member WHERE username_member = ${username};`;
+                const token = jwt.sign({ id_member: qRegisteredMember[0].id_member, username_member: qRegisteredMember[0].username_member }, process.env.SECRET_KEY, { expiresIn: '24h' });
+                await sql`
+                    UPDATE
+                        member
+                    SET
+                        token = ${token}
+                    WHERE
+                        id_member = ${qRegisteredMember[0].id_member};
+                `;
                 return res.json({ ok: true,
                     user: {
                         id: qRegisteredMember[0].id_member,
                         username: qRegisteredMember[0].username_member,
-                        token: qRegisteredMember[0].token_member 
+                        token: token
                     }
                 });
             });           

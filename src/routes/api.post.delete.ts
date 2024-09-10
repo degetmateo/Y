@@ -1,16 +1,6 @@
 import Postgres from "../database/Postgres";
 import Server from "../Server";
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: {
-                username?: string
-            }
-        }
-    }
-}
-
 module.exports = (server: Server) => {
     server.app.delete('/api/post/:id/delete', server.authenticate, async (req, res) => {
         const id_post = req.params.id;

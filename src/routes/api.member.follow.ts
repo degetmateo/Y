@@ -2,18 +2,18 @@ import Postgres from "../database/Postgres";
 import Server from "../Server";
 
 declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        username?: string
-      }
+    namespace Express {
+        interface Request {
+            user?: {
+                id?: number;
+                username?: string;
+            }
+        }
     }
-  }
 }
 
 module.exports = (server: Server) => {
     server.app.put("/api/member/:username/follow", server.authenticate, async (req, res) => {
-        
         try {
             const reqUser = req.user.username;
             const userToFollow = req.params.username;

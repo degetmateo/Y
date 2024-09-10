@@ -267,8 +267,6 @@ const VIEW_CONTENT = `
         <div class="container-mobile-form-post-create" id="container-mobile-form-post-create" style="display:none;"></div>
 
         <div class="container-main" id="container-main">
-
-            <div class="container-home-main-form-post-create">
                 <div class="container-home-main-form-post-create-div">
                     <div class="container-home-main-form-post-create-profile_pic">
                         <img class="home-main-form-post-create-profile_pic" id="home-main-form-post-create-profile_pic" src="" />
@@ -281,10 +279,8 @@ const VIEW_CONTENT = `
                             </div>
                         </div>
                         
-                        <div class="container-home-main-form-post-create-textarea">
-                            <textarea id="home-main-form-post-create-textarea" class="home-main-form-post-create-textarea" placeholder="¿Qué pensás?" required></textarea>
-                        </div>
-                        
+                        <textarea id="home-main-form-post-create-textarea" class="home-main-form-post-create-textarea" placeholder="¿Qué pensás?" required></textarea>
+                            
                         <div class="container-home-main-form-post-create-buttons">
                             <div class="container-home-main-form-post-create-options">
                                 <select id="options" name="options" class="home-main-form-post-create-button home-main-form-post-create-button-options" disabled>
@@ -297,7 +293,6 @@ const VIEW_CONTENT = `
                         </div>
                     </div>
                 </div>
-            </div>
 
             <div class="container-button-change-timeline">
                 <button class="button-change-timeline active" type="button" id="button-change-timeline-global"><span>Global</span></button>
