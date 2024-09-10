@@ -61,6 +61,7 @@ export default async () => {
         return false;
     };
 
+    localStorage.setItem('user', JSON.stringify({ id: response.user.id, username: response.user.username, token: response.user.token }));
     window.app.user = response.user;
     return true;
 };

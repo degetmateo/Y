@@ -206,6 +206,7 @@ export default class extends AbstractView {
         this.offset = 0;
         this.mode = 'global';
         const res = await this.getPosts();
+        console.log(res)
         if (!res.ok) {
             alert(res.error.message);
             return navigateTo('/login');
