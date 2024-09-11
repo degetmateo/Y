@@ -24,31 +24,34 @@ export default class CommentsView extends AbstractView {
         this.main = document.createElement('main');
         this.main.classList.add('comments-view-main');
         this.main.innerHTML = `
+            <div class="container-thread" id="container-thread"></div>
             <div class="container-comments-main-post" id="container-comments-main-post"></div>
-                <div class="container-comments-main-form-post-create">
-                    <div class="container-comments-main-form-post-create-div">
-                        <div class="container-comments-main-form-post-create-profile_pic">
-                            <img class="comments-main-form-post-create-profile_pic" id="comments-main-form-post-create-profile_pic" src="${window.app.user.profilePic.url}" />
-                        </div>
 
-                        <div class="container-comments-main-form-post-create-body">
-                            <div class="container-comments-main-form-post-create-signature">
-                                <div class="container-comments-main-form-post-create-name">
-                                    <span class="comments-comments-form-post-create-name" id="comments-comments-form-post-create-name">${window.app.user.name}</span>
-                                </div>
+            <div class="container-comments-main-form-post-create">
+                <div class="container-comments-main-form-post-create-div">
+                    <div class="container-comments-main-form-post-create-profile_pic">
+                        <img class="comments-main-form-post-create-profile_pic" id="comments-main-form-post-create-profile_pic" src="${window.app.user.profilePic.url}" />
+                    </div>
+
+                    <div class="container-comments-main-form-post-create-body">
+                        <div class="container-comments-main-form-post-create-signature">
+                            <div class="container-comments-main-form-post-create-name">
+                                <span class="comments-comments-form-post-create-name" id="comments-comments-form-post-create-name">${window.app.user.name}</span>
                             </div>
-                            
-                            <textarea id="comments-main-form-post-create-textarea" class="comments-main-form-post-create-textarea" placeholder="¿Qué respondés?" required></textarea>
-                            
-                            <div class="container-comments-main-form-post-create-buttons">
-                                <div class="container-comments-main-form-post-create-options">
-                                    <img src="/public/assets/imagen.svg" class="comments-main-form-post-create-button-image" id="comments-main-form-post-create-button-image" />
-                                </div>
-                                <button id="comments-main-form-post-create-button" class="button comments-main-form-post-create-button">Publicar</button>
+                        </div>
+                        
+                        <textarea id="comments-main-form-post-create-textarea" class="comments-main-form-post-create-textarea" placeholder="¿Qué respondés?" required></textarea>
+                        
+                        <div class="container-comments-main-form-post-create-buttons">
+                            <div class="container-comments-main-form-post-create-options">
+                                <img src="/public/assets/imagen.svg" class="comments-main-form-post-create-button-image" id="comments-main-form-post-create-button-image" />
                             </div>
+                            <button id="comments-main-form-post-create-button" class="button comments-main-form-post-create-button">Publicar</button>
                         </div>
                     </div>
                 </div>
+            </div>
+
             <div class="container-comments-main-comments" id="container-comments-main-comments"></div>
         `;
         this.viewContainer.appendChild(this.main);
@@ -57,6 +60,7 @@ export default class CommentsView extends AbstractView {
         this.CreateMainComments();
         this.CreateEventPostCreate();
         this.CreateEventInsertImage();
+        this.CreateThread();
     }
 
     CreateEventInsertImage () {
@@ -166,5 +170,37 @@ export default class CommentsView extends AbstractView {
             console.error(error);
             return new Alert('Ha ocurrido un error.');
         }
+    }
+
+    async CreateThread () {
+        try {
+            const thread = await this.FetchThread();
+            const containerThread = document.getElementById('container-thread');
+            containerThread.innerHTML = '';
+
+            const scrollPos = this.main.scrollTop;
+            const alturaAntes = this.main.scrollHeight;
+
+            for (const post of thread.reverse()) {
+                const newPost = new Post(post);
+                containerThread.appendChild(newPost.getElement());
+
+                const alturaDespues = this.main.scrollHeight;
+                this.main.scrollTop = scrollPos + (alturaDespues - alturaAntes);
+            }
+        } catch (error) {
+            console.error(error);
+            return new Alert("Ha ocurrido un error.");
+        }
+    }
+
+    async FetchThread () {
+        const request = await fetch(`/api/post/${this.params.id_post}/thread`, {
+            method: "GET",
+            headers: { "Authorization": "Bearer "+window.app.user.token }
+        });
+        const response = await request.json();
+        if (!response.ok) throw new Error(response.error.message);
+        return response.thread;
     }
 }
