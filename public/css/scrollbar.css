@@ -1,6 +1,6 @@
 /* BASICOS */
 ::-webkit-scrollbar {
-    width: 4px;
+    width: 8px;
 }
 
 /* FONDO */
@@ -10,8 +10,8 @@
 
 /* ESTILO BARRITA */
 ::-webkit-scrollbar-thumb {
-    background: #FFF;   
-    border-radius: 6px;
+    background: #bbbbbb;   
+    /* border-radius: 6px; */
     /* border: 1px solid #f1f1f1; */
 }
 

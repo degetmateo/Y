@@ -1,43 +1,4 @@
 export default async () => {
-    console.log('auth')
-    window.app = {
-        alerts: new Array(),
-
-        user: {
-            id: -1,
-            name: '',
-            username: '',
-            token: '',
-            role: '',
-            profilePic: {
-                url: '',
-                crop: {
-                    x: -1,
-                    y: -1,
-                    w: -1,
-                    h: -1
-                }
-            }
-        },
-
-        views: {
-            home: {
-                timelines: {
-                    global: {
-                        posts: new Array()
-                    },
-                    following: {
-                        posts: new Array()
-                    }
-                }
-            },
-
-            member: {
-                members: new Array()
-            }
-        }
-    }
-
     try {
         const credentials = JSON.parse(localStorage.getItem('user'));
         localStorage.removeItem('user');

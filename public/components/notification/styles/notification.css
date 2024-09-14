@@ -1,0 +1,50 @@
+.container-notification {
+    padding: 20px;
+    border-bottom: 1px solid gray;
+    cursor: pointer;
+}
+
+.container-notification:hover {
+    background-color: #1b2835;
+}
+
+.container-notification {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.container-notification-comment-signature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.container-notification-comment-pic {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #FFF;
+}
+
+.container-notification-comment-pic:hover {
+    border: 1px solid var(--accent-color);
+}
+
+.notification-comment-signature-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.notification-comment-signature-name {
+    font-weight: bolder;
+}
+
+.notification-comment-signature-name:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+.notification-comment-post-content {
+    font-family: "Inter-Regular";
+}

@@ -1,4 +1,5 @@
 import Navigation from "../../components/navigation/navigation.js";
+import Notification from "../../components/notification/notification.js";
 import AbstractView from "../AbstractView.js";
 
 export default class NotificationsView extends AbstractView {
@@ -7,6 +8,9 @@ export default class NotificationsView extends AbstractView {
         this.viewContainer = document.createElement('div');
         this.viewContainer.classList.add('container-view', 'container-view-notifications');
         this.appContainer.appendChild(this.viewContainer);
+        
+        this.offset = 0;
+        this.limit = 20;
     }
 
     async init () {
@@ -24,16 +28,16 @@ export default class NotificationsView extends AbstractView {
 
         this.notifications = await this.FetchNotifications();
         this.drawNotifications();
+        this.eventScroll();
     }
 
     async FetchNotifications () {
-        const request = await fetch('/api/notifications/0', {
+        const request = await fetch('/api/notifications/'+this.offset, {
             method: "GET",
             headers: { "Authorization": "Bearer "+window.app.user.token }
         });
         const response = await request.json();
         if (!response.ok) throw new Error(response.error.message);
-        console.log(response.notifications)
         return response.notifications;
     }
 
@@ -42,71 +46,24 @@ export default class NotificationsView extends AbstractView {
         for (const n of this.notifications) {
             const notification = new Notification(n);
             this.container_notifications.appendChild(notification.getElement());
-            this.container_notifications.innerHTML += '<br>';
-        }
-    }
-}
-
-class Notification {
-    notification = {
-        id: '',
-        date: '',
-        type: '',
-        target_member: {
-            id: '',
-            name: '',
-            username: '',
-            role: '',
-            pic: ''
-        },
-        target_post: {
-            id: '',
-            id_post_replied: '',
-            content: '',
-            date: '',
-            images: ''
         }
     }
 
-    constructor (_notification) {
-        this.notification = _notification;
-        this.container = document.createElement('div');
-        this.container.classList.add('container-notification', 'container-notification--'+this.notification.type_notification);
-        this.Create();
-    }
+    eventScroll () {
+        this.main.addEventListener('scroll', async () => {
+            const scrollHeight = this.main.scrollHeight;
+            const clientHeight = this.main.clientHeight;
+            const scrollTop = this.main.scrollTop;
+            const umbral = 1;
 
-    getElement () {
-        return this.container;
-    }
-
-    remove () {
-        this.container.remove();
-    }
-
-    Create () {
-       if (this.notification.type === 'comment') this.CreateNotificationComment();
-       if (this.notification.type === 'upvote') this.CreateNotificationUpvote();
-       if (this.notification.type === 'follow') this.CreateNotificationFollow();
-        this.container.innerHTML = `
-            <p>TYPE: ${this.notification.type}</p>
-            <p>MEMBER TRIGGER: ${this.notification.target_member.username}</p>
-            ${this.notification.type === 'follow' ?
-                '' :
-                `<p>CONTENT: ${this.notification.target_post.content}</p>
-                <p>URL: <a href="/post/${this.notification.target_post.id}/comments">/post/${this.notification.target_post.id}/comments<a></p>`
+            if (scrollTop + clientHeight >= scrollHeight - umbral) {
+                this.offset += this.limit;
+                const notifications = await this.FetchNotifications();
+                for (const n of notifications) {
+                    this.notifications.push(n);
+                }
+                this.drawNotifications();
             }
-        `;
-    }
-
-    CreateNotificationComment () {
-
-    }
-
-    CreateNotificationUpvote () {
-
-    }
-
-    CreateNotificationFollow () {
-
+        });
     }
 }

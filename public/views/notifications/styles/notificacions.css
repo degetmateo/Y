@@ -1,5 +1,12 @@
 .notifications-view-main {
     grid-area: main;
+    overflow-y: scroll;
+}
+
+.container-notifications {
+    display: flex;
+    flex-direction: column;
+
     border-right: 1px solid gray;
     border-left: 1px solid gray;
 }
