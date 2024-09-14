@@ -1,14 +1,14 @@
 export default class Notifications {
     static RequestPermissions () {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./service-worker.js')
-                .then(r => {
-                    console.log('Service Worker registered.', r);
-                })
-                .catch(err => {
-                    console.error('Error. Service Worker denied.', err);
-                });
-        }
+        // if ('serviceWorker' in navigator) {
+        //     navigator.serviceWorker.register('./service-worker.js')
+        //         .then(r => {
+        //             console.log('Service Worker registered.', r);
+        //         })
+        //         .catch(err => {
+        //             console.error('Error. Service Worker denied.', err);
+        //         });
+        // }
 
         Notification.requestPermission()
             .then(per => {
