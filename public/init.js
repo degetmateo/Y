@@ -1,5 +1,3 @@
-import Notifications from "./modules/Notifications.js"
-
 export default () => {
     window.app = {
         alerts: new Array(),
@@ -42,5 +40,5 @@ export default () => {
     if (!localStorage.getItem('notifications')) {
         localStorage.setItem('notifications', JSON.stringify({ last_id: 0 }));
     }
-    Notifications.RequestPermissions();
+    // Notifications.RequestPermissions();
 }
