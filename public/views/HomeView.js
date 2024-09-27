@@ -20,7 +20,7 @@ export default class extends AbstractView {
         }
 
         this.observerId = 'home';
-        window.app.listener.removeObserver('home');
+        window.app.listener.removeObserver(this.observerId);
         window.app.listener.addObserver(this);
     }
 

@@ -7,7 +7,6 @@ import AdminView from "./views/AdminView.js";
 import CommentsView from "./views/comments/CommentsView.js";
 import MessagesView from "./views/messages/MessagesView.js";
 import NotificationsView from "./views/notifications/NotificationsView.js";
-import Notifications from "./modules/Notifier.js";
 
 const pathToRegex = (path) => {
     return new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
@@ -25,7 +24,6 @@ const getParams = (match) => {
 export const navigateTo = (url) => {
     if (window.location.pathname === url) return;
     window.history.pushState(null, null, url);
-    window.app.listener.removeObserver('home');
     router();
 };
 
