@@ -19,9 +19,14 @@ export default class extends AbstractView {
             images: new Array()
         }
 
-        document.onvisibilitychange = () => {
-            if (document.visibilityState === 'visible') this.setTimeline();
-        }
+        this.observerId = 'home';
+        window.app.listener.removeObserver('home');
+        window.app.listener.addObserver(this);
+    }
+
+    onVisibilityChange = () => {
+        if (window.location.pathname != '/home') return;
+        if (document.visibilityState === 'visible') this.setTimeline();
     }
 
     async init () {
@@ -32,7 +37,7 @@ export default class extends AbstractView {
 
         this.mainContainer = document.getElementById('container-main');
         this.timelineContainer = document.getElementById('container-timeline');
-        document.getElementById('container-view').appendChild(Navigation.Create());
+        document.getElementById('container-view').appendChild(window.app.nav.getNode());
         this.setGlobalTimeline();
         this.events();
         this.CreateMobileButtonPost();
@@ -207,7 +212,6 @@ export default class extends AbstractView {
         this.offset = 0;
         this.mode = 'global';
         const res = await this.getPosts();
-        console.log(res)
         if (!res.ok) {
             console.error(res.error.message);
             new Alert(res.error.message);

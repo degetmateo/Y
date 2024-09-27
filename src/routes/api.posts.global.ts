@@ -3,17 +3,6 @@ import Server from "../Server";
 import Postgres from '../database/Postgres';
 import getTimeDifference from '../helpers/get_time_difference';
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: {
-                id?: number;
-                username?: string;
-            }
-        }
-    }
-}
-
 module.exports = (server: Server) => {
     server.app.get('/api/posts/global/:limit/:offset', server.authenticate, async (req: express.Request, res: express.Response) => {
         try {

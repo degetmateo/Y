@@ -8,6 +8,10 @@
     background-color: #1b2835;
 }
 
+.notification-container--unread {
+    background-color: #1b2835;
+}
+
 .container-notification {
     display: flex;
     flex-direction: column;
@@ -31,8 +35,8 @@
 }
 
 .notification-comment-signature-pic {
-    width: 100%;
-    height: 100%;
+    width: 30px;
+    height: 30px;
     object-fit: cover;
 }
 

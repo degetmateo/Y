@@ -35,6 +35,10 @@ export default class Notification {
         this.container.remove();
     }
 
+    setUnread () {
+        this.container.classList.add('notification-container--unread');
+    }
+
     Create () {
        if (this.notification.type === 'comment') this.CreateNotificationComment();
        if (this.notification.type === 'upvote') this.CreateNotificationUpvote();

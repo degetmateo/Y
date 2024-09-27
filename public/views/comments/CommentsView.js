@@ -15,7 +15,7 @@ export default class CommentsView extends AbstractView {
     }
 
     async init () {
-        this.viewContainer.appendChild(Navigation.Create());
+        this.viewContainer.appendChild(window.app.nav.getNode());
         this.CreateMain();
         this.commentsContainer = document.getElementById('container-comments-main-comments');
     }
@@ -190,7 +190,8 @@ export default class CommentsView extends AbstractView {
             }
         } catch (error) {
             console.error(error);
-            return new Alert("Ha ocurrido un error.");
+            if (error.message.includes('innerHTML')) return;
+            new Alert('Ha ocurrido un error.');
         }
     }
 

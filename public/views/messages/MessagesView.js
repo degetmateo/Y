@@ -10,7 +10,7 @@ export default class MessagesView extends AbstractView {
     }
 
     async init () {
-        this.viewContainer.appendChild(Navigation.Create());
+        this.viewContainer.appendChild(window.app.nav.getNode());
         this.CreateMain();
     }
 

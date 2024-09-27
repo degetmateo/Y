@@ -9,4 +9,20 @@
 
     border-right: 1px solid gray;
     border-left: 1px solid gray;
+
+    min-height: 100%;
+}
+
+@media (max-width: 768px) {
+    .container-view-notifications {
+        display: flex;
+    }
+
+    .notifications-view-main {
+        padding-bottom: 50px;
+    }
+
+    .container-notifications {
+        border: none;
+    }
 }

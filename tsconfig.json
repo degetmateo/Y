@@ -105,7 +105,8 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src/**/*.ts"                  /* Patrón de inclusión de archivos TypeScript. */
+    "src/**/*.ts",
+    "env.d.ts"                  /* Patrón de inclusión de archivos TypeScript. */
   ],
   "exclude": [
     "node_modules",

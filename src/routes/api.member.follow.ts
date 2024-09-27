@@ -1,19 +1,11 @@
+/// <reference path="../../env.d.ts" />
+
+import { Request, Response } from "express";
 import Postgres from "../database/Postgres";
 import Server from "../Server";
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: {
-                id?: number;
-                username?: string;
-            }
-        }
-    }
-}
-
 module.exports = (server: Server) => {
-    server.app.put("/api/member/:username/follow", server.authenticate, async (req, res) => {
+    server.app.put("/api/member/:username/follow", server.authenticate, async (req: Request, res: Response) => {
         try {
             const reqUser = req.user.username;
             const userToFollow = req.params.username;

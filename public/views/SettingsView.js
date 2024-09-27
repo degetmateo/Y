@@ -13,7 +13,7 @@ export default class extends AbstractView {
     async init () {
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW;
-        document.getElementById('container-view').appendChild(Navigation.Create());
+        document.getElementById('container-view').appendChild(window.app.nav.getNode());
         await this.events();
     }
 

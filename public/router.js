@@ -3,12 +3,11 @@ import ErrorView from "./views/ErrorView.js";
 import HomeView from "./views/HomeView.js";
 import LoginView from "./views/LoginView.js";
 import UserView from "./views/UserView.js";
-import auth from "./auth.js";
 import AdminView from "./views/AdminView.js";
 import CommentsView from "./views/comments/CommentsView.js";
 import MessagesView from "./views/messages/MessagesView.js";
 import NotificationsView from "./views/notifications/NotificationsView.js";
-import init from "./init.js";
+import Notifications from "./modules/Notifier.js";
 
 const pathToRegex = (path) => {
     return new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
@@ -26,6 +25,7 @@ const getParams = (match) => {
 export const navigateTo = (url) => {
     if (window.location.pathname === url) return;
     window.history.pushState(null, null, url);
+    window.app.listener.removeObserver('home');
     router();
 };
 
@@ -62,22 +62,3 @@ export const router = async () => {
     const view = new match.route.view(getParams(match));
     await view.init();
 };
-
-window.addEventListener("popstate", router);
-
-document.addEventListener('DOMContentLoaded', async () => {
-    document.body.addEventListener("click", (e) => {
-        if (e.target.matches("[data-link]") || e.target.hasAttribute('data-link')) {
-            e.preventDefault();
-            navigateTo(e.target.href || e.target.getAttribute('href'));
-        };
-    });
-
-    init();
-
-    if (!await auth()) {
-        navigateTo('/login');
-    };
-
-    router();
-});

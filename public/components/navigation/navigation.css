@@ -22,11 +22,6 @@
     background-color: gray;
 }
 
-.nav-button-icon {
-    width: 20px;
-    height: 20px;
-}
-
 .nav-button-status--test {
     font-size: 12px;
     text-transform: uppercase;
@@ -34,6 +29,48 @@
     border-radius: 8px;
     color: #CECE77;
     border: 1px solid #CECE77;
+}
+
+
+.nav-button-icon-container {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-button-icon-image-container {
+    position: absolute;
+}
+
+.nav-button-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* NOTIFICATIONS BUTTON */
+
+.nav-button-notifications-counter {
+    display: none;
+
+    font-size: 14px;
+
+    background-color: var(--accent-color);
+    border-radius: 2px;
+    border: 1px solid #FFF;
+
+    color: #FFF;
+
+    position: relative;
+    top: -5px;
+    right: -10px;
+
+    width: 15px;
+    height: 15px;
+}
+
+.nav-button-notifications-counter--active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (max-width: 768px) {
@@ -66,6 +103,14 @@
 
         height: 100%;
         width: 100%;
+    }
+
+    .nav-button:hover {
+        background-color: var(--primary-color);
+    }
+
+    .nav-button:active {
+        background-color: var(--primary-color);
     }
 
     .nav-button-text {

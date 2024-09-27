@@ -1,9 +1,10 @@
 import auth from "../auth.js";
 import Alert from "../components/alert/alert.js";
+import {init} from "../index.js";
 import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
 
-export default class extends AbstractView {
+export default class LoginView extends AbstractView {
     constructor (params) {
         super(params);
         this.setTitle('Iniciar Sesion');
@@ -50,10 +51,7 @@ export default class extends AbstractView {
             window.app.user.id = res.user.id;
             window.app.user.username = res.user.username;
             window.app.user.token = res.user.token;
-            if (!await auth()) {
-                return;
-            }
-            navigateTo('/home');
+            await redirect();
         } else {
             console.error(res.error.message);
             return new Alert(res.error.message);
@@ -83,11 +81,16 @@ export default class extends AbstractView {
         window.app.user.id = response.user.id;
         window.app.user.username = response.user.username;
         window.app.user.token = response.user.token;
-        if (!await auth()) {
-            return;
-        }
-        navigateTo('/home');
+        await redirect();
     }
+}
+
+const redirect = async () => {
+    if (!await auth()) {
+        return;
+    }
+    init();
+    navigateTo('/home');
 }
 
 const VIEW_CONTENT = `

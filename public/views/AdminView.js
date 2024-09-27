@@ -13,7 +13,7 @@ export default class extends AbstractView {
         if (window.app.user.role != 'admin') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
-        document.getElementById('container-view').appendChild(Navigation.Create());
+        document.getElementById('container-view').appendChild(window.app.nav.getNode());
         this.events();
     }
 

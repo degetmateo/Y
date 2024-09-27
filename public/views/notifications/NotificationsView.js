@@ -11,10 +11,25 @@ export default class NotificationsView extends AbstractView {
         
         this.offset = 0;
         this.limit = 20;
+
+        this.observerId = 'notificationsView';
+        window.app.listener.removeObserver(this.observerId);
+        window.app.listener.addObserver(this);
+
+        window.app.notifier.removeObserver(this.observerId);
+        window.app.notifier.addObserver(this);
+    }
+
+    onVisibilityChange = () => {
+        this.drawNotifications(window.app.notifier.get());
+    }
+
+    onNotifications = () => {
+        this.drawNotifications(window.app.notifier.get());
     }
 
     async init () {
-        this.viewContainer.appendChild(Navigation.Create());
+        this.viewContainer.appendChild(window.app.nav.getNode());
         this.CreateMain();
     }
 
@@ -26,27 +41,20 @@ export default class NotificationsView extends AbstractView {
         this.main.appendChild(this.container_notifications);
         this.viewContainer.appendChild(this.main);
 
-        this.notifications = await this.FetchNotifications();
-        this.drawNotifications();
+        this.drawNotifications(await window.app.notifier.fetch(0));
         this.eventScroll();
     }
 
-    async FetchNotifications () {
-        const request = await fetch('/api/notifications/'+this.offset, {
-            method: "GET",
-            headers: { "Authorization": "Bearer "+window.app.user.token }
-        });
-        const response = await request.json();
-        if (!response.ok) throw new Error(response.error.message);
-        return response.notifications;
-    }
-
-    drawNotifications () {
+    async drawNotifications (_entries) {
+        const unread = window.app.notifier.getUnread();
         this.container_notifications.innerHTML = '';
-        for (const n of this.notifications) {
+        for (const n of _entries) {
             const notification = new Notification(n);
+            if (unread.find(u => u.id === n.id)) notification.setUnread();
             this.container_notifications.appendChild(notification.getElement());
         }
+
+        window.app.notifier.updateSave(window.app.notifier.get()[0].id);
     }
 
     eventScroll () {
@@ -58,11 +66,9 @@ export default class NotificationsView extends AbstractView {
 
             if (scrollTop + clientHeight >= scrollHeight - umbral) {
                 this.offset += this.limit;
-                const notifications = await this.FetchNotifications();
-                for (const n of notifications) {
-                    this.notifications.push(n);
-                }
-                this.drawNotifications();
+                const notifications = await window.app.notifier.fetch(this.offset);
+                window.app.notifier.insertAfter(notifications);
+                this.drawNotifications(window.app.notifier.get());
             }
         });
     }

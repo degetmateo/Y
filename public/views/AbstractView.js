@@ -3,7 +3,6 @@ export default class {
         this.params = params;
         this.appContainer = document.getElementById('app');
         this.appContainer.innerHTML = '';
-        document.onvisibilitychange = null;
     }
 
     setTitle (title) {

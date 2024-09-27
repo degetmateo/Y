@@ -1,9 +1,10 @@
+import { Request } from "express";
 import Postgres from "../database/Postgres";
 import getTimeDifference from "../helpers/get_time_difference";
 import Server from "../Server";
 
 module.exports = (server: Server) => {
-    server.app.get('/api/post/:id_post/comments', server.authenticate, async (req, res) => {
+    server.app.get('/api/post/:id_post/comments', server.authenticate, async (req: Request, res) => {
         try {
             const id_post = req.params.id_post;
             const id_user = req.user.id;
