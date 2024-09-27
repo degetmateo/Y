@@ -13,7 +13,7 @@ class Notifier {
         this.do();
         this.interval = setInterval(() => {
             this.do();
-        }, 10000);
+        }, 60000);
     }
 
     async do () {
