@@ -52,7 +52,7 @@ module.exports = (server: Server) => {
                                 id_post_replied: n.id_post_replied,
                                 content: n.content_post,
                                 date: n.date_post,
-                                images: n.images
+                                images: n.images_post
                             }
                         }
                     })

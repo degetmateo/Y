@@ -45,7 +45,9 @@ export default class Post {
     CreatePostBody () {
         const containerBody = document.createElement('div');
         containerBody.classList.add('container-post-body');
-        containerBody.appendChild(this.CreatePostBodyContent());
+        if (this.post.content && this.post.content.length > 0) {
+            containerBody.appendChild(this.CreatePostBodyContent());
+        }
 
         if (this.post.images && this.post.images.length > 0) {
             const imagesContainer = document.createElement('div');

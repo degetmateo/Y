@@ -54,8 +54,26 @@ export default class Notification {
                 </div>
                 <span class="notification-comment-signature-title"><span class="notification-comment-signature-name" href="/member/${this.notification.target_member.username}" data-link>${this.notification.target_member.name}</span> te ha respondido:</span>
             </div>
-            <span class="notification-comment-post-content" href="/post/${this.notification.target_post.id}/comments" data-link>${this.notification.target_post.content}</span>
+            ${this.notification.target_post.content.length > 0 ? `<span class="notification-comment-post-content" href="/post/${this.notification.target_post.id}/comments" data-link>${this.notification.target_post.content}</span>` : ''}
+            ${this.notification.target_post.images.length > 0 ? `<div class="container-post-body-images">${this.images()}</div>` : ''}
         `;
+    }
+
+    images () {
+        const imagesContainer = document.createElement('div');
+        imagesContainer.classList.add('container-post-body-images');
+        for (const image of this.notification.target_post.images) {
+            try {
+                const img = new Image();
+                img.src = image;
+                img.addEventListener('error', () => imagesContainer.remove());
+                img.classList.add('post-body-image');
+                imagesContainer.appendChild(img);
+            } catch (error) {
+                continue;
+            }
+        }
+        return imagesContainer.innerHTML;
     }
 
     CreateNotificationUpvote () {
@@ -67,7 +85,8 @@ export default class Notification {
                 </div>
                 <span class="notification-comment-signature-title"><span class="notification-comment-signature-name" href="/member/${this.notification.target_member.username}" data-link>${this.notification.target_member.name}</span> ha indicado que le gusta tu publicación.</span>
             </div>
-            <span class="notification-comment-post-content" href="/post/${this.notification.target_post.id}/comments" data-link>${this.notification.target_post.content}</span>
+            ${this.notification.target_post.content.length > 0 ? `<span class="notification-comment-post-content" href="/post/${this.notification.target_post.id}/comments" data-link>${this.notification.target_post.content}</span>` : ''}
+            ${this.notification.target_post.images.length > 0 ? `<div class="container-post-body-images">${this.images()}</div>` : ''}
         `;
     }
 

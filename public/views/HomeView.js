@@ -34,7 +34,6 @@ export default class extends AbstractView {
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
 
-
         this.mainContainer = document.getElementById('container-main');
         this.timelineContainer = document.getElementById('container-timeline');
         document.getElementById('container-view').appendChild(window.app.nav.getNode());
@@ -74,12 +73,16 @@ export default class extends AbstractView {
                 const imageURL = input.value;
                 pop.delete();
                 try {
-                    if (content.length <= 0) throw new Error('Debes escribir algo.');
                     if (imageURL.length > 0){
                         await loadImage(imageURL);
                         this.post.images = new Array();
                         this.post.images.push(imageURL);
                     }
+                    
+                    if ((!content || content.length <= 0) && (!this.post.images || this.post.images.length <= 0)) {
+                        throw new Error("Debes escribir algo o ingresar una imagen.");
+                    }
+                    if (content && content.length <= 0) throw new Error('Debes escribir algo.');
                     const result = await this.SendPost({ content, images: this.post.images });
                     if (!result.ok) throw new Error(result.error.message);
                     new Alert('Publicación enviada.');
@@ -111,8 +114,13 @@ export default class extends AbstractView {
             try {
                 const textarea = document.getElementById('home-main-form-post-create-textarea');
                 const value = textarea.value.trim();
-                if (value.length <= 0) return new Alert('Tenés que escribir algo.');
-                if (value.length > 400) return new Alert('Límite de carácteres: 400.');
+
+                if ((!value || value.length <= 0) && (!this.post.images || this.post.images.length <= 0)) {
+                    return new Alert("Debes escribir algo o ingresar una imagen.");
+                }
+
+                if (value && value.length <= 0) return new Alert('Tenés que escribir algo.');
+                if (value && value.length > 400) return new Alert('Límite de carácteres: 400.');
                 textarea.value = '';
                 const res = await this.SendPost({
                     content: value,

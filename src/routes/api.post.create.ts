@@ -4,12 +4,22 @@ import Server from "../Server";
 module.exports = (server: Server) => {
     server.app.post('/api/post/create', server.authenticate, async (req, res) => {
         try {
-            const content = req.body.post.content as string;
-            const images = req.body.post.images as Array<string>;
+            const content = req.body.post.content.trim();
+            const images = req.body.post.images;
             const id_replied_post = req.body.post.id_replied_post || null;
             const user = req.body.user;
-            if ((content && content.trim().length < 1) || !content) return res.json({ ok:false, error: {message:"Debes escribir algo."} });
-            if (content.length > 400) return res.json({ ok: false, error: { message: 'Has superado el limite de caracteres (400).'} });
+
+            if (!content && !images) {
+                return res.json({
+                    ok: false,
+                    error: {
+                        message: "Debes escribir algo o ingresar una imagen."
+                    }
+                })
+            }
+
+            if (content && content.length <= 0) return res.json({ ok: false, error: { message: "Debes escribir algo." } });
+            if (content && content.length > 400) return res.json({ ok: false, error: { message: 'Has superado el limite de caracteres (400).'} });
             if (images && images.length > 4) return res.json({ ok:false, error: { message: "POST IMAGES: Hasta 4." } });
 
             await Postgres.query().begin(async sql => {

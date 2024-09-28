@@ -102,9 +102,12 @@ export default class CommentsView extends AbstractView {
         
         button.onclick = async () => {
             try {
-                const content = textarea.value;
-                if (!content || content.length <= 0) return new Alert("Debes escribir algo.");
-                if (content.length > 400) return new Alert("La cantidad máxima de carácteres es 400.");
+                const content = textarea.value;     
+                if ((!content || content.length <= 0) && (!this.images || this.images.length <= 0)) {
+                    throw new Error("Debes escribir algo o ingresar una imagen.");
+                }
+                if (content && content.length <= 0) return new Alert("Debes escribir algo.");
+                if (content && content.length > 400) return new Alert("La cantidad máxima de carácteres es 400.");
                 textarea.value = '';
                 const user = JSON.parse(localStorage.getItem('user'));
                 const request = await fetch('/api/post/create', {

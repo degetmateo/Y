@@ -78,7 +78,7 @@ module.exports = (server: Server) => {
                         id: post.id_post,
                         content: post.content_post,
                         upvotes: post.upvotes,
-                        images: post.images,
+                        images: post.images_post,
                         date: getTimeDifference(new Date(post.date_post)),
                         comments_count: post.comments_count_post,
                         upvotes_count: post.upvotes_count_post,
