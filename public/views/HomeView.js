@@ -68,6 +68,14 @@ export default class extends AbstractView {
             `;
             pop.body().appendChild(textarea);
             pop.body().appendChild(input);
+
+            const btnTenor = pop.CreateButton("GIFS", async () => {
+                CreateButtonTenor(btnTenor, (src) => {
+                    this.post.images = [];
+                    this.post.images.push(src);
+                });
+            });
+
             pop.CreateButton("Enviar", async () => {
                 const content = textarea.value.trim();
                 const imageURL = input.value;
@@ -136,7 +144,7 @@ export default class extends AbstractView {
             }
         });
 
-        const buttonImage = document.getElementById('home-main-form-post-create-button-image');
+        const buttonImage = document.getElementById('home-main-form-post-create-button-media--image');
         buttonImage.onclick = () => {
             const popup = new Popup();
             const input = popup.CreateInput('text', 'URL de la Imagen');
@@ -166,6 +174,11 @@ export default class extends AbstractView {
                 }
             });
         }
+
+        CreateButtonTenor(document.getElementById('home-main-form-post-create-button-media--tenor'), (src) => {
+            this.post.images = [];
+            this.post.images.push(src);
+        });
     }
 
     eventChangeTimeline () {
@@ -302,7 +315,8 @@ const VIEW_CONTENT = `
                                     <option value="opcion1">Todos</option>
                                 </select>
 
-                                <img src="/public/assets/imagen.svg" class="home-main-form-post-create-button-image" id="home-main-form-post-create-button-image" />
+                                <div id="home-main-form-post-create-button-media--image" class="home-main-form-post-create-button-media">IMG</div>
+                                <div id="home-main-form-post-create-button-media--tenor" class="home-main-form-post-create-button-media">GIF</div>
                             </div>
                             <button id="home-main-form-post-create-button" class="button home-main-form-post-create-button">Publicar</button>
                         </div>
@@ -318,3 +332,62 @@ const VIEW_CONTENT = `
         </div>
     </div>
 `;
+
+/* <img src="/public/assets/imagen.svg" class="home-main-form-post-create-button-image" id="home-main-form-post-create-button-image" /> */
+
+
+const tenor = async (_query) => {
+    const lmt = 12;
+    const search_url = 'https://tenor.googleapis.com/v2/search?q=' + _query + '&key=AIzaSyAEKv-HyfGYtL1y3jvvEDvcmY7Qagvsl0k'+'&limit='+lmt;
+    const request = await fetch(search_url, { method: "GET" });
+    const response = await request.json();
+    return response['results'].map(r => r['media_formats'].gif);
+}
+
+export const CreateButtonTenor = (button, func) => {
+    button.onclick = () => {
+        try {
+            const popup = new Popup();
+            const input = popup.CreateInput('text', 'Busca un GIF');
+
+            const containerTenorGifs = document.createElement('div');
+            containerTenorGifs.style =`
+                display: flex;
+                flex-wrap: wrap;
+                overflow-y: scroll;
+            `;
+            popup.body().appendChild(containerTenorGifs);
+
+            popup.CreateButton('Buscar', async () => {
+                containerTenorGifs.innerHTML = '';
+                const popupWaiting = new Popup();
+                popupWaiting.CreateTitle("Espere...");
+
+                const value = input.value;
+                if (!value || value.length <= 0) {
+                    popupWaiting.delete();
+                    return new Alert("Debes escribir algo.");
+                }
+
+                const query = await tenor(value);
+                query.forEach(r => {
+                    const image = new Image();
+                    image.src = r.url;
+                    image.classList.add('home-tenor-gif');
+                    containerTenorGifs.appendChild(image);
+
+                    image.onclick = () => {
+                        func(image.src);
+                        popup.delete();
+                        new Alert("GIF Insertado.");
+                    }
+                });
+
+                popupWaiting.delete();
+            });
+        } catch (error) {
+            console.error(error);
+            new Alert("Ha ocurrido un error.");
+        }
+    }
+}

@@ -4,6 +4,7 @@ import Popup from "../../components/popup/Popup.js";
 import Post from "../../components/post/Post.js";
 import {loadImage} from "../../helpers.js";
 import AbstractView from "../AbstractView.js";
+import {CreateButtonTenor} from "../HomeView.js";
 
 export default class CommentsView extends AbstractView {
     constructor (params) {
@@ -44,7 +45,8 @@ export default class CommentsView extends AbstractView {
                         
                         <div class="container-comments-main-form-post-create-buttons">
                             <div class="container-comments-main-form-post-create-options">
-                                <img src="/public/assets/imagen.svg" class="comments-main-form-post-create-button-image" id="comments-main-form-post-create-button-image" />
+                                <div id="comments-main-form-post-create-button-image" class="home-main-form-post-create-button-media">IMG</div>
+                                <div id="comments-main-form-post-create-button-tenor" class="home-main-form-post-create-button-media">GIF</div>
                             </div>
                             <button id="comments-main-form-post-create-button" class="button comments-main-form-post-create-button">Publicar</button>
                         </div>
@@ -61,6 +63,11 @@ export default class CommentsView extends AbstractView {
         this.CreateEventPostCreate();
         this.CreateEventInsertImage();
         this.CreateThread();
+
+        CreateButtonTenor(document.getElementById('comments-main-form-post-create-button-tenor'), (image) => {
+            this.images = [];
+            this.images.push(image);
+        });
     }
 
     CreateEventInsertImage () {

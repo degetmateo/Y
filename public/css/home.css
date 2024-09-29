@@ -212,9 +212,30 @@
     gap: 10px;
 }
 
-.home-main-form-post-create-button-image {
-    height: 30px;
+
+.home-main-form-post-create-button-media {
+    width: 28px;
+    height: 28px;
     cursor: pointer;
+    border: 1px solid #FFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.home-main-form-post-create-button-media:hover {
+    background-color: var(--accent-color);
+}
+
+.home-tenor-gif {
+    width: 100px; 
+    height: 100px; 
+    cursor:pointer;
+}
+
+.home-tenor-gif:hover {
+    border: 3px solid var(--accent-color);
 }
 
 @media (max-width: 1024px) {

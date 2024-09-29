@@ -94,6 +94,11 @@
     cursor: pointer;
 }
 
+.container-comments-main-form-post-create-options {
+    display: flex;
+    gap: 5px;
+}
+
 .comments-main-form-post-create-button:hover {
     background-color: var(--accent-color);
 }
