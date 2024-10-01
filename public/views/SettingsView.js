@@ -2,15 +2,16 @@ import AbstractView from "./AbstractView.js";
 import { navigateTo } from '../router.js';
 import {loadImage} from "../helpers.js";
 import Alert from "../components/alert/alert.js";
-import Navigation from "../components/navigation/navigation.js";
 
 export default class extends AbstractView {
-    constructor (params) {
-        super(params);
-        this.setTitle('Configuracion');
+    constructor () {
+        super();
     }
 
-    async init () {
+    async init (params) {
+        this.params = params;
+        this.setTitle('Configuracion');
+        this.clear();
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW;
         document.getElementById('container-view').appendChild(window.app.nav.getNode());

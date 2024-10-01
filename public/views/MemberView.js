@@ -3,22 +3,24 @@ import {cleanContent} from "../helpers.js";
 import AbstractView from "./AbstractView.js";
 import Popup from "../components/popup/Popup.js";
 import Post from "../components/post/Post.js";
-import Navigation from "../components/navigation/navigation.js";
 import Alert from "../components/alert/alert.js";
 
 export default class extends AbstractView {
-    constructor (params) {
-        super(params);
-        this.setTitle('Usuario');
+    constructor () {
+        super();
+    }
+
+    async init (params) {
+        this.params = params;
+        this.setTitle('Miembro');
+        this.clear();
 
         this.user = {};
         this.posts = {};
 
         this.limit = 20;
         this.offset = 0;
-    }
 
-    async init () {
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW;
         document.getElementById('container-view').appendChild(window.app.nav.getNode());

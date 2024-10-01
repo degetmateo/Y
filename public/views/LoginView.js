@@ -5,12 +5,14 @@ import { navigateTo } from "../router.js";
 import AbstractView from "./AbstractView.js";
 
 export default class LoginView extends AbstractView {
-    constructor (params) {
-        super(params);
-        this.setTitle('Iniciar Sesion');
+    constructor () {
+        super();
     }
 
-    async init () {
+    async init (params) {
+        this.params = params;
+        this.setTitle('Iniciar Sesion');
+        this.clear();
         if (await auth()) {
             return navigateTo('/home');
         };

@@ -7,6 +7,7 @@ class Notifier {
         this.observers = new Array();
 
         this.observerId = 'notifier';
+        this.cooldown = false;
     }
 
     init () {
@@ -24,7 +25,12 @@ class Notifier {
     }
 
     onVisibilityChange = () => {
+        if (this.cooldown) return;
         this.do();
+        this.cooldown = true;
+        setTimeout(() => {
+            this.cooldown = false;
+        }, 10000);
     }
 
     notifyObservers () {

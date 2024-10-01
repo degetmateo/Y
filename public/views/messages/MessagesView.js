@@ -2,14 +2,18 @@ import Navigation from "../../components/navigation/navigation.js";
 import AbstractView from "../AbstractView.js";
 
 export default class MessagesView extends AbstractView {
-    constructor (params) {
-        super(params);
+    constructor () {
+        super();
+    }
+
+    async init (params) {
+        this.params = params;
+        this.clear();
+        this.setTitle("Mensajes")
         this.viewContainer = document.createElement('div');
         this.viewContainer.classList.add('container-view', 'container-view-messages');
         this.appContainer.appendChild(this.viewContainer);
-    }
 
-    async init () {
         this.viewContainer.appendChild(window.app.nav.getNode());
         this.CreateMain();
     }

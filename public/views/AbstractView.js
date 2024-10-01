@@ -1,7 +1,9 @@
 export default class {
-    constructor (params) {
-        this.params = params;
+    constructor () {
         this.appContainer = document.getElementById('app');
+    }
+
+    clear () {
         this.appContainer.innerHTML = '';
     }
 

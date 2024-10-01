@@ -4,12 +4,14 @@ import {navigateTo} from "../router.js";
 import AbstractView from "./AbstractView.js";
 
 export default class extends AbstractView {
-    constructor (params) {
-        super(params);
-        this.setTitle('Panel de Administracion');
+    constructor () {
+        super();
     }
 
-    async init () {
+    async init (params) {
+        this.params = params;
+        this.setTitle('Panel de Administracion');
+        this.clear();
         if (window.app.user.role != 'admin') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;

@@ -7,15 +7,20 @@ import AbstractView from "../AbstractView.js";
 import {CreateButtonTenor} from "../HomeView.js";
 
 export default class CommentsView extends AbstractView {
-    constructor (params) {
-        super(params);
+    constructor () {
+        super();
+    }
+
+    async init (params) {
+        this.params = params;
+        this.setTitle("Respuestas");
+        this.clear();
+
         this.viewContainer = document.createElement('div');
         this.viewContainer.classList.add('container-view-comments');
         this.appContainer.appendChild(this.viewContainer);
         this.images = new Array();
-    }
 
-    async init () {
         this.viewContainer.appendChild(window.app.nav.getNode());
         this.CreateMain();
         this.commentsContainer = document.getElementById('container-comments-main-comments');

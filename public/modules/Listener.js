@@ -18,7 +18,6 @@ export default class Listener {
 
     onVisibilityChange () {
         document.onvisibilitychange = () => {
-            if (document.visibilityState != 'visible') return;
             this.observers.forEach(observer => observer.onVisibilityChange());
         }
     }

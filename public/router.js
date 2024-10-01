@@ -2,7 +2,7 @@ import SettingsView from "./views/SettingsView.js";
 import ErrorView from "./views/ErrorView.js";
 import HomeView from "./views/HomeView.js";
 import LoginView from "./views/LoginView.js";
-import UserView from "./views/UserView.js";
+import MemberView from "./views/MemberView.js";
 import AdminView from "./views/AdminView.js";
 import CommentsView from "./views/comments/CommentsView.js";
 import MessagesView from "./views/messages/MessagesView.js";
@@ -29,16 +29,16 @@ export const navigateTo = (url) => {
 
 export const router = async () => {
     const routes = [
-        { path: "/error", view: ErrorView },
-        { path: "/", view: HomeView },
-        { path: "/home", view: HomeView },
-        { path: "/login", view: LoginView },
-        { path: "/settings", view: SettingsView },
-        { path: "/member/:username", view: UserView },
-        { path: "/admin", view: AdminView },
-        { path: "/post/:id_post/comments", view: CommentsView },
-        { path: "/messages", view: MessagesView },
-        { path: "/notifications", view: NotificationsView }
+        { path: "/error", view: new ErrorView() },
+        { path: "/", view: new HomeView() },
+        { path: "/home", view: new HomeView() },
+        { path: "/login", view: new LoginView() },
+        { path: "/settings", view: new SettingsView() },
+        { path: "/member/:username", view: new MemberView() },
+        { path: "/admin", view: new AdminView() },
+        { path: "/post/:id_post/comments", view: new CommentsView() },
+        { path: "/messages", view: new MessagesView() },
+        { path: "/notifications", view: new NotificationsView() }
     ];
 
     const potentialMatches = routes.map(route => {
@@ -57,6 +57,6 @@ export const router = async () => {
         };
     };
 
-    const view = new match.route.view(getParams(match));
-    await view.init();
+    const view = match.route.view;
+    await view.init(getParams(match));
 };

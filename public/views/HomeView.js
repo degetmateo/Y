@@ -5,11 +5,28 @@ import Alert from "../components/alert/alert.js";
 import Popup from "../components/popup/Popup.js";
 import Post from "../components/post/Post.js";
 import {URL_NO_IMAGE} from "../consts.js";
-import Navigation from "../components/navigation/navigation.js";
 
 export default class extends AbstractView {
-    constructor (params) {
-        super(params);
+    constructor () {
+        super();
+        this.cooldown = false;
+    }
+
+    onVisibilityChange = () => {
+        if (document.visibilityState != 'visible') return;
+        if (window.location.pathname != '/home') return;
+        if (this.cooldown) return;
+        if (document.visibilityState === 'visible') this.setTimeline();
+        this.cooldown = true;
+        setTimeout(() => {
+            this.cooldown = false;
+        }, 10000);
+    }
+
+    async init (params) {
+        this.params = params;
+        this.clear();
+
         this.setTitle('Inicio');
         this.limit = 20;
         this.offset = 0;
@@ -22,14 +39,7 @@ export default class extends AbstractView {
         this.observerId = 'home';
         window.app.listener.removeObserver(this.observerId);
         window.app.listener.addObserver(this);
-    }
 
-    onVisibilityChange = () => {
-        if (window.location.pathname != '/home') return;
-        if (document.visibilityState === 'visible') this.setTimeline();
-    }
-
-    async init () {
         if (window.location.pathname === '/') return navigateTo('/home');
         const appContainer = document.getElementById('app');
         appContainer.innerHTML = VIEW_CONTENT;
@@ -74,7 +84,7 @@ export default class extends AbstractView {
                     this.post.images = [];
                     this.post.images.push(src);
                 });
-            });
+            }); 
 
             pop.CreateButton("Enviar", async () => {
                 const content = textarea.value.trim();
@@ -338,7 +348,7 @@ const VIEW_CONTENT = `
 
 const tenor = async (_query) => {
     const lmt = 12;
-    const search_url = 'https://tenor.googleapis.com/v2/search?q=' + _query + '&key=AIzaSyAEKv-HyfGYtL1y3jvvEDvcmY7Qagvsl0k'+'&limit='+lmt;
+    const search_url = 'https://tenor.googleapis.com/v2/search?q=' + _query + '&key=AIzaSyAEKv-HyfGYtL1y3jvvEDvcmY7Qagvsl0k' + '&limit='+lmt;
     const request = await fetch(search_url, { method: "GET" });
     const response = await request.json();
     return response['results'].map(r => r['media_formats'].gif);

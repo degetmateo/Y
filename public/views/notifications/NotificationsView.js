@@ -3,8 +3,23 @@ import Notification from "../../components/notification/notification.js";
 import AbstractView from "../AbstractView.js";
 
 export default class NotificationsView extends AbstractView {
-    constructor (params) {
-        super(params);
+    constructor () {
+        super();
+    }
+
+    onVisibilityChange = () => {
+        if (document.visibilityState != 'visible') return;
+        this.drawNotifications(window.app.notifier.get());
+    }
+
+    onNotifications = () => {
+        this.drawNotifications(window.app.notifier.get());
+    }
+
+    async init (params) {
+        this.params = params;
+        this.clear();
+        this.setTitle("Notificaciones");
         this.viewContainer = document.createElement('div');
         this.viewContainer.classList.add('container-view', 'container-view-notifications');
         this.appContainer.appendChild(this.viewContainer);
@@ -18,17 +33,7 @@ export default class NotificationsView extends AbstractView {
 
         window.app.notifier.removeObserver(this.observerId);
         window.app.notifier.addObserver(this);
-    }
 
-    onVisibilityChange = () => {
-        this.drawNotifications(window.app.notifier.get());
-    }
-
-    onNotifications = () => {
-        this.drawNotifications(window.app.notifier.get());
-    }
-
-    async init () {
         this.viewContainer.appendChild(window.app.nav.getNode());
         this.CreateMain();
     }
