@@ -10,6 +10,17 @@ export default class extends AbstractView {
     constructor () {
         super();
         this.cooldown = false;
+        this.observerId = 'home';
+        this.mode = 'global';
+
+        this.posts = {
+            global: new Array(),
+            following: new Array()
+        }
+
+        this.scroll = 0;
+        this.limit = 20;
+        this.offset = 0;
     }
 
     onVisibilityChange = () => {
@@ -28,15 +39,11 @@ export default class extends AbstractView {
         this.clear();
 
         this.setTitle('Inicio');
-        this.limit = 20;
-        this.offset = 0;
-        this.mode = 'global';
 
         this.post = {
             images: new Array()
         }
 
-        this.observerId = 'home';
         window.app.listener.removeObserver(this.observerId);
         window.app.listener.addObserver(this);
 
@@ -47,9 +54,11 @@ export default class extends AbstractView {
         this.mainContainer = document.getElementById('container-main');
         this.timelineContainer = document.getElementById('container-timeline');
         document.getElementById('container-view').appendChild(window.app.nav.getNode());
-        this.setGlobalTimeline();
+
         this.events();
         this.CreateMobileButtonPost();
+
+        this.setTimeline();
     }
 
     CreateMobileButtonPost () {
@@ -209,9 +218,21 @@ export default class extends AbstractView {
     }
 
     setTimeline () {
-        this.mode === 'global' ?
-            this.setGlobalTimeline() :
+        if (this.mode === 'global') {
+            this.setGlobalTimeline();
+            return;
+        }
+
+        if (this.mode === 'following') {
             this.setFollowingTimeline();
+            return;
+        }
+
+        this.setGlobalTimeline();
+    }
+
+    setTimelineScroll () {
+        this.mainContainer.scrollTop = this.scroll;
     }
 
     async setFollowingTimeline () {
@@ -226,7 +247,26 @@ export default class extends AbstractView {
             return navigateTo('/login');
         }
         this.timelineContainer.innerHTML = '';
+        this.insertFollowingPosts(res.posts);
         this.drawPosts(res.posts);
+    }
+
+    insertGlobalPosts (_posts) {
+        const newPosts = new Array();
+        for (const post of _posts) {
+            if (this.posts.global.find(p => p.id == post.id)) continue;
+            newPosts.push(post);
+        }
+        this.posts.global = [...newPosts, ...this.posts.global];
+    }
+
+    insertFollowingPosts (_posts) {
+        const newPosts = new Array();
+        for (const post of _posts) {
+            if (this.posts.following.find(p => p.id == post.id)) continue;
+            newPosts.push(post);
+        }
+        this.posts.following = [...newPosts, ...this.posts.following];
     }
 
     clearPosts () {
@@ -249,6 +289,7 @@ export default class extends AbstractView {
             return navigateTo('/login');
         }
         this.timelineContainer.innerHTML = '';
+        this.insertGlobalPosts(res.posts);
         this.drawPosts(res.posts);
     }
 
@@ -267,6 +308,10 @@ export default class extends AbstractView {
         }
     }
 
+    clearPosts () {
+        this.timelineContainer.innerHTML = '';
+    }
+
     async SendPost (post) {
         const user = JSON.parse(localStorage.getItem('user'));
         const request = await fetch ('/api/post/create', {
@@ -282,12 +327,12 @@ export default class extends AbstractView {
 
     eventTimelineScroll () {
         this.mainContainer.addEventListener('scroll', async () => {
-            const scrollHeight = this.mainContainer.scrollHeight;
             const clientHeight = this.mainContainer.clientHeight;
-            const scrollTop = this.mainContainer.scrollTop;
+            const scrollHeight = this.mainContainer.scrollHeight;
+            this.scroll = this.mainContainer.scrollTop;
             const umbral = 1;
 
-            if (scrollTop + clientHeight >= scrollHeight - umbral) {
+            if (this.scroll + clientHeight >= scrollHeight - umbral) {
                 this.offset += this.limit;
                 const res = await this.getPosts();
                 if (!res.ok) {

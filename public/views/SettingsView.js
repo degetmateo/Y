@@ -3,6 +3,8 @@ import { navigateTo } from '../router.js';
 import {loadImage} from "../helpers.js";
 import Alert from "../components/alert/alert.js";
 
+const { router } = window.app;
+
 export default class extends AbstractView {
     constructor () {
         super();
@@ -31,7 +33,7 @@ export default class extends AbstractView {
         document.getElementById('button-logout').addEventListener('click', (event) => {
             event.preventDefault();
             localStorage.removeItem('user');
-            navigateTo('/login');
+            router.navigateTo('/login');
         });
     }
 

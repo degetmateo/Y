@@ -2,7 +2,7 @@ import auth from "./auth.js";
 import Navigation from "./components/navigation/navigation.js";
 import Listener from "./modules/Listener.js";
 import Notifier from "./modules/Notifier.js";
-import { navigateTo, router } from "./router.js";
+import Router from "./router.js";
 
 window.app = {
     alerts: new Array(),
@@ -44,22 +44,24 @@ window.app = {
 
 if (!localStorage.getItem('notifications')) localStorage.setItem('notifications', JSON.stringify({ last_id: 0 }));
 
-window.addEventListener("popstate", router);
+window.app.router = new Router();
+
+window.addEventListener("popstate", window.app.router.execute);
 
 document.addEventListener('DOMContentLoaded', async () => {
     document.body.addEventListener("click", (e) => {
         if (e.target.matches("[data-link]") || e.target.hasAttribute('data-link')) {
             e.preventDefault();
-            navigateTo(e.target.href || e.target.getAttribute('href'));
+            window.app.router.navigateTo(e.target.href || e.target.getAttribute('href'));
         };
     });
 
     if (!await auth()) {
-        navigateTo('/login');
+        window.app.router.navigateTo('/login');
     };
 
     init();
-    router();
+    window.app.router.execute();
 });
 
 export const init = () => {
